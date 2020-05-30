@@ -9,6 +9,13 @@
 #'
 #' @include mboPlot-helpers.R
 #'
+#' @import checkmate
+#' @import ggplot2
+#' @import mlrMBO
+#' @import ParamHelpers
+#' @import R6
+#' @import shiny
+#'
 #' @description
 #' This is the base class for plotting in this package.
 #'
