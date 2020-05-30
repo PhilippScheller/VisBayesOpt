@@ -1,16 +1,14 @@
 #
 # This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
+# run the application by the function 'runAppLocal()'.
 
 
 
 library(shiny)
 library(shinythemes)
 
-# modify upload size of files to 200MB
+# modify upload-size of files to 200MB
 options(shiny.maxRequestSize = 200*1024^2)
-
 
 
 # Define UI for application
@@ -19,7 +17,7 @@ ui <- navbarPage(
     theme = shinytheme("darkly"),
     tabPanel(
         "Visualize mlrMBO run",
-        fluidRow( 
+        fluidRow(
             column(5, fileInput("mbo1", "Select mlr run from local directory"),
                    textOutput("mbo1Check")),
             column(7, plotOutput("mbo1Plot"))
@@ -31,5 +29,5 @@ ui <- navbarPage(
    tabPanel(
        "About"
    )
-    
+
 )
