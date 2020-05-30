@@ -1,4 +1,4 @@
-Package: mlrVis
+Package: VisBayesOpt
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
@@ -13,3 +13,4 @@ RoxygenNote: 7.0.2
 Collate: 
     'mboPlot-helpers.R'
     'mboPlot.R'
+    'runAppLocal.R'

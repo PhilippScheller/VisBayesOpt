@@ -9,7 +9,7 @@
 
 runAppLocal = function() {
 
-  appDir <- system.file("shinyApp", package = "visualDescent")
+  appDir <- base::system.file("shinyApp", package = "VisBayesOpt")
 
   shiny::runApp(appDir, display.mode = "normal")
 }
