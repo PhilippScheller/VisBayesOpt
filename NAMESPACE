@@ -2,4 +2,9 @@
 
 export(mboPlot)
 export(runAppLocal)
+import(ParamHelpers)
+import(checkmate)
+import(ggplot2)
+import(mlrMBO)
 import(shiny)
+importFrom(R6,R6Class)
