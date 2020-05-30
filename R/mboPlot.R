@@ -9,13 +9,6 @@
 #'
 #' @include mboPlot-helpers.R
 #'
-#' @import checkmate
-#' @import ggplot2
-#' @import mlrMBO
-#' @import ParamHelpers
-#' @import R6
-#' @import shiny
-#'
 #' @description
 #' This is the base class for plotting in this package.
 #'
@@ -23,7 +16,7 @@
 mboPlot = R6Class(
   "mboPlot",
   public = list(
-    #' @field opt_state ('OptState')\cr
+    #' @field opt_state (`OptState`)\cr
     #' Environment containing necessary information needed during optimization in MBO.
     opt_state = NULL,
     #' @field param_set ([ParamSet])\cr

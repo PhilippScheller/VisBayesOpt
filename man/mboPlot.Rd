@@ -9,19 +9,19 @@ This is the base class for plotting in this package.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{opt_state}}{('OptState')\cr
+\item{\code{opt_state}}{(\code{OptState})\cr
 Environment containing necessary information needed during optimization in MBO.}
 
-\item{\code{param_set}}{([ParamSet])\cr
+\item{\code{param_set}}{(\link{ParamSet})\cr
 Object describing the parameter space of the search.}
 
-\item{\code{param_vals}}{([Param])\cr
+\item{\code{param_vals}}{(\link{Param})\cr
 Object containing the parameter values.}
 
 \item{\code{param_types}}{('char()')\cr
 Object containing the parameter values.}
 
-\item{\code{control}}{([MBOControl])\cr
+\item{\code{control}}{(\link{MBOControl})\cr
 Control object for mbo.}
 
 \item{\code{shiny_uis}}{('html') \cr
@@ -50,13 +50,13 @@ Pins the parameters to the object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{opt_state}}{([OptState])}
+\item{\code{opt_state}}{(\link{OptState})}
 
-\item{\code{param_set}}{([ParamSet])}
+\item{\code{param_set}}{(\link{ParamSet})}
 
-\item{\code{param_vals}}{([Param])}
+\item{\code{param_vals}}{(\link{Param})}
 
-\item{\code{control}}{([MBOControl])}
+\item{\code{control}}{(\link{MBOControl})}
 }
 \if{html}{\out{</div>}}
 }
@@ -72,7 +72,7 @@ Sets parameter values
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{([Param][ParamSet])}
+\item{\code{x}}{(\link[=ParamSet]{Param})}
 }
 \if{html}{\out{</div>}}
 }
