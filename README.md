@@ -1,1 +1,1 @@
-# mlrMBOVis
+# VisBayesOpt
