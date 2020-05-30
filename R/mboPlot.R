@@ -55,7 +55,6 @@ mboPlot = R6Class(
       self$param_vals = assert_list(param_vals)
       self$control = assert_class(control, "MBOControl")
     },
-
     #' @description
     #' Sets parameter values
     #'
@@ -77,12 +76,14 @@ mboPlot = R6Class(
     #' Generates ui elements of all parameters in the parameter set. The html elements are attached
     #' to the object which calls the function.
     #'
+    #' @return html of ui for each parameter of the param_set
     generateParamUiShiny = function() {
       if (length(self$param_set$pars) == 0L) {
-        h4("This learner has no hyperparameters.")
+        self$shiny_uis = h4("No hyperparameters found in the object provided.")
+        return(self$shiny_uis)
       } else {
         self$shiny_uis = getParamUi(self$param_set)
-        #return(self$shiny_uis)
+        return(self$shiny_uis)
       }
     }
   )

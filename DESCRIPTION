@@ -12,7 +12,8 @@ Imports:
     ParamHelpers,
     checkmate,
     ggplot2,
-    mlrMBO,
+    mlrMBO
+Dependency:
     shiny
 Encoding: UTF-8
 LazyData: true
