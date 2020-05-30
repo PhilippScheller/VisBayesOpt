@@ -95,6 +95,9 @@ to the object which calls the function.
 \if{html}{\out{<div class="r">}}\preformatted{mboPlot$generateParamUiShiny()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+html of ui for each parameter of the param_set
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

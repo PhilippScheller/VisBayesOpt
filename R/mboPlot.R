@@ -89,6 +89,8 @@ mboPlot = R6Class(
   )
 )
 
+
+#' @export
 mboPlotProgress = R6Class(
   "mboPlotProgress",
   inherit = mboPlot,
