@@ -20,8 +20,6 @@
 #' This is the base class for plotting in this package.
 #'
 #' @export
-#'
-
 mboPlot = R6Class(
   "mboPlot",
   public = list(
