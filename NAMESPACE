@@ -3,6 +3,7 @@
 export(MboPlot)
 export(MboPlotProgress)
 export(MboShiny)
+export(MboSummary)
 export(runAppLocal)
 import(ParamHelpers)
 import(checkmate)
