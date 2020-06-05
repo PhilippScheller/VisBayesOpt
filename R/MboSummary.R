@@ -42,7 +42,7 @@ MboSummary = R6Class(
     #'
     #' @return (`list()`).
     getMboSummary = function(silent = TRUE) {
-      infill_crit_name = assert_class(getMBOInfillCritName(self$mbo_control$infill_crit),
+      infill_crit_name = assert_class(getMBOInfillCritName(self$mbo_control$infill.crit),
                                  "character")
       infill_crit_dir = assert_class(self$mbo_control$infill_crit$opt.direction, "character")
       hyperparam_names = assert_class(names(self$opt_path$par.set$pars), "character")
