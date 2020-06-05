@@ -15,6 +15,9 @@ Environment containing necessary information needed during optimization in MBO.}
 \item{\code{mbo_control}}{(\link{MBOControl})\cr
 Control object for mbo.}
 
+\item{\code{mboSummary}}{(\code{list()})\cr
+Summarizes specific parameters of mbo run.}
+
 \item{\code{opt_path}}{(\link{OptPath})\cr
 Optimization path of the mbo run.}
 }

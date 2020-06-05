@@ -22,6 +22,9 @@ MboSummary = R6Class(
     #' @field mbo_control ([MBOControl])\cr
     #'   Control object for mbo.
     mbo_control = NULL,
+    #' @field mboSummary (`list()`)\cr
+    #'   Summarizes specific parameters of mbo run.
+    mboSummary = NULL,
     #' @field opt_path ([OptPath])\cr
     #'   Optimization path of the mbo run.
     opt_path = NULL,
