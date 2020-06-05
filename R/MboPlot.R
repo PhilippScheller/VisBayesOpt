@@ -45,7 +45,7 @@ MboPlot = R6Class(
       self$opt_state = assert_class(opt_state, "OptState")
       self$opt_path = assert_class(opt_state$opt.path, "OptPath")
       self$param_set = assert_class(opt_state$opt.path$par.set, "ParamSet")
-      self$mbo_control = assert_class(opt_state$opt.problem$mbo.control, "MBOControl")
+      self$mbo_control = assert_class(opt_state$opt.problem$control, "MBOControl")
     },
     #' @description
     #' Sets parameter values
