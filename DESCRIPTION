@@ -20,6 +20,10 @@ LazyData: true
 RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 Collate: 
-    'mboPlot-helpers.R'
-    'mboPlot.R'
+    'MboPlot.R'
+    'MboPlotProgress.R'
+    'MboShiny-helpers.R'
+    'MboShiny.R'
+    'MboSummary-helpers.R'
+    'MboSummary.R'
     'runAppLocal.R'
