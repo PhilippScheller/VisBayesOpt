@@ -6,10 +6,12 @@
 #' @import mlrMBO
 #' @import ParamHelpers
 #' @import shiny
+#' @import dplyr
 #'
 #' @importFrom R6 R6Class
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %T>%
+#' @importFrom ggpubr ggarrange
 #'
 #' @description
 #' This class generates plots for the visualization of the input space given
@@ -41,22 +43,46 @@ MboPlotInputSpace = R6Class(
     #'
     #' @return ([ggplot]).
     plotPrior = function(n = 10L, theme = NULL) {
-      if (!is.null(theme)) theme = assert_class(theme, "theme")
-
+      if (!is.null(theme)) {
+        theme = assert_class(theme, "theme")
+      }
       rand_df = generateRandomDesign(n, self$param_set)
 
+      rand_df_num = extractFromDf(rand_df, extr = c(is.numeric))
+      rand_df_disc = extractFromDf(rand_df, extr = c(is.factor))
+      ncols_df = c(ncol(rand_df_num), ncol(rand_df_disc))
+
       # turn of warning in pipe since 'gather()' throws warning loosing attributes of data.frame
-      long_df = rand_df %T>%
-        {options(warn=-1)} %>%
-        gather("Param", "value", convert = TRUE, factor_key = TRUE) %T>%
-        {options(warn=0)}
+      long_df_num = rand_df_num %T>%
+          {options(warn = -1)} %>%
+          gather("Param", "value", convert = TRUE, factor_key = TRUE) %T>%
+        {options(warn = 0)}
+      long_df_disc =  rand_df_disc %T>%
+        {options(warn = -1)} %>%
+          gather("Param", "value", convert = TRUE, factor_key = TRUE) %T>%
+        {options(warn = 0)}
 
-      g = ggplot(long_df, aes(x = value))
-      g = g + geom_density()
-      g = g + facet_wrap(Param ~ ., scales = "free")
-      g = g + theme
+      ggnum = NULL
+      ggdisc = NULL
+      if (ncols_df[1] != 0) {
+        ggnum = ggplot(long_df_num, aes(x = value))
+        ggnum = ggnum + geom_density()
+        ggnum = ggnum + facet_wrap(Param ~ ., scales = "free")
+        ggnum = ggnum + ggtitle("Input space: numeric priors")
+        ggnum = ggnum + theme(plot.title = element_text(face="bold"))
+        ggnum = ggnum + theme
+      }
+      if (ncols_df[2] != 0) {
+        ggdisc = ggplot(long_df_disc, aes(x = value))
+        ggdisc = ggdisc + geom_bar()
+        ggdisc = ggdisc + facet_wrap(Param ~ ., scales = "free")
+        ggdisc = ggdisc + ggtitle("Input space: discrete priors")
+        ggdisc = ggdisc + theme(plot.title = element_text(face="bold"))
+        ggdisc = ggdisc + theme
+      }
+      gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
 
-      return(g)
+      return(gg)
     }
   )
 )

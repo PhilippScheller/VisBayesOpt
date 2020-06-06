@@ -1,18 +1,15 @@
 # MboPlotInputSpace helpers
 
-generateWideFormat = function(df) {
+extractFromDf = function(df, extr) {
   df = assert_class(df, "data.frame")
-  colnames = assert_class(names(df), "character")
+  extr = assert_class(extr, "list")
+  check_fun = lapply(extr, check_function)
+  if (!all(unlist(check_fun))) stop("Make sure that provided extractions are all functions")
+  if (length(extr) > 1) stop("Only 1 function can be evaluated, you provided multiple ones")
 
-  df_colnames = data.frame(matrix(
-    rep(colnames(df), each = nrow(df)),ncol = ncol(df)),
-    stringsAsFactors = F)
+  df_select = df %>%
+    select_if(extr)
 
-  id = paste("id", colnames, sep = ".")
-  names(df_colnames) = id
-  df_combined = cbind.data.frame(df, df_colnames)
-
-  out = list(df = df_combined, id.vars = id)
-  return(out)
+  return(df_select)
 }
 
