@@ -5,7 +5,6 @@
 #' @import checkmate
 #' @import mlrMBO
 #' @import ParamHelpers
-#' @import shiny
 #' @import dplyr
 #'
 #' @importFrom R6 R6Class

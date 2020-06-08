@@ -11,7 +11,6 @@
 #' @import ggplot2
 #' @import mlrMBO
 #' @import ParamHelpers
-#' @import shiny
 #'
 #' @importFrom R6 R6Class
 #'
@@ -22,7 +21,7 @@
 MboPlot = R6Class(
   "MboPlot",
   public = list(
-    #' @field opt_state (`OptState`)\cr
+    #' @field opt_state ([OptState])\cr
     #'   Environment containing necessary information needed during optimization in MBO.
     opt_state = NULL,
     #' @field opt_path ([OptPath])\cr
