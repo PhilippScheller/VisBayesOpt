@@ -21,6 +21,9 @@ MboPlotInputSpace = R6Class(
   "MboPlotInputSpace",
   inherit = MboPlot,
   public = list(
+    #' @field opt_path ([OptPath])\cr
+    #'   Optimization path of the mbo run.
+    opt_path = NULL,
     #' @field param_set ([ParamSet])\cr
     #'   Object describing the parameter space of the search.
     param_set = NULL,
@@ -29,6 +32,7 @@ MboPlotInputSpace = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
+      self$opt_path = assert_class(opt_state$opt.path, "OptPath")
       self$param_set = assert_class(opt_state$opt.path$par.set, "ParamSet")
     },
     #' @description
@@ -41,48 +45,67 @@ MboPlotInputSpace = R6Class(
     #'   A theme to specify the ggplot default.
     #'
     #' @return ([ggplot]).
-    plotPrior = function(n = 10L, theme = NULL) {
+    plotInputSpace = function(type = c("prior", "posterior", "overlay"), theme = NULL) {
       if (!is.null(theme)) {
         theme = assert_class(theme, "theme")
       }
-      rand_df = generateRandomDesign(n, self$param_set)
 
-      rand_df_num = extractFromDf(rand_df, extr = c(is.numeric))
-      rand_df_disc = extractFromDf(rand_df, extr = c(is.factor))
-      ncols_df = c(ncol(rand_df_num), ncol(rand_df_disc))
+      n = nrow(getOptPathX(self$opt_path))
+      df_prior = cbind(data.frame("prior", stringsAsFactors = FALSE),
+                       generateRandomDesign(n, self$param_set))
+      df_posterior = cbind(data.frame("posterior", stringsAsFactors = FALSE),
+                           getOptPathX(self$opt_path))
+      df = list(prior = df_prior, posterior = df_posterior)
 
-      # turn of warning in pipe since 'gather()' throws warning loosing attributes of data.frame
-      long_df_num = rand_df_num %T>%
-          {options(warn = -1)} %>%
-          gather("Param", "value", convert = TRUE, factor_key = TRUE) %T>%
-        {options(warn = 0)}
-      long_df_disc =  rand_df_disc %T>%
-        {options(warn = -1)} %>%
-          gather("Param", "value", convert = TRUE, factor_key = TRUE) %T>%
-        {options(warn = 0)}
+      df_wide_num = lapply(df, extractFromDf, extr = c(is.numeric))
+      df_wide_disc = lapply(df, extractFromDf, extr = c(is.factor))
+      ncols_df = c(ncol(df_wide_num[[1]]), ncol(df_wide_disc[[1]]))
+
+      df_long_num = lapply(df_wide_num, wideToLong)
+      df_long_disc = lapply(df_wide_disc, wideToLong)
 
       ggnum = NULL
       ggdisc = NULL
       if (ncols_df[1] != 0) {
-        ggnum = ggplot(long_df_num, aes(x = value))
-        ggnum = ggnum + geom_density()
-        ggnum = ggnum + facet_wrap(Param ~ ., scales = "free")
-        ggnum = ggnum + ggtitle("Input space: numeric priors")
-        ggnum = ggnum + theme(plot.title = element_text(face="bold"))
-        ggnum = ggnum + theme
+        ggnum = plotWrappedDens(df_long_num, "Input space: numeric priors", "numeric", type)
       }
       if (ncols_df[2] != 0) {
-        ggdisc = ggplot(long_df_disc, aes(x = value))
-        ggdisc = ggdisc + geom_bar()
-        ggdisc = ggdisc + facet_wrap(Param ~ ., scales = "free")
-        ggdisc = ggdisc + ggtitle("Input space: discrete priors")
-        ggdisc = ggdisc + theme(plot.title = element_text(face="bold"))
-        ggdisc = ggdisc + theme
+        ggdisc = plotWrappedDens(df_long_disc, "Input space: discrete priors", "discrete", type)
       }
       gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
 
       return(gg)
     }
+
+    # plotPosterior = function(theme = NULL) {
+    #   if (!is.null(theme)) {
+    #     theme = assert_class(theme, "theme")
+    #   }
+    #   df = getOptPathX(self$opt_path)
+    #
+    #   df_wide_num = extractFromDf(df, extr = c(is.numeric))
+    #   df_wide_disc = extractFromDf(df, extr = c(is.factor))
+    #   ncols_df = c(ncol(df_wide_num), ncol(df_wide_disc))
+    #
+    #   df_long_num = wideToLong(df_wide_num)
+    #   df_long_disc = wideToLong(df_wide_disc)
+    #
+    #   ggnum = NULL
+    #   ggdisc = NULL
+    #   if (ncols_df[1] != 0) {
+    #     ggnum = plotWrappedDens(df_long_num, "Input space: numeric posteriors", "numeric")
+    #   }
+    #   if (ncols_df[2] != 0) {
+    #     ggdisc = plotWrappedDens(df_long_disc, "Input space: discrete posteriors", "discrete")
+    #   }
+    #   gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
+    #
+    #   return(gg)
+    # },
+    #
+    # plotOverlay = function(theme = NULL) {
+    #
+    # }
   )
 )
 
