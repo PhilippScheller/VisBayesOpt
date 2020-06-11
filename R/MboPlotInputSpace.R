@@ -6,10 +6,12 @@
 #' @import mlrMBO
 #' @import ParamHelpers
 #' @import dplyr
+#' @import BBmisc
 #'
 #' @importFrom R6 R6Class
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %T>%
+#' @importFrom tidyr gather
 #' @importFrom ggpubr ggarrange
 #'
 #' @description
@@ -28,7 +30,7 @@ MboPlotInputSpace = R6Class(
     #'   Object describing the parameter space of the search.
     param_set = NULL,
     #' @description
-    #' Initializes the parameters of the object.
+    #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
@@ -38,16 +40,29 @@ MboPlotInputSpace = R6Class(
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
-    #' @param n (`integer()`)
-    #'   Defines the number of random samples generated from each parameter in the
-    #'   parameter set.
+    #' @param type (`character(1)`)
+    #'   Defines the information to be used for the plot and can be either `prior`, `posterior` or òverlay.
+    #'   Prior uses a random desgin of the parameter set.\cr
+    #'   Posterior uses the values the optimizer searched over during the mbo run.\cr
+    #'   Overlay plots a combination of both, `prior` and `posterior` in a combined plot.
     #' @param theme ([theme|gg])
     #'   A theme to specify the ggplot default.
     #'
     #' @return ([ggplot]).
-    plotInputSpace = function(type = c("prior", "posterior", "overlay"), theme = NULL) {
+    plotInputSpace = function(type = c("prior", "posterior", "overlay"), plot = c("distribution", "iteration"),
+                              theme = NULL) {
       if (!is.null(theme)) {
         theme = assert_class(theme, "theme")
+      }
+      if (type %in% c("prior", "posterior", "overlay") & length(type) == 1) {
+        type = assert_class(type, "character")
+      } else {
+        stop("`type` must be of length 1 and can only take values `prior`, `posterior` or òverlay`")
+      }
+      if (plot %in% c("distribution", "iteration") & length(plot) == 1) {
+        plot = assert_class(plot, "character")
+      } else {
+        stop("`plot` must be of length 1 and can only take values `distribution` or `iteration`")
       }
 
       n = nrow(getOptPathX(self$opt_path))
@@ -67,45 +82,27 @@ MboPlotInputSpace = R6Class(
       ggnum = NULL
       ggdisc = NULL
       if (ncols_df[1] != 0) {
-        ggnum = plotWrappedDens(df_long_num, "Input space: numeric priors", "numeric", type)
+        if (plot %in% c("distribution")) {
+          ggnum = wrappedPlot(df_long_num, "Input space: numeric priors as density",
+                              "numeric", type, plot, n, theme)
+        } else {
+          ggnum = wrappedPlot(df_long_num, "Input space: numeric priors over iterations",
+                              "numeric", type, plot, n, theme)
+        }
       }
       if (ncols_df[2] != 0) {
-        ggdisc = plotWrappedDens(df_long_disc, "Input space: discrete priors", "discrete", type)
+        if (plot %in% c("distribution")) {
+          ggdisc = wrappedPlot(df_long_disc, "Input space: discrete priors as density",
+                             "discrete", type, plot, theme)
+        } else {
+          ggdisc = wrappedPlot(df_long_disc, "Input space: discrete priors over iterations",
+                             "discrete", type, plot, theme)
+        }
       }
-      gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
+        gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
 
       return(gg)
     }
-
-    # plotPosterior = function(theme = NULL) {
-    #   if (!is.null(theme)) {
-    #     theme = assert_class(theme, "theme")
-    #   }
-    #   df = getOptPathX(self$opt_path)
-    #
-    #   df_wide_num = extractFromDf(df, extr = c(is.numeric))
-    #   df_wide_disc = extractFromDf(df, extr = c(is.factor))
-    #   ncols_df = c(ncol(df_wide_num), ncol(df_wide_disc))
-    #
-    #   df_long_num = wideToLong(df_wide_num)
-    #   df_long_disc = wideToLong(df_wide_disc)
-    #
-    #   ggnum = NULL
-    #   ggdisc = NULL
-    #   if (ncols_df[1] != 0) {
-    #     ggnum = plotWrappedDens(df_long_num, "Input space: numeric posteriors", "numeric")
-    #   }
-    #   if (ncols_df[2] != 0) {
-    #     ggdisc = plotWrappedDens(df_long_disc, "Input space: discrete posteriors", "discrete")
-    #   }
-    #   gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
-    #
-    #   return(gg)
-    # },
-    #
-    # plotOverlay = function(theme = NULL) {
-    #
-    # }
   )
 )
 

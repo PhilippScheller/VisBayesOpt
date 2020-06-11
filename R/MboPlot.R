@@ -37,7 +37,7 @@ MboPlot = R6Class(
     #'   Control object for mbo.
     mbo_control = NULL,
     #' @description
-    #' Initializes the parameters of the object.
+    #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {

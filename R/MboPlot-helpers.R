@@ -27,8 +27,8 @@ wideToLong = function(df_wide) {
   return(df_long)
 }
 
-plotWrappedDens = function(df_long, title, method = c("numeric", "discrete"), type = c("prior", "posterior", "overlay"),
-                           theme = NULL) {
+wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type = c("prior", "posterior", "overlay"),
+                           plot = c("distribution", "iteration"), n, theme = NULL) {
 
   if (type %in% c("prior", "posterior")) {
     df = get(type, df_long)
@@ -37,18 +37,29 @@ plotWrappedDens = function(df_long, title, method = c("numeric", "discrete"), ty
     names(df_long[[2]])[1] = "type"
     df = rbind.data.frame(df_long[[1]], df_long[[2]])
   }
-
+  df_colnames = colnames(df)
   if (ncol(df) != 3) stop("data.frame needs to be in long format (i.e. have exactly 3 columns).")
   if (length(method) != 1) stop("Only 1 method can be selected, choose either 'numeric' or 'discrete'.")
   if (length(type) != 1) stop("Only 1 type can be selected, choose either 'prior', 'posterior' or 'overlay'.")
-  df_colnames = colnames(df)
   if (all(df_colnames %nin% c("Param", "Value"))) stop("Columns must be named with 'Value' and 'Param'.")
 
+
   gg = ggplot(df, aes(x = Value, colour = type))
-  if (method %in% "numeric") {
-    gg = gg + geom_density(n = 2^6)
-  } else {
-    gg = gg + geom_bar()
+  if (plot == "distribution") {
+    if (method == "numeric") {
+      gg = gg + geom_density(n = 2^6)
+    } else {
+      gg = gg + geom_bar()
+    }
+  }
+  if (plot == "iteration") {
+    if (method == "numeric") {
+      gg = gg + geom_point(aes(x = rep(seq(1:n), times = nrow(df)/n), y = Value))
+      gg = gg + geom_smooth(aes(x = rep(seq(1:n), times = nrow(df)/n), y = Value),
+                            method = "lm", formula = y~x)
+    } else {
+      gg = gg + geom_bar()
+    }
   }
   gg = gg + facet_wrap(Param ~ ., scales = "free")
   gg = gg + ggtitle(title)

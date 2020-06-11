@@ -16,6 +16,10 @@ MboPlotProgress = R6Class(
   "MboPlotProgress",
   inherit = MboPlot,
   public = list(
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
       param_set = makeParamSet(makeIntegerParam("max_iter", lower = 0, upper = opt_state$loop))
       self$param_vals = list(max_iter = opt_state$loop)

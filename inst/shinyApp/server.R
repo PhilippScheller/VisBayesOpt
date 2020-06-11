@@ -43,7 +43,7 @@ server <- function(input, output) {
   #   return(storage$ui_mboObj1)
   # })
 
-  output$mbo1Summary = renderUI({
+  output$mbo1Summary = renderText({
     validate(need(!is.null(storage$mboObj1) , ""))
 
     storage$MboPlot1 = MboPlot$new(storage$mboObj1)

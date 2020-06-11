@@ -28,7 +28,8 @@ MboShiny = R6Class(
     #' @field shiny_uis ('html') \cr
     #'   Shiny ui elements.
     shiny_uis = NULL,
-    #' @description defines the parameters to be converted to the ui.
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param mbo_plot ([MboPlot]).
     initialize = function(mbo_plot) {

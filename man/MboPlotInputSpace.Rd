@@ -13,6 +13,9 @@ prior and posterior distributions of the evaluated parameters in the mbo run.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
+\item{\code{opt_path}}{(\link{OptPath})\cr
+Optimization path of the mbo run.}
+
 \item{\code{param_set}}{(\link{ParamSet})\cr
 Object describing the parameter space of the search.}
 }
@@ -22,7 +25,7 @@ Object describing the parameter space of the search.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{MboPlotInputSpace$new()}}
-\item \href{#method-plotPrior}{\code{MboPlotInputSpace$plotPrior()}}
+\item \href{#method-plotInputSpace}{\code{MboPlotInputSpace$plotInputSpace()}}
 \item \href{#method-clone}{\code{MboPlotInputSpace$clone()}}
 }
 }
@@ -36,7 +39,7 @@ Object describing the parameter space of the search.}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
-Initializes the parameters of the object.
+Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$new(opt_state)}\if{html}{\out{</div>}}
 }
@@ -50,19 +53,24 @@ Initializes the parameters of the object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-plotPrior"></a>}}
-\subsection{Method \code{plotPrior()}}{
+\if{html}{\out{<a id="method-plotInputSpace"></a>}}
+\subsection{Method \code{plotInputSpace()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plotPrior(n = 10L, theme = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plotInputSpace(
+  type = c("prior", "posterior", "overlay"),
+  theme = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{n}}{(\code{integer()})
-Defines the number of random samples generated from each parameter in the
-parameter set.}
+\item{\code{type}}{(\code{character(1)})
+Defines the information to be used for the plot and can be either \code{prior}, \code{posterior} or òverlay.
+Prior uses a random desgin of the parameter set.\cr
+Posterior uses the values the optimizer searched over during the mbo run.\cr
+Overlay plots a combination of both, \code{prior} and \code{posterior} in a combined plot.}
 
 \item{\code{theme}}{(\link{theme|gg})
 A theme to specify the ggplot default.}

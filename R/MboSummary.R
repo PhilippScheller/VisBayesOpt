@@ -28,7 +28,7 @@ MboSummary = R6Class(
     #'   Optimization path of the mbo run.
     opt_path = NULL,
     #' @description
-    #' Initializes the parameters to of object.
+    #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
