@@ -59,6 +59,7 @@ Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plotInputSpace(
   type = c("prior", "posterior", "overlay"),
+  plot = c("distribution", "iteration"),
   theme = NULL
 )}\if{html}{\out{</div>}}
 }
