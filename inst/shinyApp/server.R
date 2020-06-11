@@ -8,48 +8,95 @@ library(BBmisc)
 
 # Define server logic
 server <- function(input, output) {
-  storage = reactiveValues(mboObj1 = NULL, MboPlot1 = NULL, MboPlotProgress1 = NULL,
+  storage = reactiveValues(check = NULL, mboObj1 = NULL, MboPlot1 = NULL, MboPlotProgress = NULL,
                            ShinyMbo1 = NULL)
-
   output$mbo1Check = renderText({
     # prevent error message when path is still empty
     validate(need(input$mbo1$datapath != "", "Please select a data set"))
     # check if provied file can be loaded
     if (is.error(try(readRDS(input$mbo1$datapath), silent = TRUE))) {
-      paste("Uploaded file is not a compatible object to 'readRDS'")
+      storage$check = NULL
+      return(paste("Uploaded file is not a compatible object to 'readRDS'"))
     } else {
       storage$mboObj1 = readRDS(input$mbo1$datapath)
       # check if uploaded object is of a valid class for mbo
       if (test_class(storage$mboObj1, c("OptState"))) {
-        paste("Upload successfull")
+        storage$check = "ok"
+        return(paste("Upload successfull"))
       } else {
-        paste(
-          "Uploaded file is not of class OptState"
-        )
+        storage$check = NULL
+        return(paste("Uploaded file is not of class OptState"))
       }
     }
   })
 
-  output$mbo1Plot = renderPlot({
-    validate(need(!is.null(storage$MboPlotProgress1) , ""))
-    plot_mboObj1 = storage$MboPlotProgress1$plot()
-
-    return(plot_mboObj1)
-  })
-
-  # output$mbo1Ui = renderUI({
-  #   validate(need(!is.null(storage$ui_mboObj1) , ""))
-  #
-  #   return(storage$ui_mboObj1)
-  # })
-
-  output$mbo1Summary = renderText({
-    validate(need(!is.null(storage$mboObj1) , ""))
+  # Summary of mbo run
+  output$mbo1Summary = renderTable({
+    validate(need(storage$check == "ok", ""))
 
     storage$MboPlot1 = MboPlot$new(storage$mboObj1)
-    storage$MboPlotProgress1 = MboPlotProgress$new(storage$mboObj1)
+    storage$MboPlotProgress = MboPlotProgress$new(storage$mboObj1)
     storage$ShinyMbo1 = MboShiny$new(storage$MboPlot1)
-    out = storage$ShinyMbo1$generateSummaryTextUiShiny(silent = FALSE)
+    sumTable = storage$ShinyMbo1$generateSummaryTable(silent = FALSE)
+    return(sumTable)
   })
 
+  output$headerSummary = renderText({
+    validate(need(storage$check == "ok", ""))
+    return(paste(h4("Characteristics of Mbo Run")))
+  })
+
+  # Plot performance over iterations
+  output$PerformancePlot = renderPlot({
+    validate(need(storage$check == "ok", ""))
+
+    plot_performance = storage$MboPlotProgress$plot()
+    return(plot_performance)
+  })
+
+  output$headerPerformance = renderText({
+    validate(need(storage$check == "ok", ""))
+    return(paste(h4("Optimization Progress: Performance Over Time")))
+  })
+
+  # Plot input space
+  output$InputSpacePlot = renderPlot({
+    validate(need(storage$check == "ok", ""))
+
+    mboObj = MboPlotInputSpace$new(storage$mboObj1)
+    plot_inputSpace = mboObj$plotInputSpace(type = "overlay", plot = "distribution")
+    return(plot_inputSpace)
+  })
+
+  output$headerInputSpace = renderText({
+    validate(need(storage$check == "ok", ""))
+    return(paste(h4("Input Space Priors and Posteriors")))
+  })
+
+  # Plot search space
+  output$SearchSpacePlot = renderPlot({
+    validate(need(storage$check == "ok", ""))
+
+    mboObj = MboPlotInputSpace$new(storage$mboObj1)
+    plot_searchSpace = mboObj$plotInputSpace(type = "overlay", plot = "iteration")
+    return(plot_searchSpace)
+  })
+
+  output$headerSearchSpace = renderText({
+    validate(need(storage$check == "ok", ""))
+    return(paste(h4("Evaluated Space of Optimization")))
+  })
 }
+
+
+
+
+
+
+######## Backup
+
+# output$mbo1Ui = renderUI({
+#   validate(need(!is.null(storage$ui_mboObj1) , ""))
+#
+#   return(storage$ui_mboObj1)
+# })

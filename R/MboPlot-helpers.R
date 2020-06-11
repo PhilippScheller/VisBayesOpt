@@ -38,6 +38,7 @@ wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type =
     df = rbind.data.frame(df_long[[1]], df_long[[2]])
   }
   df_colnames = colnames(df)
+
   if (ncol(df) != 3) stop("data.frame needs to be in long format (i.e. have exactly 3 columns).")
   if (length(method) != 1) stop("Only 1 method can be selected, choose either 'numeric' or 'discrete'.")
   if (length(type) != 1) stop("Only 1 type can be selected, choose either 'prior', 'posterior' or 'overlay'.")
@@ -68,3 +69,4 @@ wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type =
 
   return(gg)
 }
+

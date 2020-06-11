@@ -20,9 +20,30 @@ ui <- navbarPage(
         width = 3
         ),
     mainPanel(
-      fluidRow(
-      textOutput("mbo1Summary"),
-      plotOutput("mbo1Plot")
+      uiOutput("headerSummary"),
+      uiOutput("mbo1Summary"),
+      tabsetPanel(
+        tabPanel(
+          "Performance",
+          fluidRow(
+            uiOutput("headerPerformance"),
+            plotOutput("PerformancePlot")
+          )
+        ),
+        tabPanel(
+          "Input Space",
+          fluidRow(
+            uiOutput("headerInputSpace"),
+            plotOutput("InputSpacePlot")
+          )
+        ),
+        tabPanel(
+          "Search Space Optimizer",
+          fluidRow(
+            uiOutput("headerSearchSpace"),
+            plotOutput("SearchSpacePlot")
+          )
+        )
     ))),
     tabPanel("Diagnostic Tool for Single Iteration"),
     tabPanel("About")

@@ -81,7 +81,7 @@ makeParamUi = function(lower, upper, value, par_type, par_id, par_name) {
 
 
 
-getParamTextFromMboSummary = function(mboSummary, names = c("Characteristic", "Value")) {
+getParamTableFromMboSummary = function(mboSummary, names = c("Characteristic", "Value")) {
   names = assert_class(names, "character")
   if (length(names) != 2L) stop("Names vector has to much/less elements")
 
@@ -99,8 +99,12 @@ getParamTextFromMboSummary = function(mboSummary, names = c("Characteristic", "V
   text_mat = matrix(c(unlist(text_names), unlist(text_values)), nrow = length(text_names))
   text_df = data.frame(text_mat, stringsAsFactors = FALSE)
   names(text_df) = names
-  text_html_shiny = HTML(toHTML(text_df))
 
-  return(text_html_shiny)
+  return(text_df)
 }
+
+# Helpers for generating conditional headings for sections (i.e. heading only appears when upload sucessfull)
+
+
+
 

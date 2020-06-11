@@ -53,21 +53,21 @@ MboShiny = R6Class(
       if (!silent) return(self$shiny_uis)
     },
     #' @description
-    #' Generates ui text elements of the MboSummary. The html elements are attached to the object
+    #' Generates a table of the MboSummary. The html elements are attached to the object
     #'  which calls the function.
     #'
     #' @param silent (`logical()`)
     #'   If TRUE, the output will only be saved in the object and not be returned.
     #'
     #' @return (`html`).
-    generateSummaryTextUiShiny = function(silent = TRUE) {
+    generateSummaryTable = function(silent = TRUE) {
       summary_mbo = MboSummary$new(self$opt_state)
       summary_text = summary_mbo$getMboSummary(silent = FALSE)
 
       if (length(summary) == 0L) {
         self$summary = h4("No summary found in the object provided.")
       } else {
-        self$summary = getParamTextFromMboSummary(summary_text)
+        self$summary = getParamTableFromMboSummary(summary_text)
       }
       if (!silent) return(self$summary)
     }
