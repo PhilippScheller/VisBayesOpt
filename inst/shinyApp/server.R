@@ -10,22 +10,22 @@ library(BBmisc)
 server <- function(input, output) {
   storage = reactiveValues(check = NULL, mboObj1 = NULL, MboPlot1 = NULL, MboPlotProgress = NULL,
                            ShinyMbo1 = NULL)
-  output$mbo1Check = renderText({
+  output$mbo1Check = renderUI({
     # prevent error message when path is still empty
     validate(need(input$mbo1$datapath != "", "Please select a data set"))
     # check if provied file can be loaded
     if (is.error(try(readRDS(input$mbo1$datapath), silent = TRUE))) {
       storage$check = NULL
-      return(paste("Uploaded file is not a compatible object to 'readRDS'"))
+      return(p("Uploaded file is not a compatible object to 'readRDS'", style = "color:red"))
     } else {
       storage$mboObj1 = readRDS(input$mbo1$datapath)
       # check if uploaded object is of a valid class for mbo
       if (test_class(storage$mboObj1, c("OptState"))) {
         storage$check = "ok"
-        return(paste("Upload successfull"))
+        return(p("Upload successfull", style = "color:green"))
       } else {
         storage$check = NULL
-        return(paste("Uploaded file is not of class OptState"))
+        return(p("Uploaded file is not of class OptState", style = "color:red"))
       }
     }
   })

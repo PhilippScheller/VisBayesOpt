@@ -45,6 +45,9 @@ MboPlotInputSpace = R6Class(
     #'   Prior uses a random desgin of the parameter set.\cr
     #'   Posterior uses the values the optimizer searched over during the mbo run.\cr
     #'   Overlay plots a combination of both, `prior` and `posterior` in a combined plot.
+    #' @param plot (`chatacter(1)`)
+    #'   Defines plot type. `distribution` plots the distributions of each variable in the design.
+    #'   `iteration` plots the value of each variable in the design over the single iterations.
     #' @param theme ([theme|gg])
     #'   A theme to specify the ggplot default.
     #'
@@ -81,7 +84,7 @@ MboPlotInputSpace = R6Class(
 
       ggnum = NULL
       ggdisc = NULL
-      if (ncols_df[1] != 0) {
+      if (ncols_df[1] > 1) {
         if (plot %in% c("distribution")) {
           ggnum = wrappedPlot(df_long_num, "Input space: numeric priors as density",
                               "numeric", type, plot, n, theme)
@@ -90,7 +93,7 @@ MboPlotInputSpace = R6Class(
                               "numeric", type, plot, n, theme)
         }
       }
-      if (ncols_df[2] != 0) {
+      if (ncols_df[2] > 1) {
         if (plot %in% c("distribution")) {
           ggdisc = wrappedPlot(df_long_disc, "Input space: discrete priors as density",
                              "discrete", type, plot, theme)
@@ -99,7 +102,7 @@ MboPlotInputSpace = R6Class(
                              "discrete", type, plot, theme)
         }
       }
-        gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
+      gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
 
       return(gg)
     }

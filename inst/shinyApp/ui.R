@@ -14,9 +14,9 @@ ui <- navbarPage(
   tabPanel(
     "Visualize mlrMBO Run",
     sidebarPanel(
-        fileInput("mbo1", "Select mlr run from local directory"),
-        textOutput("mbo1Check"),
-        uiOutput("mbo1Ui"),
+        fileInput("mbo1", h4("Select mlr run from local directory")),
+        uiOutput("mbo1Check"),
+        # uiOutput("mbo1Ui"),
         width = 3
         ),
     mainPanel(

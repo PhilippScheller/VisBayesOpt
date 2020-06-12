@@ -1,6 +1,6 @@
-# MboPlotInputSpace helpers
+# General helpers (used in various functions)
 
-extractFromDf = function(df, extr) {
+extractFromDf = function(df, extr, keepColumNo = c(1)) {
   df = assert_class(df, "data.frame")
   extr = assert_class(extr, "list")
   check_fun = lapply(extr, check_function)
@@ -9,23 +9,28 @@ extractFromDf = function(df, extr) {
 
   df_select = df %>%
     select_if(extr)
-  df_sleect_named = cbind(df[1], df_select)
+  if (keepColumNo > 0) {
+    df_select = cbind.data.frame(df[keepColumNo], cbind(df_select))
+  }
 
-  return(df_sleect_named)
+  return(df_select)
 }
 
-wideToLong = function(df_wide) {
+wideToLong = function(df_wide, keyColumn = 1) {
 
-  key = colnames(df_wide[1])
+  key = colnames(df_wide[keyColumn])
 
   # turn of warning in pipe since 'gather()' throws warning loosing attributes of data.frame
   df_long = df_wide %T>%
     {options(warn = -1)} %>%
-    gather("Param", "Value", -key ,convert = TRUE, factor_key = TRUE) %T>%
+    gather("Param", "Value", -all_of(key) ,convert = TRUE, factor_key = TRUE) %T>%
     {options(warn = 0)}
 
   return(df_long)
 }
+
+# Specific helpers (only used in specified function)
+# MboPlotInputSpace helpers
 
 wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type = c("prior", "posterior", "overlay"),
                            plot = c("distribution", "iteration"), n, theme = NULL) {
@@ -55,11 +60,15 @@ wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type =
   }
   if (plot == "iteration") {
     if (method == "numeric") {
-      gg = gg + geom_point(aes(x = rep(seq(1:n), times = nrow(df)/n), y = Value))
+      gg = gg + geom_point(aes(x = rep(seq(1:n), times = nrow(df)/n), y = Value),
+                           size = 0.5)
       gg = gg + geom_smooth(aes(x = rep(seq(1:n), times = nrow(df)/n), y = Value),
-                            method = "lm", formula = y~x)
+                            method = "lm", formula = y~x, size=0.5)
     } else {
-      gg = gg + geom_bar()
+      # generate frequency df for factor variables
+      df_frequencies = generateFrequencyDf(df)
+      gg = gg + geom_point(aes(x = rep(seq(1:n), times = nrow(df)/n), y = Value),
+                           size = 0.5)
     }
   }
   gg = gg + facet_wrap(Param ~ ., scales = "free")
@@ -69,4 +78,24 @@ wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type =
 
   return(gg)
 }
+
+generateFrequencyDf = function(df) {
+  df = assert_class(df, "data.frame")
+
+  df_n = df %>%
+    group_by(Value) %>%
+    mutate(new = cumany(Value == "dart"))
+
+  #ave()
+
+    #mutate(cumsum(Value))
+
+  print(head(df_n))
+}
+
+
+
+
+
+
 
