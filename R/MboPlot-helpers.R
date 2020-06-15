@@ -86,10 +86,6 @@ generateFrequencyDf = function(df) {
     group_by(Value) %>%
     mutate(new = cumany(Value == "dart"))
 
-  #ave()
-
-    #mutate(cumsum(Value))
-
   print(head(df_n))
 }
 

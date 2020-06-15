@@ -96,10 +96,10 @@ MboPlotInputSpace = R6Class(
       if (ncols_df[2] > 1) {
         if (plot %in% c("distribution")) {
           ggdisc = wrappedPlot(df_long_disc, "Input space: discrete priors as density",
-                             "discrete", type, plot, theme)
+                             "discrete", type, n, plot, theme)
         } else {
           ggdisc = wrappedPlot(df_long_disc, "Input space: discrete priors over iterations",
-                             "discrete", type, plot, theme)
+                             "discrete", type, n, plot, theme)
         }
       }
       gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))

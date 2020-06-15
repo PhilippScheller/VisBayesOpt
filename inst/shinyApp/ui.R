@@ -43,6 +43,13 @@ ui <- navbarPage(
             uiOutput("headerSearchSpace"),
             plotOutput("SearchSpacePlot")
           )
+        ),
+        tabPanel(
+          "Exploration vs. Exploitation",
+          fluidRow(
+            uiOutput("headerDist2Neighbor"),
+            plotOutput("Dist2NeighborPlot")
+          )
         )
     ))),
     tabPanel("Diagnostic Tool for Single Iteration"),

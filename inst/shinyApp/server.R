@@ -86,6 +86,20 @@ server <- function(input, output) {
     validate(need(storage$check == "ok", ""))
     return(paste(h4("Evaluated Space of Optimization")))
   })
+
+  # Plot distance to neighbor
+  output$Dist2NeighborPlot = renderPlot({
+    validate(need(storage$check == "ok", ""))
+
+    mboObj = MboPlotDistToNeighbor$new(storage$mboObj1)
+    plot_distToNeighbor = mboObj$plotDistToNeighbor("min", 1L)
+    return(plot_distToNeighbor)
+  })
+
+  output$headerDist2Neighbor = renderText({
+    validate(need(storage$check == "ok", ""))
+    return(paste(h4("Exploration vs Exploitation")))
+  })
 }
 
 
