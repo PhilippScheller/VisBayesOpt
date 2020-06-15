@@ -27,7 +27,7 @@ Shiny ui elements.}
 \itemize{
 \item \href{#method-new}{\code{MboShiny$new()}}
 \item \href{#method-generateParamUiShiny}{\code{MboShiny$generateParamUiShiny()}}
-\item \href{#method-generateSummaryTextUiShiny}{\code{MboShiny$generateSummaryTextUiShiny()}}
+\item \href{#method-generateSummaryTable}{\code{MboShiny$generateSummaryTable()}}
 \item \href{#method-clone}{\code{MboShiny$clone()}}
 }
 }
@@ -69,12 +69,12 @@ If TRUE, the output will only be saved in the object and not be returned.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-generateSummaryTextUiShiny"></a>}}
-\subsection{Method \code{generateSummaryTextUiShiny()}}{
-Generates ui text elements of the MboSummary. The html elements are attached to the object
+\if{html}{\out{<a id="method-generateSummaryTable"></a>}}
+\subsection{Method \code{generateSummaryTable()}}{
+Generates a table of the MboSummary. The html elements are attached to the object
 which calls the function.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generateSummaryTextUiShiny(silent = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generateSummaryTable(silent = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

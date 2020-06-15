@@ -73,6 +73,10 @@ Prior uses a random desgin of the parameter set.\cr
 Posterior uses the values the optimizer searched over during the mbo run.\cr
 Overlay plots a combination of both, \code{prior} and \code{posterior} in a combined plot.}
 
+\item{\code{plot}}{(\code{chatacter(1)})
+Defines plot type. \code{distribution} plots the distributions of each variable in the design.
+\code{iteration} plots the value of each variable in the design over the single iterations.}
+
 \item{\code{theme}}{(\link{theme|gg})
 A theme to specify the ggplot default.}
 }

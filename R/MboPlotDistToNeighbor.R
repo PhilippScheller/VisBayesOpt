@@ -24,7 +24,13 @@ MboPlotDistToNeighbor = R6Class(
   "MboPlotDistToNeighbor",
   inherit = MboPlot,
   public = list(
-
+    #' @field opt_path ([OptPath])\cr
+    #'   Optimization path of the mbo run.
+    opt_path = NULL,
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
       self$opt_path = assert_class(opt_state$opt.path, "OptPath")
     },
