@@ -44,7 +44,6 @@ MboPlotDistToNeighbor = R6Class(
     #'
     #' @return ([ggplot]).
     plotDistToNeighbor = function(dist_measure = c("min", "max", "mean"), k = 1L, theme = NULL) {
-
       if (length(dist_measure) != 1L) stop("Only 1 distance measure can be calculated.")
       dist_measure = assert_class(dist_measure, "character")
       if (!check_function(get(dist_measure))) stop("Chosen `dist_measure` cannot be evaluated as a function")
@@ -55,15 +54,15 @@ MboPlotDistToNeighbor = R6Class(
       df = as.data.frame(getOptPathY(self$opt_path))
       df_colnames = colnames(df)
       df_num = extractFromDf(df, extr = c(is.numeric), keepColumNo = 0)
-
+      # create matrix with euclidean distances
       dist = dist(df_num)
       mat_dist = as.matrix(dist)
-
+      # extract lower triangular matrix and take the `k` rows below the diagonal
       mat_dist_lower = mat_dist * lower.tri(mat_dist, FALSE)
       mat_k_general = row(mat_dist_lower) - col(mat_dist_lower)
       mat_k = (mat_k_general > 0) & (mat_k_general <= k)
       mat_dist_lower_k = mat_dist_lower * mat_k
-
+      # calculate the distance over each row (iteration) considering the `k` previous iterations
       mat_dist_measure = apply(mat_dist_lower_k[2:nrow(mat_dist_lower_k), ], 1, function(x) {
         suppressWarnings(get(dist_measure)(x[x > 0]))
       })
@@ -83,13 +82,3 @@ MboPlotDistToNeighbor = R6Class(
     }
   )
 )
-
-
-#####
-list_dist = lapply(df_num, dplyr::lag, n = 1L)
-df_dist = as.data.frame(list_dist, stringsAsFactors = FALSE) %>%
-  drop_na()
-
-df_dist_long = wideToLong(df_dist, 0)
-n = nrow(df_dist_long)/length(unique(df_dist_long$Param))
-
