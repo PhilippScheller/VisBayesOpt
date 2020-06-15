@@ -16,6 +16,11 @@ ui <- navbarPage(
     sidebarPanel(
         fileInput("mbo1", h4("Select mlr run from local directory")),
         uiOutput("mbo1Check"),
+        wellPanel(p("Input for 'exploration vs. exploitation'"),
+        numericInput("distToNeighbor_k", h5("Select k for explore/exploit plot"),
+                     value = 1, min = 1, step = 1),
+        selectInput("distToNeighbor_measure", h5("Select distance measure for explore/exploit plot"),
+                      choices = c("min", "max", "mean"), selected = "min")),
         # uiOutput("mbo1Ui"),
         width = 3
         ),

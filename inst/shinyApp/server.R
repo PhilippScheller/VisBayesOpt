@@ -89,10 +89,12 @@ server <- function(input, output) {
 
   # Plot distance to neighbor
   output$Dist2NeighborPlot = renderPlot({
+    req(input$distToNeighbor_measure, input$distToNeighbor_k)
     validate(need(storage$check == "ok", ""))
 
+
     mboObj = MboPlotDistToNeighbor$new(storage$mboObj1)
-    plot_distToNeighbor = mboObj$plotDistToNeighbor("min", 1L)
+    plot_distToNeighbor = mboObj$plotDistToNeighbor(input$distToNeighbor_measure, input$distToNeighbor_k)
     return(plot_distToNeighbor)
   })
 

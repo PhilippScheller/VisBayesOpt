@@ -108,4 +108,3 @@ MboPlotInputSpace = R6Class(
     }
   )
 )
-
