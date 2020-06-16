@@ -17,24 +17,12 @@
 MboShiny = R6Class(
   "MboShiny",
   public = list(
-    #' @field summary (`character()`)\cr
-    summary = NULL,
-    #' @field opt_state (`OptState`)\cr
-    #'   Environment containing necessary information needed during optimization in MBO.
-    opt_state = NULL,
-    #' @field param_set ([ParamSet])\cr
-    #'   Object describing the parameter space of the mbo run.
-    param_set = NULL,
-    #' @field shiny_uis ('html') \cr
-    #'   Shiny ui elements.
-    shiny_uis = NULL,
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param mbo_plot ([MboPlot]).
     initialize = function(mbo_plot) {
-      self$opt_state = assert_class(mbo_plot$opt_state, "OptState")
-      self$param_set = assert_class(mbo_plot$param_set, "ParamSet")
+      self$mbo_plot = assert_class(mbo_plot, "MboPlot")
     },
     #' @description
     #' Generates ui elements of all parameters in the parameter set. The html elements are attached
@@ -44,13 +32,13 @@ MboShiny = R6Class(
     #'   If TRUE, the output will only be saved in the object and not be returned.
     #'
     #' @return (`html`).
-    generateParamUiShiny = function(silent = TRUE) {
-      if (length(self$param_set$pars) == 0L) {
-        self$shiny_uis = h4("No hyperparameters found in the object provided.")
+    generateParamUiShiny = function() {
+      if (length(self$mbo_plot$param.set$pars) == 0L) {
+        shiny_uis = h4("No hyperparameters found in the object provided.")
       } else {
-        self$shiny_uis = getParamUi(self$param_set)
+        shiny_uis = getParamUi(self$mbo_plot$param_set)
       }
-      if (!silent) return(self$shiny_uis)
+      return(shiny_uis)
     },
     #' @description
     #' Generates a table of the MboSummary. The html elements are attached to the object
@@ -61,15 +49,15 @@ MboShiny = R6Class(
     #'
     #' @return (`html`).
     generateSummaryTable = function(silent = TRUE) {
-      summary_mbo = MboSummary$new(self$opt_state)
+      summary_mbo = MboSummary$new(self$mbo_plot$opt.state)
       summary_text = summary_mbo$getMboSummary(silent = FALSE)
 
       if (length(summary) == 0L) {
-        self$summary = h4("No summary found in the object provided.")
+        summary = h4("No summary found in the object provided.")
       } else {
-        self$summary = getParamTableFromMboSummary(summary_text)
+        summary = getParamTableFromMboSummary(summary_text)
       }
-      if (!silent) return(self$summary)
+      return(summary)
     }
   )
 )

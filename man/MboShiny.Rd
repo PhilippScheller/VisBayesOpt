@@ -6,22 +6,6 @@
 \description{
 This class transforms inputs into shiny uis.
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{summary}}{(\code{character()})\cr}
-
-\item{\code{opt_state}}{(\code{OptState})\cr
-Environment containing necessary information needed during optimization in MBO.}
-
-\item{\code{param_set}}{(\link{ParamSet})\cr
-Object describing the parameter space of the mbo run.}
-
-\item{\code{shiny_uis}}{('html') \cr
-Shiny ui elements.}
-}
-\if{html}{\out{</div>}}
-}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -53,7 +37,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 Generates ui elements of all parameters in the parameter set. The html elements are attached
 to the object which calls the function.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generateParamUiShiny(silent = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generateParamUiShiny()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
