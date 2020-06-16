@@ -12,17 +12,8 @@ This is the base class for plotting in this package.
 \item{\code{opt_state}}{(\link{OptState})\cr
 Environment containing necessary information needed during optimization in MBO.}
 
-\item{\code{opt_path}}{(\link{OptPath})\cr
-Optimization path of the mbo run.}
-
-\item{\code{param_set}}{(\link{ParamSet})\cr
-Object describing the parameter space of the search.}
-
 \item{\code{param_vals}}{(\link{Param})\cr
 Object containing the parameter values.}
-
-\item{\code{mbo_control}}{(\link{MBOControl})\cr
-Control object for mbo.}
 }
 \if{html}{\out{</div>}}
 }

@@ -10,53 +10,28 @@ Therefore the distance of \code{f(x)}
 \section{Super class}{
 \code{\link[VisBayesOpt:MboPlot]{VisBayesOpt::MboPlot}} -> \code{MboPlotDistToNeighbor}
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{opt_path}}{(\link{OptPath})\cr
-Optimization path of the mbo run.}
-}
-\if{html}{\out{</div>}}
-}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{MboPlotDistToNeighbor$new()}}
-\item \href{#method-plotDistToNeighbor}{\code{MboPlotDistToNeighbor$plotDistToNeighbor()}}
+\item \href{#method-plot}{\code{MboPlotDistToNeighbor$plot()}}
 \item \href{#method-clone}{\code{MboPlotDistToNeighbor$clone()}}
 }
 }
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="VisBayesOpt" data-topic="MboPlot" data-id="initialize">}\href{../../VisBayesOpt/html/MboPlot.html#method-initialize}{\code{VisBayesOpt::MboPlot$initialize()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="VisBayesOpt" data-topic="MboPlot" data-id="set_param_vals">}\href{../../VisBayesOpt/html/MboPlot.html#method-set_param_vals}{\code{VisBayesOpt::MboPlot$set_param_vals()}}\out{</span>}
 }
 \out{</details>}
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$new(opt_state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{opt_state}}{(\link{OptState}).}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-plotDistToNeighbor"></a>}}
-\subsection{Method \code{plotDistToNeighbor()}}{
+\if{html}{\out{<a id="method-plot"></a>}}
+\subsection{Method \code{plot()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$plotDistToNeighbor(
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$plot(
   dist_measure = c("min", "max", "mean"),
-  k = 1L,
   theme = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -69,13 +44,13 @@ Defines the distance measure which is considered for the determination of the di
 difference between the values of \code{f(x)}. \code{min} takes the minimum of the \code{k} calculated distances to
 the neighbors while \code{max} uses maximum distance and \code{mean} calculates arithmetic mean distance.}
 
+\item{\code{theme}}{(\link{theme|gg})
+A theme to specify the ggplot default.}
+
 \item{\code{k}}{(\code{integer(1)})
 Defines the number of neighbors conisdered for the difference calculation. For e.g. \code{k=1} only the
 difference to the previous value is considered (i.e. lagged value) while \code{k>1} enables to consider
 the distance to the next \code{k} neighbors.}
-
-\item{\code{theme}}{(\link{theme|gg})
-A theme to specify the ggplot default.}
 }
 \if{html}{\out{</div>}}
 }

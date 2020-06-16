@@ -14,24 +14,17 @@
 #' @export
 MboSummary = R6Class(
   "MboSummary",
+  inherit = MboPlot,
   public = list(
-    #' @field mboSummary (`list()`)\cr
-    #'   Summarizes specific parameters of mbo run.
-    mboSummary = NULL,
-    #' @field opt_path ([OptPath])\cr
-    #'   Optimization path of the mbo run.
     #' @description
     #' Summarizes all relevant characterisitcs of the mbo run.
     #'
-    #' @param silent (`logical()`)
-    #'   If TRUE, the output will only be saved in the object and not be returned.
-    #'
     #' @return (`list()`).
-    getMboSummary = function(silent = TRUE) {
+    getMboSummary = function() {
       infill_crit_name = assert_class(getMBOInfillCritName(self$opt_state$opt.problem$control$infill.crit),
                                  "character")
       infill_crit_dir = assert_class(self$opt_state$opt.problem$control$infill.crit$opt.direction, "character")
-      hyperparam_names = assert_class(names(self$opt_state$opt.path$par.set$pars), "character")
+      param_names = assert_class(names(self$opt_state$opt.path$par.set$pars), "character")
 
       infillCrit = list(name = "Infill crit",
                         value = infill_crit_name,
@@ -39,17 +32,16 @@ MboSummary = R6Class(
       infillCritOpt = list(name = "Infill crit optim direction",
                            value = infill_crit_dir,
                            group = 1)
-      hyperParams = list(name = "Hyperparameters",
-                         value = hyperparam_names,
+      hyperParams = list(name = "Search space",
+                         value = param_names,
                          group = 2)
 
-      self$mboSummary = list(
+      mboSummary = list(
         infillCrit = infillCrit,
         infillCritOpt = infillCritOpt,
         hyperParams = hyperParams
       )
-      if (!silent)
-        return(self$mboSummary)
+        return(mboSummary)
     }
   )
 )

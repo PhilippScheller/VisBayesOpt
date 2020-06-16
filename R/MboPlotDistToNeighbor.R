@@ -39,7 +39,7 @@ MboPlotDistToNeighbor = R6Class(
     #'   A theme to specify the ggplot default.
     #'
     #' @return ([ggplot]).
-    plotDistToNeighbor = function(dist_measure = c("min", "max", "mean"), theme = NULL) {
+    plot = function(dist_measure = c("min", "max", "mean"), theme = NULL) {
       if (length(dist_measure) != 1L) stop("Only 1 distance measure can be calculated.")
       dist_measure = assert_class(dist_measure, "character")
       if (!check_function(get(dist_measure))) stop("Chosen `dist_measure` cannot be evaluated as a function")
@@ -52,21 +52,24 @@ MboPlotDistToNeighbor = R6Class(
       df_num = as.matrix(extractFromDf(df, extr = c(is.numeric), keepColumNo = 0))
       df_disc = extractFromDf(df, extr = c(is.factor), keepColumNo = 0)
       # create matrix with euclidean/gower distances
-      mat_dist_num = dist(df_num)
-      mat_dist_disc = daisy(df_disc, metric = "gower")
+      mat_dist_num = as.matrix(dist(df_num))
+      mat_dist_disc = as.matrix(daisy(df_disc, metric = "gower"))
+
       # extract lower triangular matrix
       mat_dist_num_lower = mat_dist_num * lower.tri(mat_dist_num)
-      mat_dist_disc_lower = df * lower.tri(mat_dist_disc)
+      mat_dist_disc_lower = mat_dist_disc * lower.tri(mat_dist_disc)
 
       # calculate the distance over each row (iteration)
       mat_dist_num_measure = apply(mat_dist_num_lower[2:nrow(mat_dist_num_lower), ], 1, function(x) {
         suppressWarnings(get(dist_measure)(x[x > 0]))
       })
-      mat_dist_num_measure = apply(mat_dist_num_lower[2:nrow(mat_dist_num_lower), ], 1, function(x) {
+      mat_dist_disc_measure = apply(mat_dist_disc_lower[2:nrow(mat_dist_disc_lower), ], 1, function(x) {
         suppressWarnings(get(dist_measure)(x[x > 0]))
       })
       df_dist_num_measure = as.data.frame(mat_dist_num_measure)
       names(df_dist_num_measure) = "Value"
+      df_dist_disc_measure = as.data.frame(mat_dist_disc_measure)
+      names(df_dist_disc_measure) = "Value"
 
       gg_dist = ggplot(df_dist_num_measure, aes(x = seq(1:nrow(df_dist_num_measure)), y = Value))
       gg_dist = gg_dist + geom_point(shape = 4)
