@@ -23,20 +23,6 @@ MboPlotInputSpace = R6Class(
   "MboPlotInputSpace",
   inherit = MboPlot,
   public = list(
-    #' @field opt_path ([OptPath])\cr
-    #'   Optimization path of the mbo run.
-    opt_path = NULL,
-    #' @field param_set ([ParamSet])\cr
-    #'   Object describing the parameter space of the search.
-    param_set = NULL,
-    #' @description
-    #' Creates a new instance of this [R6][R6::R6Class] class.
-    #'
-    #' @param opt_state ([OptState]).
-    initialize = function(opt_state) {
-      self$opt_path = assert_class(opt_state$opt.path, "OptPath")
-      self$param_set = assert_class(opt_state$opt.path$par.set, "ParamSet")
-    },
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
@@ -52,7 +38,7 @@ MboPlotInputSpace = R6Class(
     #'   A theme to specify the ggplot default.
     #'
     #' @return ([ggplot]).
-    plotInputSpace = function(type = c("prior", "posterior", "overlay"), plot = c("distribution", "iteration"),
+    plot = function(type = c("prior", "posterior", "overlay"), plot = c("distribution", "iteration"),
                               theme = NULL) {
       if (!is.null(theme)) {
         theme = assert_class(theme, "theme")
@@ -68,11 +54,11 @@ MboPlotInputSpace = R6Class(
         stop("`plot` must be of length 1 and can only take values `distribution` or `iteration`")
       }
 
-      n = nrow(getOptPathX(self$opt_path))
+      n = nrow(getOptPathX(self$opt_state$opt.path))
       df_prior = cbind(data.frame("prior", stringsAsFactors = FALSE),
-                       generateRandomDesign(n, self$param_set))
+                       generateRandomDesign(n, self$opt_state$opt.path$par.set))
       df_posterior = cbind(data.frame("posterior", stringsAsFactors = FALSE),
-                           getOptPathX(self$opt_path))
+                           getOptPathX(self$opt_state$opt.path))
       df = list(prior = df_prior, posterior = df_posterior)
 
       df_wide_num = lapply(df, extractFromDf, extr = c(is.numeric))

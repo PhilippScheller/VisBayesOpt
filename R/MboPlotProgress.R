@@ -17,20 +17,11 @@ MboPlotProgress = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
-    #' Creates a new instance of this [R6][R6::R6Class] class.
-    #'
-    #' @param opt_state ([OptState]).
-    initialize = function(opt_state) {
-      param_set = makeParamSet(makeIntegerParam("max_iter", lower = 0, upper = opt_state$loop))
-      self$param_vals = list(max_iter = opt_state$loop)
-      super$initialize(opt_state)
-    },
-    #' @description
     #' Plots minimal value of model (y) of mbo run over the iterations.
     #'
     #' @return ([ggplot]).
     plot = function() {
-      opdf = as.data.frame(self$opt_path)
+      opdf = as.data.frame(self$opt_state$opt.path)
       opdf$cumy = cummin(opdf$y) #cummax if max problem
       opdf = opdf[opdf$dob <= self$param_vals$max_iter,]
 

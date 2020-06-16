@@ -9,8 +9,8 @@
 #' @import BBmisc
 #'
 #' @importFrom R6 R6Class
-#' @importFrom magrittr %T>%
-#' @importFrom tidyr gather
+#' @importFrom cluster daisy
+#' @importFrom stats dist
 #' @importFrom ggpubr ggarrange
 #'
 #' @description
@@ -24,16 +24,6 @@ MboPlotDistToNeighbor = R6Class(
   "MboPlotDistToNeighbor",
   inherit = MboPlot,
   public = list(
-    #' @field opt_path ([OptPath])\cr
-    #'   Optimization path of the mbo run.
-    opt_path = NULL,
-    #' @description
-    #' Creates a new instance of this [R6][R6::R6Class] class.
-    #'
-    #' @param opt_state ([OptState]).
-    initialize = function(opt_state) {
-      self$opt_path = assert_class(opt_state$opt.path, "OptPath")
-    },
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
@@ -49,7 +39,7 @@ MboPlotDistToNeighbor = R6Class(
     #'   A theme to specify the ggplot default.
     #'
     #' @return ([ggplot]).
-    plotDistToNeighbor = function(dist_measure = c("min", "max", "mean"), k = 1L, theme = NULL) {
+    plotDistToNeighbor = function(dist_measure = c("min", "max", "mean"), theme = NULL) {
       if (length(dist_measure) != 1L) stop("Only 1 distance measure can be calculated.")
       dist_measure = assert_class(dist_measure, "character")
       if (!check_function(get(dist_measure))) stop("Chosen `dist_measure` cannot be evaluated as a function")
@@ -57,29 +47,31 @@ MboPlotDistToNeighbor = R6Class(
         theme = assert_class(theme, "theme")
       }
 
-      df = as.data.frame(getOptPathY(self$opt_path))
+      df = as.data.frame(getOptPathX(self$opt_state$opt.path))
       df_colnames = colnames(df)
-      df_num = extractFromDf(df, extr = c(is.numeric), keepColumNo = 0)
-      # create matrix with euclidean distances
-      dist = dist(df_num)
-      mat_dist = as.matrix(dist)
-      # extract lower triangular matrix and take the `k` rows below the diagonal
-      mat_dist_lower = mat_dist * lower.tri(mat_dist, FALSE)
-      mat_k_general = row(mat_dist_lower) - col(mat_dist_lower)
-      mat_k = (mat_k_general > 0) & (mat_k_general <= k)
-      mat_dist_lower_k = mat_dist_lower * mat_k
-      # calculate the distance over each row (iteration) considering the `k` previous iterations
-      mat_dist_measure = apply(mat_dist_lower_k[2:nrow(mat_dist_lower_k), ], 1, function(x) {
+      df_num = as.matrix(extractFromDf(df, extr = c(is.numeric), keepColumNo = 0))
+      df_disc = extractFromDf(df, extr = c(is.factor), keepColumNo = 0)
+      # create matrix with euclidean/gower distances
+      mat_dist_num = dist(df_num)
+      mat_dist_disc = daisy(df_disc, metric = "gower")
+      # extract lower triangular matrix
+      mat_dist_num_lower = mat_dist_num * lower.tri(mat_dist_num)
+      mat_dist_disc_lower = df * lower.tri(mat_dist_disc)
+
+      # calculate the distance over each row (iteration)
+      mat_dist_num_measure = apply(mat_dist_num_lower[2:nrow(mat_dist_num_lower), ], 1, function(x) {
         suppressWarnings(get(dist_measure)(x[x > 0]))
       })
-      df_dist_measure = as.data.frame(mat_dist_measure) %>%
-        drop_na
-      names(df_dist_measure) = "Value"
+      mat_dist_num_measure = apply(mat_dist_num_lower[2:nrow(mat_dist_num_lower), ], 1, function(x) {
+        suppressWarnings(get(dist_measure)(x[x > 0]))
+      })
+      df_dist_num_measure = as.data.frame(mat_dist_num_measure)
+      names(df_dist_num_measure) = "Value"
 
-      gg_dist = ggplot(df_dist_measure, aes(x = seq(1:nrow(df_dist_measure)), y = Value))
+      gg_dist = ggplot(df_dist_num_measure, aes(x = seq(1:nrow(df_dist_num_measure)), y = Value))
       gg_dist = gg_dist + geom_point(shape = 4)
       gg_dist = gg_dist + geom_line()
-      gg_dist = gg_dist + ggtitle(paste0(dist_measure, " distance to ", k, " nearest neigbors"))
+      gg_dist = gg_dist + ggtitle(paste0(dist_measure, " distance"))
       gg_dist = gg_dist + xlab("Iteration")
       gg_dist = gg_dist + ylab("Euclidean distance")
       gg_dist = gg_dist + theme

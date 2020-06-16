@@ -24,27 +24,15 @@ MboPlot = R6Class(
     #' @field opt_state ([OptState])\cr
     #'   Environment containing necessary information needed during optimization in MBO.
     opt_state = NULL,
-    #' @field opt_path ([OptPath])\cr
-    #'   Optimization path of the mbo run.
-    opt_path = NULL,
-    #' @field param_set ([ParamSet])\cr
-    #'   Object describing the parameter space of the search.
-    param_set = NULL,
     #' @field param_vals ([Param])\cr
     #'   Object containing the parameter values.
     param_vals = NULL,
-    #' @field mbo_control ([MBOControl])\cr
-    #'   Control object for mbo.
-    mbo_control = NULL,
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
       self$opt_state = assert_class(opt_state, "OptState")
-      self$opt_path = assert_class(opt_state$opt.path, "OptPath")
-      self$param_set = assert_class(opt_state$opt.path$par.set, "ParamSet")
-      self$mbo_control = assert_class(opt_state$opt.problem$control, "MBOControl")
     },
     #' @description
     #' Sets parameter values
@@ -52,7 +40,7 @@ MboPlot = R6Class(
     #' @param x ([Param][ParamSet]).
     set_param_vals = function(x) {
       assert_list(x, names = "named")
-      is_feasible = isFeasible(par = self$param_set, x)
+      is_feasible = isFeasible(par = self$opt_state$opt.path$par.set, x)
       if (!is_feasible) {
         stop(attr(is_feasible, "warning"))
       }

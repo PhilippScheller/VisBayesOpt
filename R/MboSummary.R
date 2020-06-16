@@ -15,27 +15,11 @@
 MboSummary = R6Class(
   "MboSummary",
   public = list(
-    #' @field opt_state (`OptState`)\cr
-    #'   Environment containing necessary information needed during optimization in MBO.
-    opt_state = NULL,
-    #' @field mbo_control ([MBOControl])\cr
-    #'   Control object for mbo.
-    mbo_control = NULL,
     #' @field mboSummary (`list()`)\cr
     #'   Summarizes specific parameters of mbo run.
     mboSummary = NULL,
     #' @field opt_path ([OptPath])\cr
     #'   Optimization path of the mbo run.
-    opt_path = NULL,
-    #' @description
-    #' Creates a new instance of this [R6][R6::R6Class] class.
-    #'
-    #' @param opt_state ([OptState]).
-    initialize = function(opt_state) {
-      self$opt_state = assert_class(opt_state, c("OptState"))
-      self$mbo_control = assert_class(self$opt_state$opt.problem$control, c("MBOControl"))
-      self$opt_path = assert_multi_class(self$opt_state$opt.path, c("OptPathDF", "OptPath"))
-    },
     #' @description
     #' Summarizes all relevant characterisitcs of the mbo run.
     #'
@@ -44,11 +28,10 @@ MboSummary = R6Class(
     #'
     #' @return (`list()`).
     getMboSummary = function(silent = TRUE) {
-      infill_crit_name = assert_class(getMBOInfillCritName(self$mbo_control$infill.crit),
+      infill_crit_name = assert_class(getMBOInfillCritName(self$opt_state$opt.problem$control$infill.crit),
                                  "character")
-      # print(self$mbo_control$infill.crit$opt.direction)
-      infill_crit_dir = assert_class(self$mbo_control$infill.crit$opt.direction, "character")
-      hyperparam_names = assert_class(names(self$opt_path$par.set$pars), "character")
+      infill_crit_dir = assert_class(self$opt_state$opt.problem$control$infill.crit$opt.direction, "character")
+      hyperparam_names = assert_class(names(self$opt_state$opt.path$par.set$pars), "character")
 
       infillCrit = list(name = "Infill crit",
                         value = infill_crit_name,
