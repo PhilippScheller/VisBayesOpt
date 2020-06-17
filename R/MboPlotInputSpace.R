@@ -12,6 +12,7 @@
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %T>%
 #' @importFrom tidyr gather
+#' @importFrom scales number_format
 #' @importFrom ggpubr ggarrange
 #'
 #' @description
@@ -26,71 +27,78 @@ MboPlotInputSpace = R6Class(
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
-    #' @param type (`character(1)`)
-    #'   Defines the information to be used for the plot and can be either `prior`, `posterior` or òverlay.
-    #'   Prior uses a random desgin of the parameter set.\cr
-    #'   Posterior uses the values the optimizer searched over during the mbo run.\cr
-    #'   Overlay plots a combination of both, `prior` and `posterior` in a combined plot.
-    #' @param plot (`chatacter(1)`)
-    #'   Defines plot type. `distribution` plots the distributions of each variable in the design.
-    #'   `iteration` plots the value of each variable in the design over the single iterations.
+    #' @param include_prior (`boolean(1)`)
+    #'   Specifies if bar chart over sampled prior should also be included in plot.
+    #' @param n (`integer(1)`)
+    #'   Specifies the number of samples drawn for prior design generated.
     #' @param theme ([theme|gg])
     #'   A theme to specify the ggplot default.
     #'
     #' @return ([ggplot]).
-    plot = function(type = c("prior", "posterior", "overlay"), plot = c("distribution", "iteration"),
-                              theme = NULL) {
+    plot = function(include_prior = TRUE, theme = NULL, n = 1000L) {
       if (!is.null(theme)) {
         theme = assert_class(theme, "theme")
       }
-      if (type %in% c("prior", "posterior", "overlay") & length(type) == 1) {
-        type = assert_class(type, "character")
-      } else {
-        stop("`type` must be of length 1 and can only take values `prior`, `posterior` or òverlay`")
-      }
-      if (plot %in% c("distribution", "iteration") & length(plot) == 1) {
-        plot = assert_class(plot, "character")
-      } else {
-        stop("`plot` must be of length 1 and can only take values `distribution` or `iteration`")
-      }
 
-      n = nrow(getOptPathX(self$opt_state$opt.path))
-      df_prior = cbind(data.frame("prior", stringsAsFactors = FALSE),
-                       generateRandomDesign(n, self$opt_state$opt.path$par.set))
-      df_posterior = cbind(data.frame("posterior", stringsAsFactors = FALSE),
-                           getOptPathX(self$opt_state$opt.path))
-      df = list(prior = df_prior, posterior = df_posterior)
+      df = getOptPathX(self$opt_state$opt.path)
 
-      df_wide_num = lapply(df, extractFromDf, extr = c(is.numeric))
-      df_wide_disc = lapply(df, extractFromDf, extr = c(is.factor))
-      ncols_df = c(ncol(df_wide_num[[1]]), ncol(df_wide_disc[[1]]))
+      df_wide_post_num = df %>%
+        select_if(is.numeric)
+      df_wide_post_num = cbind(type = "posterior", df_wide_post_num)
 
-      df_long_num = lapply(df_wide_num, wideToLong)
-      df_long_disc = lapply(df_wide_disc, wideToLong)
+      df_wide_post_disc = df %>%
+        select_if(is.factor)
+      df_wide_post_disc = cbind(type = "posterior", df_wide_post_disc)
 
-      ggnum = NULL
-      ggdisc = NULL
+      df_wide_prior_num = generateRandomDesign(n, self$opt_state$opt.path$par.set) %>%
+        select_if(is.numeric)
+      df_wide_prior_num = cbind(type = "prior", df_wide_prior_num)
+      df_wide_prior_disc = generateRandomDesign(n, self$opt_state$opt.path$par.set) %>%
+        select_if(is.factor)
+      df_wide_prior_disc = cbind(type = "prior", df_wide_prior_disc)
+
+      df_long_num = rbind(wideToLong(df_wide_post_num), wideToLong(df_wide_prior_num))
+      df_long_disc = rbind(wideToLong(df_wide_post_disc), wideToLong(df_wide_prior_disc))
+
+      ncols_df = c(ncol(df_wide_post_num), ncol(df_wide_post_disc))
+
+      gg_num = NULL
+      gg_disc = NULL
       if (ncols_df[1] > 1) {
-        if (plot %in% c("distribution")) {
-          ggnum = wrappedPlot(df_long_num, "Input space: numeric priors as density",
-                              "numeric", type, plot, n, theme)
-        } else {
-          ggnum = wrappedPlot(df_long_num, "Input space: numeric priors over iterations",
-                              "numeric", type, plot, n, theme)
-        }
+        gg_num = ggplot(filter(df_long_num, type == "posterior"), aes(x = Value, fill = type))
+        gg_num = gg_num + geom_bar(aes(y = ..prop.., group = 1), alpha = .4)
+        gg_num = gg_num + scale_x_binned(n.breaks = 20, labels = scales::number_format(accuracy = .1))
+       if (include_prior) {
+         gg_num = gg_num + geom_bar(data = filter(df_long_num, type == "prior"),
+                                        mapping = aes(y = ..prop.., group = 1, fill = type),
+                                    alpha = .4)
+       }
+
+        gg_num = gg_num + facet_wrap(Param ~ ., scales = "free")
+        gg_num = gg_num + ggtitle("Mbo search space: evaluated numeric parameters")
+        gg_num = gg_num + xlab("Param value")
+        gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
+        gg_num = gg_num + theme
       }
+
       if (ncols_df[2] > 1) {
-        if (plot %in% c("distribution")) {
-          ggdisc = wrappedPlot(df_long_disc, "Input space: discrete priors as density",
-                             "discrete", type, n, plot, theme)
-        } else {
-          ggdisc = wrappedPlot(df_long_disc, "Input space: discrete priors over iterations",
-                             "discrete", type, n, plot, theme)
+        gg_disc = ggplot(filter(df_long_disc, type == "posterior"), aes(x = Value))
+        gg_disc = gg_disc + geom_bar(aes(y = ..prop.., group = 2, fill = type), alpha = .4)
+        if (include_prior) {
+        gg_disc = gg_disc + geom_bar(data = filter(df_long_disc, type == "prior"),
+                                     mapping = aes(y = ..prop.., group = 1, fill = type),
+                                     alpha = .4)
         }
+        gg_disc = gg_disc + facet_wrap(Param ~ ., scales = "free")
+        gg_disc = gg_disc + ggtitle("Mbo search space: evaluated discrete parameters")
+        gg_disc = gg_disc + xlab("Param value")
+        gg_disc = gg_disc + theme(plot.title = element_text(face = "bold"))
+        gg_disc = gg_disc + theme
       }
-      gg = ggarrange(ggnum, ggdisc, nrow = 2, heights = c(2,1))
+      gg = ggarrange(gg_num, gg_disc, nrow = 2, heights = c(2,1))
 
       return(gg)
     }
   )
 )
+

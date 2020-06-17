@@ -30,28 +30,20 @@ prior and posterior distributions of the evaluated parameters in the mbo run.
 \subsection{Method \code{plot()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plot(
-  type = c("prior", "posterior", "overlay"),
-  plot = c("distribution", "iteration"),
-  theme = NULL
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plot(include_prior = TRUE, theme = NULL, n = 1000L)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{type}}{(\code{character(1)})
-Defines the information to be used for the plot and can be either \code{prior}, \code{posterior} or òverlay.
-Prior uses a random desgin of the parameter set.\cr
-Posterior uses the values the optimizer searched over during the mbo run.\cr
-Overlay plots a combination of both, \code{prior} and \code{posterior} in a combined plot.}
-
-\item{\code{plot}}{(\code{chatacter(1)})
-Defines plot type. \code{distribution} plots the distributions of each variable in the design.
-\code{iteration} plots the value of each variable in the design over the single iterations.}
+\item{\code{include_prior}}{(\code{boolean(1)})
+Specifies if bar chart over sampled prior should also be included in plot.}
 
 \item{\code{theme}}{(\link{theme|gg})
 A theme to specify the ggplot default.}
+
+\item{\code{n}}{(\code{integer(1)})
+Specifies the number of samples drawn for prior design generated.}
 }
 \if{html}{\out{</div>}}
 }
