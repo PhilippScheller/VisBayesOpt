@@ -9,7 +9,7 @@
 #' @importFrom R6 R6Class
 #'
 #' @description
-#' This class transforms inputs into shiny uis.
+#' This class plots the minimum value (y) over the iterations of a mlrMbo run.
 #'
 #' @export
 MboPlotProgress = R6Class(
@@ -31,14 +31,3 @@ MboPlotProgress = R6Class(
     }
   )
 )
-#######
-# Example:
-# mboObj1 = readRDS("../test-data/mboObj.RData")
-#
-# plot_progress = mboPlotProgress$new(mboObj1$final.opt.state)
-# plot_progress$plot()
-# plot_progress$generateParamUiShiny()
-
-
-
-

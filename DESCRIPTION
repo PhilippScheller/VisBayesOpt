@@ -26,6 +26,7 @@ Collate:
     'MboPlotDistToNeighbor.R'
     'MboPlotInputSpace.R'
     'MboPlotProgress.R'
+    'MboPlotRuntime.R'
     'MboPlotSearchSpace.R'
     'MboShiny-helpers.R'
     'MboShiny.R'
