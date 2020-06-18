@@ -29,9 +29,17 @@ This class plots the runtime of a mlrMbo run.
 \subsection{Method \code{plot()}}{
 Plots minimal value of model (y) of mbo run over the iterations.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotRuntime$plot()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotRuntime$plot(highlight_iter = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{highlight_iter}}{(\code{integer(1) | NULL})\cr
+Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 (\link{ggplot}).
 }
