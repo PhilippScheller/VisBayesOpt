@@ -26,15 +26,8 @@ MboPlotSearchSpace = R6Class(
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
-    #' @param theme ([theme|gg])
-    #'   A theme to override the ggplot default theme.
-    #'
     #' @return ([ggplot]).
-    plot = function(theme = NULL) {
-      if (!is.null(theme)) {
-        theme = assert_class(theme, "theme")
-      }
-
+    plot = function() {
       df = getOptPathX(self$opt_state$opt.path)
       n = nrow(df)
 
@@ -43,7 +36,6 @@ MboPlotSearchSpace = R6Class(
       df_wide_disc = df %>%
         select_if(is.factor)
       ncols_df = c(ncol(df_wide_num), ncol(df_wide_disc))
-
 
       df_long_num = wideToLong(df_wide_num, 0)
       df_long_disc = wideToLong(df_wide_disc, 0)
@@ -59,7 +51,6 @@ MboPlotSearchSpace = R6Class(
         gg_num = gg_num + ggtitle("Mbo search space: evaluated numeric parameters")
         gg_num = gg_num + xlab("Iteration")
         gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
-        gg_num = gg_num + theme
       }
       if (ncols_df[2] > 0) {
         gg_disc = ggplot(df_long_disc, aes(x = rep(seq(1:n), times = nrow(df_long_disc)/n), y = Value))
@@ -68,7 +59,6 @@ MboPlotSearchSpace = R6Class(
         gg_disc = gg_disc + ggtitle("Mbo search space: evaluated discrete parameters")
         gg_disc = gg_disc + xlab("Iteration")
         gg_disc = gg_disc + theme(plot.title = element_text(face = "bold"))
-        gg_disc = gg_disc + theme
       }
       gg = ggarrange(gg_num, gg_disc, nrow = 2, heights = c(2,1))
 

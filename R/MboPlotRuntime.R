@@ -26,7 +26,7 @@ MboPlotRuntime = R6Class(
     #'
     #' @return ([ggplot]).
     plot = function(highlight_iter = NULL) {
-      if (!is.null(highlight_iter)) highlight_iter = assertClass(highlight_iter, "numeric")
+      if (!is.null(highlight_iter)) highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
       df_extra = convertListOfRowsToDataFrame(self$opt_state$opt.path$env$extra)
       df_time = df_extra[colnames(df_extra) %in% c("train.time", "propose.time")]
       df_time$total.time = df_time$train.time + df_time$propose.time

@@ -31,15 +31,9 @@ MboPlotInputSpace = R6Class(
     #'   Specifies if bar chart over sampled prior should also be included in plot.
     #' @param n (`integer(1)`)
     #'   Specifies the number of samples drawn for prior design generated.
-    #' @param theme ([theme|gg])
-    #'   A theme to specify the ggplot default.
     #'
     #' @return ([ggplot]).
-    plot = function(include_prior = TRUE, theme = NULL, n = 1000L) {
-      if (!is.null(theme)) {
-        theme = assert_class(theme, "theme")
-      }
-
+    plot = function(include_prior = TRUE, n = 1000L) {
       df = getOptPathX(self$opt_state$opt.path)
 
       df_wide_post_num = df %>%
@@ -78,7 +72,6 @@ MboPlotInputSpace = R6Class(
         gg_num = gg_num + ggtitle("Mbo search space: evaluated numeric parameters")
         gg_num = gg_num + xlab("Param value")
         gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
-        gg_num = gg_num + theme
       }
 
       if (ncols_df[2] > 1) {
@@ -93,7 +86,6 @@ MboPlotInputSpace = R6Class(
         gg_disc = gg_disc + ggtitle("Mbo search space: evaluated discrete parameters")
         gg_disc = gg_disc + xlab("Param value")
         gg_disc = gg_disc + theme(plot.title = element_text(face = "bold"))
-        gg_disc = gg_disc + theme
       }
       gg = ggarrange(gg_num, gg_disc, nrow = 2, heights = c(2,1))
 

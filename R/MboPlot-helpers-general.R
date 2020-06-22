@@ -86,8 +86,16 @@ generateFrequencyDf = function(df) {
     group_by(Value) %>%
     mutate(new = cumany(Value == "dart"))
 
-  print(head(df_n))
 }
+
+
+
+
+
+
+
+
+################################################################################################################
 
 
 

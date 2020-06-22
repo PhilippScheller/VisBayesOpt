@@ -17,6 +17,9 @@
 MboShiny = R6Class(
   "MboShiny",
   public = list(
+    #' @field mbo_plot ([MboPlot])\cr
+    #'   Object of class `MboPlot`.
+    mbo_plot = NULL,
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -44,13 +47,10 @@ MboShiny = R6Class(
     #' Generates a table of the MboSummary. The html elements are attached to the object
     #'  which calls the function.
     #'
-    #' @param silent (`logical()`)
-    #'   If TRUE, the output will only be saved in the object and not be returned.
-    #'
     #' @return (`html`).
-    generateSummaryTable = function(silent = TRUE) {
-      summary_mbo = MboSummary$new(self$mbo_plot$opt.state)
-      summary_text = summary_mbo$getMboSummary(silent = FALSE)
+    generateSummaryTable = function() {
+      summary_mbo = MboSummary$new(self$mbo_plot$opt_state)
+      summary_text = summary_mbo$getMboSummary()
 
       if (length(summary) == 0L) {
         summary = h4("No summary found in the object provided.")
