@@ -33,7 +33,7 @@ wideToLong = function(df_wide, keyColumn = 1) {
 # MboPlotInputSpace helpers
 
 wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type = c("prior", "posterior", "overlay"),
-                           plot = c("distribution", "iteration"), n, theme = NULL) {
+                       plot = c("distribution", "iteration"), n, theme = NULL) {
 
   if (type %in% c("prior", "posterior")) {
     df = get(type, df_long)
@@ -87,19 +87,3 @@ generateFrequencyDf = function(df) {
     mutate(new = cumany(Value == "dart"))
 
 }
-
-
-
-
-
-
-
-
-################################################################################################################
-
-
-
-
-
-
-

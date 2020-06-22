@@ -1,6 +1,6 @@
 #' @title MboPlotOptPath
 #'
-#' @include MboPlot-helpers.R
+#' @include MboPlot-helpers-general.R
 #' @include MboPlot-helpers-RenderVisualizeOptPath1d.R
 #' @include MboPlot-helpers-RenderVisualizeOptPathNd.R
 #'
@@ -29,9 +29,22 @@ MboPlotOptPath = R6Class(
     #' @description
     #' Plots the opt state for a specified iteration of the mbo run.
     #'
+    #' @param highlight_iter (\code{integer(1) | NULL})\cr
+    #' Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.
+    #' @param feature (\code{character(1) | NULL})\cr
+    #' Specifies the feature to be calculated in PDP for higher dimensions, i.e. number of features > 2.
+    #' The default \code{NULL} is only a valid input for the 1 dimensional case.
+    #' @param parallel (\code{boolean(1) | TRUE})\cr
+    #' Specifies if computation of PDP is done parallel, i.e. on multiple cores. The default states that multiple
+    #' cores are used.
+    #' @param se_factor (\code{numeric(1) | 1})\cr
+    #' Specifies the scaling factor for the uncertainty (standard error) estimate for the 1 dimensional case.
+    #' The default value is that no up/or downscaling is applied.
+    #' @param trafo ([trafos]| NULL})\cr
+    #' To be specified.
+    #'
     #' @return ([ggplot]).
-    plot = function(highlight_iter = 1L, feature = NULL, densregion = TRUE, parallel = TRUE, se_factor = 1L,
-                    trafo = NULL, ...) {
+    plot = function(highlight_iter = 1L, feature = NULL, parallel = TRUE, se_factor = 1L, trafo = NULL) {
 
       opt_path_df = as.data.frame(self$opt_state$opt.path)
       n_iters = max(opt_path_df$dob)
@@ -64,14 +77,14 @@ MboPlotOptPath = R6Class(
           stopf("For 1D function only plotting of numeric or discrete functions possible, but your function is '%s'.", par_types)
         }
         return(renderVisualizeOptPath1d(opt_state = self$opt_state, highlight_iter = highlight_iter, se_factor = se_factor,
-                                        densregion = densregion, trafo = NULL, ...))
+                                        densregion = densregion, trafo = NULL))
       }
       if (n_param == 2L) {
         if (!hasNumeric(par_set)) {
           stopf("At least one parameter of the target function must be numeric!")
         }
         return(renderVisualizeOptPath2d(object, iter = iter, se.factor = se_factor,
-                                        densregion = densregion, trafo = NULL, ...))
+                                        densregion = densregion, trafo = NULL))
       } else {
         if (!is.null(self$stored_pdp[[feature]])) {
           plot(self$stored_pdp[[feature]][[highlight_iter]])

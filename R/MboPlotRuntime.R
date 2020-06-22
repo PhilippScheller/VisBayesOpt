@@ -1,6 +1,6 @@
 #' @title MboPlotRuntime
 #'
-#' @include MboPlot-helpers.R
+#' @include MboPlot-helpers-general.R
 #'
 #' @import checkmate
 #' @import mlrMBO

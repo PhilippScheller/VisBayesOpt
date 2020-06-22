@@ -30,7 +30,7 @@ prior and posterior distributions of the evaluated parameters in the mbo run.
 \subsection{Method \code{plot()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plot(include_prior = TRUE, theme = NULL, n = 1000L)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plot(include_prior = TRUE, n = 1000L)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -38,9 +38,6 @@ Plots prior distributions of mbo run specified in the set of parameters.
 \describe{
 \item{\code{include_prior}}{(\code{boolean(1)})
 Specifies if bar chart over sampled prior should also be included in plot.}
-
-\item{\code{theme}}{(\link{theme|gg})
-A theme to specify the ggplot default.}
 
 \item{\code{n}}{(\code{integer(1)})
 Specifies the number of samples drawn for prior design generated.}

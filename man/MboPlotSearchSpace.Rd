@@ -30,17 +30,9 @@ prior and posterior distributions of the evaluated parameters in the mbo run.
 \subsection{Method \code{plot()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotSearchSpace$plot(theme = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotSearchSpace$plot()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{theme}}{(\link{theme|gg})
-A theme to override the ggplot default theme.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 (\link{ggplot}).
 }

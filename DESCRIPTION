@@ -21,10 +21,16 @@ LazyData: true
 RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 Collate: 
-    'MboPlot-helpers.R'
+    'MboPlot-helpers-RenderVisualizeOptPathNd.R'
+    'MboPlot-helpers-general.R'
+    'MboPlot-helpers-renderVisualizeOptPath1d.R'
     'MboPlot.R'
     'MboPlotDistToNeighbor.R'
+    'MboPlotFit-helpers.R'
+    'MboPlotFit.R'
     'MboPlotInputSpace.R'
+    'MboPlot-helpers-RenderVisualizeOptPath1d.R'
+    'MboPlotOptPath.R'
     'MboPlotProgress.R'
     'MboPlotRuntime.R'
     'MboPlotSearchSpace.R'

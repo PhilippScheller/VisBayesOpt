@@ -6,6 +6,14 @@
 \description{
 This class transforms inputs into shiny uis.
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{mbo_plot}}{(\link{MboPlot})\cr
+Object of class \code{MboPlot}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -58,17 +66,9 @@ If TRUE, the output will only be saved in the object and not be returned.}
 Generates a table of the MboSummary. The html elements are attached to the object
 which calls the function.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generateSummaryTable(silent = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generateSummaryTable()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{silent}}{(\code{logical()})
-If TRUE, the output will only be saved in the object and not be returned.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 (\code{html}).
 }

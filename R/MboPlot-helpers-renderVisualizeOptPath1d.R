@@ -1,5 +1,5 @@
 renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE, se_factor = 1L,
-                                    trafo = NULL, ...) {
+                                    trafo = NULL) {
   par_set = opt_state$opt.path$par.set
   par_types = getParamTypes(par_set)
   n_param = sum(getParamLengths(par_set))

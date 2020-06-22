@@ -1,6 +1,6 @@
 #' @title MboPlotDistToNeighbor
 #'
-#' @include MboPlot-helpers.R
+#' @include MboPlot-helpers-general.R
 #'
 #' @import checkmate
 #' @import mlrMBO
@@ -31,10 +31,6 @@ MboPlotDistToNeighbor = R6Class(
     #'   Defines the distance measure which is considered for the determination of the distance between the
     #'   difference between the values of `f(x)`. `min` takes the minimum of the `k` calculated distances to
     #'   the neighbors while `max` uses maximum distance and `mean` calculates arithmetic mean distance.
-    #' @param k (`integer(1)`)
-    #'   Defines the number of neighbors conisdered for the difference calculation. For e.g. `k=1` only the
-    #'   difference to the previous value is considered (i.e. lagged value) while `k>1` enables to consider
-    #'   the distance to the next `k` neighbors.
     #'
     #' @return ([ggplot]).
     plot = function(dist_measure = c("min", "max", "mean")) {

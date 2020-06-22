@@ -21,7 +21,7 @@ MboPlotFit = R6Class(
     #' @description
     #' Plots the fit of the model using R-squared for each iteration of the mbo run.
     #'
-    #' #' @param highlight_iter (\code{integer(1) | NULL})\cr
+    #' @param highlight_iter (\code{integer(1) | NULL})\cr
     #' Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.
     #'
     #' @return ([ggplot]).
