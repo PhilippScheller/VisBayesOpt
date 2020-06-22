@@ -26,6 +26,7 @@ Collate:
     'MboPlot-helpers-renderVisualizeOptPath1d.R'
     'MboPlot.R'
     'MboPlotDistToNeighbor.R'
+    'MboPlotEstimationUncertainty.R'
     'MboPlotFit-helpers.R'
     'MboPlotFit.R'
     'MboPlotInputSpace.R'

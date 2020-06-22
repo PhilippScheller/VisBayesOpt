@@ -2,6 +2,7 @@
 
 export(MboPlot)
 export(MboPlotDistToNeighbor)
+export(MboPlotEstimationUncertainty)
 export(MboPlotFit)
 export(MboPlotInputSpace)
 export(MboPlotOptPath)
