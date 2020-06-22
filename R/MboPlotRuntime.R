@@ -32,16 +32,15 @@ MboPlotRuntime = R6Class(
         drop_na()
       df_time$total.time = df_time$train.time + df_time$propose.time
       opt_path_df = as.data.frame(self$opt_state$opt.path)
+      n_iters = opt_path_df[nrow(opt_path_df), "dob"]
 
-      if (!is.null(highlight_iter)) {
-        if(highlight_iter < 0 | highlight_iter > nrow(df_time)) {
-          stop("`highlight_iter` exceeds number of iterations from mbo run (n=", nrow(df_time), ")")
-        }
+      if (n_iters < highlight_iter) {
+        messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
+                 highlight_iter, n_iters)
+        highlight_iter = n_iters
       }
 
       df_time_long = wideToLong(df_time, 0)
-
-
 
       gg = ggplot(df_time_long, aes(x = rep(seq(1, max(opt_path_df$dob)), nrow(df_time_long)/nrow(df_time))
                                     , y = Value, color = Param))

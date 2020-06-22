@@ -31,24 +31,24 @@ MboPlotFit = R6Class(
       models = self$opt_state$opt.result$stored.models
       models = if (inherits(models, "WrappedModel")) list(models) else models
       opt_path_df = as.data.frame(opt_path)
-      niter = opt_path_df[nrow(opt_path_df), "dob"]
+      n_iters = opt_path_df[nrow(opt_path_df), "dob"]
       names_x = names(opt_path$par.set$pars)
 
       if (!is.null(highlight_iter)) highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
-      if (!is.null(highlight_iter)) {
-        if(highlight_iter < 0 | highlight_iter > niter) {
-          stop("`highlight_iter` exceeds number of iterations from mbo run (n=", niter, ")")
-        }
+      if (n_iters < highlight_iter) {
+        messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
+                 highlight_iter, n_iters)
+        highlight_iter = n_iters
       }
       # generate opt_path for each iteration "i" with the seen points until "i". models are
-      opt_path_iters = lapply(as.list(seq(1:niter)), function(row) opt_path_df[opt_path_df$dob != 0, ][1:row,])
-      model_iters = models[1:niter]
+      opt_path_iters = lapply(as.list(seq(1:n_iters)), function(row) opt_path_df[opt_path_df$dob != 0, ][1:row,])
+      model_iters = models[1:n_iters]
       # calculate r squared
       R2 = mapply(function(model, opt_path) {
           RSQOverIterations(model, opt_path, control, names_x)
         },opt_path = opt_path_iters, model = model_iters)
 
-      df_r2 = data.frame(R2 = R2, iter = seq(1:niter))
+      df_r2 = data.frame(R2 = R2, iter = seq(1:n_iters))
 
       gg_r2 = ggplot(df_r2, aes(x = iter, y = R2))
       gg_r2 = gg_r2 + geom_line(na.rm = TRUE)
@@ -60,6 +60,8 @@ MboPlotFit = R6Class(
       }
       gg_r2 = gg_r2 + xlab("Iteration")
       gg_r2 = gg_r2 + ylab(bquote(R^2))
+      gg_r2 = gg_r2 + ggtitle(bquote("In-Sample"~R^2))
+
       return(gg_r2)
     }
   )
