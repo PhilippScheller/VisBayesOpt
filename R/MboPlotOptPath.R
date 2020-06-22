@@ -55,8 +55,6 @@ MboPlotOptPath = R6Class(
         if (is.null(feature)) stop("The mbo run has more than 1 feature: please specify 'feature' for partial dependance plot (PDP)")
         assertCharacter(feature)
         checkChoice(feature, names_x)
-
-
       }
 
       if (n_obj > 1L) stop("Opt path can only be visualized for single objective function")

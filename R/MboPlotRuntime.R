@@ -28,8 +28,10 @@ MboPlotRuntime = R6Class(
     plot = function(highlight_iter = NULL) {
       if (!is.null(highlight_iter)) highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
       df_extra = convertListOfRowsToDataFrame(self$opt_state$opt.path$env$extra)
-      df_time = df_extra[colnames(df_extra) %in% c("train.time", "propose.time")]
+      df_time = df_extra[colnames(df_extra) %in% c("train.time", "propose.time")] %>%
+        drop_na()
       df_time$total.time = df_time$train.time + df_time$propose.time
+      opt_path_df = as.data.frame(self$opt_state$opt.path)
 
       if (!is.null(highlight_iter)) {
         if(highlight_iter < 0 | highlight_iter > nrow(df_time)) {
@@ -39,7 +41,9 @@ MboPlotRuntime = R6Class(
 
       df_time_long = wideToLong(df_time, 0)
 
-      gg = ggplot(df_time_long, aes(x = rep(seq(1, nrow(df_time)), nrow(df_time_long)/nrow(df_time))
+
+
+      gg = ggplot(df_time_long, aes(x = rep(seq(1, max(opt_path_df$dob)), nrow(df_time_long)/nrow(df_time))
                                     , y = Value, color = Param))
       gg = gg + geom_ribbon(aes(ymin = 0, ymax = Value, fill = Param), alpha = .2)
       if (!is.null(highlight_iter)) {

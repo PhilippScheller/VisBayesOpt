@@ -1,6 +1,6 @@
 #' @title MboPlotFit
 #'
-#' @include MboPlot-helpers.R
+#' @include MboPlotFit-helpers.R
 #'
 #' @import checkmate
 #' @import mlrMBO
@@ -19,71 +19,49 @@ MboPlotFit = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
-    #' Plots the fit of the model at a specified iteration in the mbo run.
+    #' Plots the fit of the model using R-squared for each iteration of the mbo run.
+    #'
+    #' #' @param highlight_iter (\code{integer(1) | NULL})\cr
+    #' Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.
     #'
     #' @return ([ggplot]).
-    plot = function() {
-
+    plot = function(highlight_iter = NULL) {
       opt_path = self$opt_state$opt.path
-      opt_fun = self$opt_state$opt.problem$fun
-      par_set = opt_state$opt.path$par.set
-      mean_fun = smoof::getMeanFunction(opt_fun) # NULL if not noisy
       control = self$opt_state$opt.problem$control
+      models = self$opt_state$opt.result$stored.models
+      models = if (inherits(models, "WrappedModel")) list(models) else models
+      opt_path_df = as.data.frame(opt_path)
+      niter = opt_path_df[nrow(opt_path_df), "dob"]
+      names_x = names(opt_path$par.set$pars)
 
-      if (!is.null(mean_fun)) {
-        y_true = vnapply(convertRowsToList(getOptPathX(opt_path), name.list = TRUE, name.vector = TRUE), mean_fun)
+      if (!is.null(highlight_iter)) highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
+      if (!is.null(highlight_iter)) {
+        if(highlight_iter < 0 | highlight_iter > niter) {
+          stop("`highlight_iter` exceeds number of iterations from mbo run (n=", niter, ")")
+        }
       }
-      if (is.null(name_y)) {
-        name_y = "y"
+      # generate opt_path for each iteration "i" with the seen points until "i". models are
+      opt_path_iters = lapply(as.list(seq(1:niter)), function(row) opt_path_df[opt_path_df$dob != 0, ][1:row,])
+      model_iters = models[1:niter]
+      # calculate r squared
+      R2 = mapply(function(model, opt_path) {
+          RSQOverIterations(model, opt_path, control, names_x)
+        },opt_path = opt_path_iters, model = model_iters)
+
+      df_r2 = data.frame(R2 = R2, iter = seq(1:niter))
+
+      gg_r2 = ggplot(df_r2, aes(x = iter, y = R2))
+      gg_r2 = gg_r2 + geom_line(na.rm = TRUE)
+      gg_r2 = gg_r2 + geom_point(shape = 4, na.rm = TRUE)
+      if (!is.null(highlight_iter)) {
+        df_line = data.frame(x = c(highlight_iter, highlight_iter), y = c(0, Inf))
+        gg_r2 = gg_r2 + geom_line(data = df_line, mapping = aes(x = x, y = y),
+                                col = "black", lty = "dashed")
       }
-      if (is.null(mean_fun)) {
-        evals = evaluate(opt_fun, par_set, n_param, par_types, noisy, noisy.evals = 20, points.per.dim = 50,
-                         names_x, name_y)
-      } else {
-        evals = evaluate(mean_fun, par_set, n_param, par_types, noisy = FALSE, noisy.evals = 1, points.per.dim = 50,
-                         names_x, name_y)
-      }
-      evals_x = evals[, getParamIds(par_set) , drop = FALSE]
-
-      infill.mean = makeMBOInfillCritMeanResponse()$fun
-      y_hat = ifelse(control$minimize, 1, -1) * infill.mean(evals_x, list(model), control)
-
-
-      print(y_true)
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ###########################################################################################################################
-
-      # opt_path_df = as.data.frame(self$opt_state$opt.path)
-      # n_iters = max(opt_path_df$dob)
-      # n_init = nrow(opt_path_df) - n_iters
-      #
-      # if (n_iters < highlight_iter) {
-      #   messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
-      #            highlight_iter, n_iters)
-      #   highlight_iter = n_iters
-      # }
-      #
-      # assertFlag(densregion)
-      # assertNumber(se_factor, lower = 0)
-      # par_set = self$opt_state$opt.path$par.set
-      # names_x = names(par_set$pars)
-      # par_types = getParamTypes(par_set)
-      # n_param = sum(getParamLengths(par_set))
-      # n_obj = self$opt_state$opt.problem$control$n.objectives
-
-
+      gg_r2 = gg_r2 + xlab("Iteration")
+      gg_r2 = gg_r2 + ylab(bquote(R^2))
+      return(gg_r2)
     }
   )
 )
+
