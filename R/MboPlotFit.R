@@ -34,11 +34,13 @@ MboPlotFit = R6Class(
       n_iters = opt_path_df[nrow(opt_path_df), "dob"]
       names_x = names(opt_path$par.set$pars)
 
-      if (!is.null(highlight_iter)) highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
-      if (n_iters < highlight_iter) {
-        messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
+      if (!is.null(highlight_iter)) {
+        highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
+        if (n_iters < highlight_iter) {
+          messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
                  highlight_iter, n_iters)
-        highlight_iter = n_iters
+          highlight_iter = n_iters
+        }
       }
       # generate opt_path for each iteration "i" with the seen points until "i". models are
       opt_path_iters = lapply(as.list(seq(1:n_iters)), function(row) opt_path_df[opt_path_df$dob != 0, ][1:row,])

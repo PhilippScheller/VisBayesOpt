@@ -26,18 +26,23 @@ MboPlotRuntime = R6Class(
     #'
     #' @return ([ggplot]).
     plot = function(highlight_iter = NULL) {
-      if (!is.null(highlight_iter)) highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
+      opt_path_df = as.data.frame(self$opt_state$opt.path)
+      n_iters = opt_path_df[nrow(opt_path_df), "dob"]
+      print(n_iters)
+
       df_extra = convertListOfRowsToDataFrame(self$opt_state$opt.path$env$extra)
       df_time = df_extra[colnames(df_extra) %in% c("train.time", "propose.time")] %>%
         drop_na()
+      #df_time$log.ecec.time = log(self$opt_state$opt.path$env$exec.time[(nrow(opt_path_df)-n_iters+1):nrow(opt_path_df)])
       df_time$total.time = df_time$train.time + df_time$propose.time
-      opt_path_df = as.data.frame(self$opt_state$opt.path)
-      n_iters = opt_path_df[nrow(opt_path_df), "dob"]
 
-      if (n_iters < highlight_iter) {
-        messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
+      if (!is.null(highlight_iter)) {
+        highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
+        if (n_iters < highlight_iter) {
+          messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
                  highlight_iter, n_iters)
-        highlight_iter = n_iters
+          highlight_iter = n_iters
+        }
       }
 
       df_time_long = wideToLong(df_time, 0)
