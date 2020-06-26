@@ -22,6 +22,16 @@ MboPlotOptPath = R6Class(
   "MboPlotOptPath",
   inherit = MboPlot,
   public = list(
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
+    initialize = function(opt_state) {
+      param_set = makeParamSet(makeIntegerParam("highlight_iter"),
+                               makeDiscreteParam("feature", values = getParam(opt_state$opt.path$par.set)))
+      param_vals = list(highlight_iter = 1L, feature = NULL) # default value, else set with function `set_param_vals()`
+      super$initialize(opt_state, param_set, param_vals)
+    },
     #' @field stored_pdp (`list()`)\cr
     #'   List for storing already calculated feature effect object for PDPs. Helps to avoid re-calculation in case
     #'   it was already done.
@@ -44,7 +54,8 @@ MboPlotOptPath = R6Class(
     #' To be specified.
     #'
     #' @return ([ggplot]).
-    plot = function(highlight_iter = 1L, feature = NULL, parallel = TRUE, se_factor = 1L, trafo = NULL) {
+    plot = function(highlight_iter = self$param_vals$highlight_iter, feature = self$param_vals$feature,
+                    parallel = TRUE, se_factor = 1L, trafo = NULL, densregion = TRUE) {
 
       opt_path_df = as.data.frame(self$opt_state$opt.path)
       n_iters = max(opt_path_df$dob)

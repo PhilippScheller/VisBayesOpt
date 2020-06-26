@@ -1,5 +1,64 @@
 #### Helpers for 'generateParamUiShiny()'
 
+generateParamUi = function(param_set, param_vals) {
+  param_types = getParamTypes(param_set)
+  param_names = getParam(param_set)
+
+
+  params_uis = Map(function(param, param_val, param_type, param_name){
+    param_choice = get(param_name, param)$values
+    input_label = paste("Select value for", param_name)
+
+    if (param_type %in% c("numeric", "integer")) {
+      if (param_type == "integer") {
+        step = 1L
+      } else {
+        step = NA
+      }
+      if (is.null(param$lower)) param$lower = NA
+      if (is.null(param$upper)) param$upper = NA
+      input = numericInput(param_name, value = param_val, min = param$lower,
+                         max = param$upper, step = step, label = input_label)
+    } else {
+      if (param_type %in% c("logical", "discrete")) {
+        input = selectInput(param_name, label = input_label, choices = param_choice)
+      } else {
+        input = textInput(param_name, param_val, label = input_label)
+      }
+    }
+    input_list = list()
+    input_list[[param_name]] = input
+
+    return(input_list)
+
+  }, param = list(param_set$pars), param_val = param_vals, param_type = param_types, param_name = param_names)
+  return(params_uis)
+}
+
+
+paramBox = function(title, input, fill = TRUE) {#, desc
+  content = div(class = "param-box",
+                span(class = "param-box-title", class = if (fill) "param-box-filled",
+                     title),
+                span(class = "param-box-inp", input),
+                # span(class = "param-box-desc", desc)
+  )
+  content = div(class = "col-sm-12", content)
+  return(content)
+}
+
+
+
+
+
+
+
+
+
+
+#old
+#######################################################################################################################
+
 getParamUi = function(par_set) {
   expect_class(par_set, "ParamSet")
 

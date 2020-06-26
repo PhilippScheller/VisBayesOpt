@@ -25,6 +25,15 @@ MboPlotDistToNeighbor = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
+    initialize = function(opt_state) {
+      param_set = makeParamSet(makeDiscreteParam("dist_measure", c("min", "max", "mean")))
+      param_vals = list(dist_measure = "min") # default value, else set with function `set_param_vals()`
+      super$initialize(opt_state, param_set, param_vals)
+    },
+    #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
     #' @param dist_measure (`character(1)`)
@@ -33,7 +42,7 @@ MboPlotDistToNeighbor = R6Class(
     #'   the neighbors while `max` uses maximum distance and `mean` calculates arithmetic mean distance.
     #'
     #' @return ([ggplot]).
-    plot = function(dist_measure = c("min", "max", "mean")) {
+    plot = function(dist_measure = self$param_vals$dist_measure) {
       if (length(dist_measure) != 1L) stop("Only 1 distance measure can be calculated.")
       dist_measure = assert_class(dist_measure, "character")
       if (!check_function(get(dist_measure))) stop("Chosen `dist_measure` cannot be evaluated as a function")

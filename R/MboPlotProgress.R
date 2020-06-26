@@ -21,22 +21,27 @@ MboPlotProgress = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
-      param_set = makeParamSet(makeIntegerParam("max_iter", lower = 0, upper = opt_state$loop))
-      self$param_vals = list(max_iter = opt_state$loop)
-      super$initialize(opt_state)
+      param_set = makeParamSet()
+      param_vals = list()
+      super$initialize(opt_state, param_set, param_vals)
     },
     #' @description
     #' Plots minimal value of model (y) of mbo run over the iterations.
     #'
     #' @return ([ggplot]).
     plot = function() {
-      opdf = as.data.frame(self$opt_state$opt.path)
-      opdf$cumy = cummin(opdf$y) #cummax if max problem
-      opdf = opdf[opdf$dob <= self$param_vals$max_iter,]
+      opt_path_df = as.data.frame(self$opt_state$opt.path)
 
-      g = ggplot(opdf, aes(x = dob, y = cumy))
-      g = g + geom_line()
-      return(g)
+      if (self$opt_state$opt.problem$control$minimize) {
+        opt_path_df$cumy = cummin(opt_path_df$y)
+      } else {
+        pt_path_df$cumy = cummax(opt_path_df$y)
+      }
+      opt_path_df = opt_path_df[opt_path_df$dob <= self$opt_state$loop,]
+
+      gg = ggplot(opt_path_df, aes(x = dob, y = cumy))
+      gg = gg + geom_line()
+      return(gg)
     }
   )
 )

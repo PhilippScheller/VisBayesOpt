@@ -25,7 +25,7 @@ MboShiny = R6Class(
     #'
     #' @param mbo_plot ([MboPlot]).
     initialize = function(mbo_plot) {
-      self$mbo_plot = assert_class(mbo_plot, "MboPlot")
+      self$mbo_plot = mbo_plot
     },
     #' @description
     #' Generates ui elements of all parameters in the parameter set. The html elements are attached
@@ -35,11 +35,11 @@ MboShiny = R6Class(
     #'   If TRUE, the output will only be saved in the object and not be returned.
     #'
     #' @return (`html`).
-    generateParamUiShiny = function() {
-      if (length(self$mbo_plot$param.set$pars) == 0L) {
-        shiny_uis = h4("No hyperparameters found in the object provided.")
+    generatePlotParamUi = function() {
+      if (isEmpty(self$mbo_plot$param_set)) {
+        shiny_uis = h4("There is no param_set for this plot type.")
       } else {
-        shiny_uis = getParamUi(self$mbo_plot$param_set)
+        shiny_uis = generateParamUi(self$mbo_plot$param_set, self$mbo_plot$param_vals)
       }
       return(shiny_uis)
     },
@@ -53,7 +53,7 @@ MboShiny = R6Class(
       summary_text = summary_mbo$getMboSummary()
 
       if (length(summary) == 0L) {
-        summary = h4("No summary found in the object provided.")
+        summary = h4("No summary found in the plot object provided.")
       } else {
         summary = getParamTableFromMboSummary(summary_text)
       }
@@ -61,3 +61,4 @@ MboShiny = R6Class(
     }
   )
 )
+

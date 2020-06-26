@@ -19,16 +19,24 @@ MboPlotRuntime = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
+    initialize = function(opt_state) {
+      param_set = makeParamSet(makeIntegerParam("highlight_iter"))
+      param_vals = list(highlight_iter = 1L) # default value, else set with function `set_param_vals()`
+      super$initialize(opt_state, param_set, param_vals)
+    },
+    #' @description
     #' Plots minimal value of model (y) of mbo run over the iterations.
     #'
     #' @param highlight_iter (\code{integer(1) | NULL})\cr
     #' Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.
     #'
     #' @return ([ggplot]).
-    plot = function(highlight_iter = NULL) {
+    plot = function(highlight_iter = self$param_vals$highlight_iter) {
       opt_path_df = as.data.frame(self$opt_state$opt.path)
       n_iters = opt_path_df[nrow(opt_path_df), "dob"]
-      print(n_iters)
 
       df_extra = convertListOfRowsToDataFrame(self$opt_state$opt.path$env$extra)
       df_time = df_extra[colnames(df_extra) %in% c("train.time", "propose.time")] %>%

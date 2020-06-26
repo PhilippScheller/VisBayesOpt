@@ -25,6 +25,15 @@ MboPlotInputSpace = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
+    initialize = function(opt_state) {
+      param_set = makeParamSet(makeLogicalParam("include_prior"), makeIntegerParam("n", lower = 1L))
+      param_vals = list(include_prior = TRUE, n = 1000L) # default value, else set with function `set_param_vals()`
+      super$initialize(opt_state, param_set, param_vals)
+    },
+    #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
     #' @param include_prior (`boolean(1)`)
@@ -33,7 +42,7 @@ MboPlotInputSpace = R6Class(
     #'   Specifies the number of samples drawn for prior design generated.
     #'
     #' @return ([ggplot]).
-    plot = function(include_prior = TRUE, n = 1000L) {
+    plot = function(include_prior = self$param_vals$include_prior, n = self$param_vals$n) {
       df = getOptPathX(self$opt_state$opt.path)
 
       df_wide_post_num = df %>%
@@ -67,13 +76,11 @@ MboPlotInputSpace = R6Class(
                                         mapping = aes(y = ..prop.., group = 1, fill = type),
                                     alpha = .4)
        }
-
         gg_num = gg_num + facet_wrap(Param ~ ., scales = "free")
         gg_num = gg_num + ggtitle("Mbo search space: evaluated numeric parameters")
         gg_num = gg_num + xlab("Param value")
         gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
       }
-
       if (ncols_df[2] > 1) {
         gg_disc = ggplot(filter(df_long_disc, type == "posterior"), aes(x = Value))
         gg_disc = gg_disc + geom_bar(aes(y = ..prop.., group = 2, fill = type), alpha = .4)
