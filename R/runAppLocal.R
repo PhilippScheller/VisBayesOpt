@@ -6,7 +6,6 @@
 #' @import shiny
 #'
 #' @export
-
 runAppLocal = function() {
 
   appDir <- system.file("shinyApp", package = "VisBayesOpt")

@@ -8,7 +8,6 @@
 #' @import shiny
 #'
 #' @importFrom R6 R6Class
-#' @importFrom textutils toHTML
 #'
 #' @description
 #' This class transforms inputs into shiny uis.
