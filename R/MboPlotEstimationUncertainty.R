@@ -17,13 +17,22 @@ MboPlotEstimationUncertainty = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
+    initialize = function(opt_state) {
+      param_set = makeParamSet(makeIntegerParam("highlight_iter"))
+      param_vals = list(highlight_iter = 1L) # default value, else set with function `set_param_vals()`
+      super$initialize(opt_state, param_set, param_vals)
+    },
+    #' @description
     #' Plots the estimation uncertainty (y_evaluated vs y_estimated) for all previous outcome values at an iteration.
     #'
     #' @param highlight_iter (\code{integer(1) | 1})\cr
     #' Specifies the iteration at which the uncertainty estimation is calculated.
     #'
     #' @return ([ggplot]).
-    plot = function(highlight_iter) {
+    plot = function(highlight_iter = self$param_vals$highlight_iter) {
       opt_path = self$opt_state$opt.path
       control = self$opt_state$opt.problem$control
       models = self$opt_state$opt.result$stored.models
@@ -51,7 +60,7 @@ MboPlotEstimationUncertainty = R6Class(
       y_eval = opt_path_iter$y
       y_df = data.frame(y.hat = y_hat, y.eval = y_eval, y.absdiff = abs(y_hat - y_eval), iters = seq(1:highlight_iter))
 
-
+      if (highlight_iter > 1) {
       gg_iter = ggplot(y_df, aes(x = iters, y = y.absdiff))
       gg_iter = gg_iter + geom_line(na.rm = TRUE)
       gg_iter = gg_iter + ylab(bquote(d[absolute]))
@@ -61,12 +70,15 @@ MboPlotEstimationUncertainty = R6Class(
       gg_dens = ggplot(y_df, aes(x = y.absdiff))
       gg_dens = gg_dens + geom_bar(na.rm = TRUE)
       gg_dens = gg_dens + scale_x_binned(n.breaks = 20, labels = scales::number_format(accuracy = .01))
-      gg_dens = gg_dens + ylab(bquote(d[absolute]))
-      gg_dens = gg_dens + xlab("Iteration")
+      gg_dens = gg_dens + ylab(bquote(count( d[absolute])))
+      gg_dens = gg_dens + xlab(bquote(d[absolute]))
       gg_dens = gg_dens + ggtitle(paste("Uncertainty of Estimation in Iteration", highlight_iter))
 
       gg = ggarrange(gg_iter, gg_dens, ncol = 2)
 
+      } else {
+        gg = paste("Plot only available for highlight_iter > 1")
+      }
       return(gg)
     }
   )

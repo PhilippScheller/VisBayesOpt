@@ -1,0 +1,21 @@
+---
+title: "Doc"
+author: "Philipp Scheller"
+date: "6/29/2020"
+output: html_document
+---
+
+```{r setup, echo=FALSE}
+library(knitr)
+library(BBmisc)
+opts_chunk$set(size = "footnotesize", echo = FALSE)
+options(digits = 3L)
+reqReactive = function(reac) {
+  tryCatch(reac, error = function(err) NULL)
+}
+```
+
+
+```{r}
+
+```

@@ -53,7 +53,7 @@ server <- function(input, output, session) {
   observe({
     validate(need(storage$check == "ok", ""))
     mbo_models$mbo_summary = MboSummary$new(storage$mboObj1)
-    mbo_models$mbo_plot_dist_neighbor = MboPlotDistToNeighbor$new(storage$mboObj1)
+    mbo_models$mbo_dist_neighbor = MboPlotDistToNeighbor$new(storage$mboObj1)
     mbo_models$mbo_progress = MboPlotProgress$new(storage$mboObj1)
     mbo_models$mbo_input_space = MboPlotInputSpace$new(storage$mboObj1)
     mbo_models$mbo_search_space = MboPlotSearchSpace$new(storage$mboObj1)
@@ -61,6 +61,7 @@ server <- function(input, output, session) {
     mbo_models$mbo_runtime = MboPlotRuntime$new(storage$mboObj1)
     mbo_models$mbo_opt_path = MboPlotOptPath$new(storage$mboObj1)
     mbo_models$mbo_fit = MboPlotFit$new(storage$mboObj1)
+    mbo_models$mbo_uncertainty = MboPlotEstimationUncertainty$new(storage$mboObj1)
   })
 
   #Summary of mbo run
@@ -86,6 +87,7 @@ server <- function(input, output, session) {
   # Plot input space
   output$InputSpacePlot = renderPlot({
     validate(need(storage$check == "ok", ""))
+    mbo_models$mbo_input_space$set_param_vals(list(include_prior = as.logical(input$include_prior)))
     mbo_plots$plot_inputSpace = mbo_models$mbo_input_space$plot()
     return(mbo_plots$plot_inputSpace)
   })
@@ -93,6 +95,7 @@ server <- function(input, output, session) {
   # Plot search space
   output$SearchSpacePlot = renderPlot({
     validate(need(storage$check == "ok", ""))
+    mbo_models$mbo_search_space$set_param_vals(list(include_y = as.logical(input$include_y)))
     mbo_plots$plot_searchSpace = mbo_models$mbo_search_space$plot()
     return(mbo_plots$plot_searchSpace)
   })
@@ -102,8 +105,8 @@ server <- function(input, output, session) {
     # The R6 class 'MboShiny' names the generated uis based on their names in the function, e.g.in
     # 'MboPlotDistToNeighbor' the plot function is 'plot(dist_measure)' thus the ui is names 'dist_measure'.
     validate(need(storage$check == "ok", ""))
-    mbo_models$mbo_plot_dist_neighbor$set_param_vals(list(dist_measure = input$dist_measure)) #adjust for selection from input
-    mbo_plots$plot_distToNeighbor = mbo_models$mbo_plot_dist_neighbor$plot() # plot based on selected input
+    mbo_models$mbo_dist_neighbor$set_param_vals(list(dist_measure = input$dist_measure)) #adjust for selection from input
+    mbo_plots$plot_distToNeighbor = mbo_models$mbo_dist_neighbor$plot() # plot based on selected input
     return(mbo_plots$plot_distToNeighbor)
   })
 
@@ -138,11 +141,21 @@ server <- function(input, output, session) {
     return(mbo_plots$plot_fit)
   })
 
+  # Plot uncertainty
+  output$UncertaintyPlot = renderPlot({
+    req(input$highlight_iter)
+    validate(need(storage$check == "ok", ""))
+    mbo_models$mbo_uncertainty$set_param_vals(list(highlight_iter = input$highlight_iter)) #adjust for selection from input
+    mbo_plots$plot_uncertainty = mbo_models$mbo_uncertainty$plot()
+    return(mbo_plots$plot_uncertainty)
+  })
+
   # create uis for plot param_set for tab 'Visualize mlrMBO Run'
   output$ui_run = renderUI({
 
     validate(need(storage$check == "ok", ""))
-    models = list(mbo_plot_dist_neighbor = mbo_models$mbo_plot_dist_neighbor)
+    models = list(mbo_dist_neighbor = mbo_models$mbo_dist_neighbor, mbo_input_space = mbo_models$mbo_input_space,
+                  mbo_search_space = mbo_models$mbo_search_space)
     names = names(models)
     uis = generateUi(models, names)
     unique_uis = removeDuplicateUi(uis)

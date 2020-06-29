@@ -38,8 +38,8 @@ MboPlotRuntime = R6Class(
       opt_path_df = as.data.frame(self$opt_state$opt.path)
       n_iters = opt_path_df[nrow(opt_path_df), "dob"]
 
-      df_extra = convertListOfRowsToDataFrame(self$opt_state$opt.path$env$extra)
-      df_time = df_extra[colnames(df_extra) %in% c("train.time", "propose.time")] %>%
+      #df_extra = convertListOfRowsToDataFrame(self$opt_state$opt.path$env$extra)
+      df_time = opt_path_df[colnames(opt_path_df) %in% c("train.time", "propose.time", "exec.time")] %>%
         drop_na()
       #df_time$log.ecec.time = log(self$opt_state$opt.path$env$exec.time[(nrow(opt_path_df)-n_iters+1):nrow(opt_path_df)])
       df_time$total.time = df_time$train.time + df_time$propose.time
@@ -54,6 +54,7 @@ MboPlotRuntime = R6Class(
       }
 
       df_time_long = wideToLong(df_time, 0)
+      df_time_long$Plot = as.factor(ifelse(df_time_long$Param == "exec.time", "Execution", "Train and Propose"))
 
       gg = ggplot(df_time_long, aes(x = rep(seq(1, max(opt_path_df$dob)), nrow(df_time_long)/nrow(df_time))
                                     , y = Value, color = Param))
@@ -66,6 +67,7 @@ MboPlotRuntime = R6Class(
       gg = gg + theme(legend.title=element_blank())
       gg = gg + xlab("Iteration")
       gg = gg + ylab("Time [seconds]")
+      gg = gg + facet_wrap(Plot ~ ., scales = "free")
 
       return(gg)
     }

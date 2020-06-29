@@ -76,7 +76,7 @@ renderVisualizeOptPathNd = function(opt_state, interest = "surrogate", feature, 
     # NOTE:- works if model_seq seen points in res.mbo do not have AF value
     #      - we care about the seen points, for which we model_seq the surrogate models, others are useless
     seen.points <- lapply(model_seq, function(x) {
-      #assertDataFrame(seen.points[[x]], all.missing = FALSE, any.missing = FALSE)
+      assertDataFrame(seen.points[[x]], all.missing = FALSE, any.missing = FALSE)
       ic = critfun(
         points = seen.points[[x]],
         models = list(sm[[as.character(x)]]),

@@ -108,17 +108,17 @@ MboPlotOptPath = R6Class(
           pdp_surrogate = renderVisualizeOptPathNd(opt_state = self$opt_state, interest = "surrogate", feature = feature,
                                                       method = "pdp", grid.size = 50, center.at = NULL, batch.size = 1000,
                                                       parallel = parallel)
-          pdp_acq = renderVisualizeOptPathNd(opt_state = self$opt_state, interest = "acquisition", feature = feature,
-                                                   method = "pdp", grid.size = 50, center.at = NULL, batch.size = 1000,
-                                                   parallel = parallel)
+          # pdp_acq = renderVisualizeOptPathNd(opt_state = self$opt_state, interest = "acquisition", feature = feature,
+          #                                          method = "pdp", grid.size = 50, center.at = NULL, batch.size = 1000,
+          #                                          parallel = parallel)
           # Bind pdp to R6 class object (therefore we do not need to recalculate once the same feature
           # is chosen with just another iteration)
           self$stored_pdp$surrogate[[feature]] = pdp_surrogate
-          self$stored_pdp$acq[[feature]] = pdp_acq
+          # self$stored_pdp$acq[[feature]] = pdp_acq
           # generate and return plot
-          p_feat = plot(pdp_surrogate[[highlight_iter]])
-          p_acq = plot(pdp_acq[[highlight_iter]])
-          p = ggarrange(p_feat, p_acq, nrow = 2)
+          p = plot(pdp_surrogate[[highlight_iter]])
+          # p_acq = plot(pdp_acq[[highlight_iter]])
+          #p = ggarrange(p_feat, p_acq, nrow = 2)
 
           return(p)
         }

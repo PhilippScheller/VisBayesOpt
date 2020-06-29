@@ -3,8 +3,10 @@
 #
 library(shiny)
 library(shinythemes)
+library(markdown)
 
 source("ui-helpers.R", local = TRUE)
+#source("Docs.Rmd", local = TRUE)
 
 # modify upload-size of files to 200MB
 options(shiny.maxRequestSize = 200 * 1024 ^ 2)
@@ -33,7 +35,8 @@ ui <- navbarPage(
       "Performance",
       fluidRow(
         uiOutput("headerPerformance"),
-        plotOutput("PerformancePlot")
+        plotOutput("PerformancePlot"),
+        includeMarkdown("Docs.Rmd")
       )
     ),
     tabPanel(
@@ -81,6 +84,10 @@ ui <- navbarPage(
              tabPanel(
                "Fit",
                fluidRow(plotOutput("FitPlot"))
+             ),
+             tabPanel(
+               "Uncertainty",
+               fluidRow(plotOutput("UncertaintyPlot"))
              )
 
              ))),

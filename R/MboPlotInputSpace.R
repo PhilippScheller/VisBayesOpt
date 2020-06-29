@@ -12,6 +12,7 @@
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %T>%
 #' @importFrom tidyr gather
+#' @importFrom dplyr select_if
 #' @importFrom scales number_format
 #' @importFrom ggpubr ggarrange
 #'
@@ -29,8 +30,8 @@ MboPlotInputSpace = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
-      param_set = makeParamSet(makeLogicalParam("include_prior"), makeIntegerParam("n", lower = 1L))
-      param_vals = list(include_prior = TRUE, n = 1000L) # default value, else set with function `set_param_vals()`
+      param_set = makeParamSet(makeLogicalParam("include_prior"))
+      param_vals = list(include_prior = TRUE) # default value, else set with function `set_param_vals()`
       super$initialize(opt_state, param_set, param_vals)
     },
     #' @description
@@ -38,13 +39,11 @@ MboPlotInputSpace = R6Class(
     #'
     #' @param include_prior (`boolean(1)`)
     #'   Specifies if bar chart over sampled prior should also be included in plot.
-    #' @param n (`integer(1)`)
-    #'   Specifies the number of samples drawn for prior design generated.
     #'
     #' @return ([ggplot]).
-    plot = function(include_prior = self$param_vals$include_prior, n = self$param_vals$n) {
+    plot = function(include_prior = self$param_vals$include_prior) {
       df = getOptPathX(self$opt_state$opt.path)
-
+      n = 1000L
       df_wide_post_num = df %>%
         select_if(is.numeric)
       df_wide_post_num = cbind(type = "posterior", df_wide_post_num)
