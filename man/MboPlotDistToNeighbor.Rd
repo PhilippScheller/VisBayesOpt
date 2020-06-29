@@ -13,6 +13,7 @@ Therefore the distance of \code{f(x)}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-new}{\code{MboPlotDistToNeighbor$new()}}
 \item \href{#method-plot}{\code{MboPlotDistToNeighbor$plot()}}
 \item \href{#method-clone}{\code{MboPlotDistToNeighbor$clone()}}
 }
@@ -20,17 +21,32 @@ Therefore the distance of \code{f(x)}
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="VisBayesOpt" data-topic="MboPlot" data-id="initialize">}\href{../../VisBayesOpt/html/MboPlot.html#method-initialize}{\code{VisBayesOpt::MboPlot$initialize()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="VisBayesOpt" data-topic="MboPlot" data-id="set_param_vals">}\href{../../VisBayesOpt/html/MboPlot.html#method-set_param_vals}{\code{VisBayesOpt::MboPlot$set_param_vals()}}\out{</span>}
 }
 \out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+Creates a new instance of this \link[R6:R6Class]{R6} class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$new(opt_state)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{opt_state}}{(\link{OptState}).}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-plot"></a>}}
 \subsection{Method \code{plot()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$plot(dist_measure = c("min", "max", "mean"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$plot(dist_measure = self$param_vals$dist_measure)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

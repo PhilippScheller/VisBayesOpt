@@ -17,6 +17,15 @@ MboSummary = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
+    initialize = function(opt_state) {
+      param_set = makeParamSet()
+      param_vals = list()
+      super$initialize(opt_state, param_set, param_vals)
+    },
+    #' @description
     #' Summarizes all relevant characterisitcs of the mbo run.
     #'
     #' @return (`list()`).

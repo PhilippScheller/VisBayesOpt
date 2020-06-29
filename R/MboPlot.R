@@ -21,19 +21,19 @@
 MboPlot = R6Class(
   "MboPlot",
   public = list(
-    #' @field opt_state ([OptState])\cr
-    #'   Environment containing necessary information needed during optimization in MBO.
-    opt_state = NULL,
-    #' @field param_set ([ParamSet])\cr
-    #'   Environment containing necessary parameters for the plot. NOT to be confused with the mbo parameter set.
-    param_set = NULL,
-    #' @field param_vals ([Param])\cr
-    #'   Object containing the parameter values.
-    param_vals = NULL,
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param opt_state ([OptState]).
+    #' @param opt_state ([OptState])\cr
+    #'   Environment containing necessary information needed during optimization in MBO.
+    opt_state = NULL,
+    #' @param param_set ([ParamSet])\cr
+    #'   Environment containing necessary parameters for the plot. NOT to be confused with the mbo parameter set.
+    param_set = NULL,
+    #' @param param_vals ([Param])\cr
+    #'   Named list containing the parameter values.
+    param_vals = NULL,
+    #'
     initialize = function(opt_state, param_set, param_vals) {
       self$opt_state = assert_class(opt_state, "OptState")
       self$param_set = assert_class(param_set, "ParamSet")

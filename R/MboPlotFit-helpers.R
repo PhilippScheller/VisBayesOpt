@@ -1,14 +1,11 @@
 
 
 RSQOverIterations = function(model, opt_path, control, names_x) {
-  # assertClass(opt_path, "OptPath")
-  # assertClass(control, "MBOControl")
   niter = opt_path[nrow(opt_path), "dob"]
 
   infill.mean = makeMBOInfillCritMeanResponse()$fun
-  opt_path_x = opt_path[,names_x]
-  new_x = opt_path_x[(nrow(opt_path)-niter+1):nrow(opt_path),]
-  #print(new_x)
+  opt_path_x = opt_path[,names_x, drop = FALSE]
+  new_x = opt_path_x[(nrow(opt_path)-niter+1):nrow(opt_path),, drop = FALSE]
 
   y_hat = ifelse(control$minimize, 1, -1) * infill.mean(new_x, list(model), control)
   y_eval = opt_path$y

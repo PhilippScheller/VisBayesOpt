@@ -14,13 +14,12 @@ createTabPanels = function(titles, mbo_plots){
     )
   }, title = titles, plot = mbo_plots)
 
-  print(t)
 }
 
-generateUi = function(models, names) {
-  assertList(models)
+generateUi = function(plots, names) {
+  assertList(plots)
   assertCharacter(names)
-  uis = sapply(models, function(x) {
+  uis = sapply(plots, function(x) {
     shiny = MboShiny$new(x)
     shiny_ui = shiny$generatePlotParamUi()
   }, simplify = FALSE)
@@ -30,11 +29,34 @@ generateUi = function(models, names) {
 
 removeDuplicateUi = function(uis) {
   assertList(uis)
-  names = sapply(uis, function(ui, x) {
-    get(x, ui[[1]])
-    }, x = "param_name")
-  test_unique = !duplicated(names)
-  unique_uis = uis[test_unique]
+
+  unlist_uis = unlist(uis, recursive = FALSE)
+  names = names(unlist(uis, recursive = FALSE))
+  duplicates = duplicated(sub(".*\\.", "", unlist(names, recursive = F)))
+  # return(duplicates)
+  unique_uis = unlist_uis[!duplicates]
+  names(unique_uis) = sub(".*\\.", "", unlist(names(unique_uis), recursive = F))# drop the "."
+
 
   return(unique_uis)
+}
+
+generateMboClasses = function(model_names, mbo_object) {
+  assertList(model_names)
+  mbo_models = list()
+  mbo_classes = lapply(model_names, function(x){
+    mbo_models[[x]] = get(x)$new(mbo_object)
+  })
+  names(mbo_classes) = names(model_names)
+  return(mbo_classes)
+}
+
+generateMboPlots = function(mbo_class_objects) {
+  assertList(mbo_class_objects)
+  plots = list()
+  mbo_plots = lapply(mbo_class_objects, function(x){
+    plots[["x"]] = x$plot()
+  })
+  names(mbo_plots) = names(mbo_class_objects)
+  return(mbo_plots)
 }

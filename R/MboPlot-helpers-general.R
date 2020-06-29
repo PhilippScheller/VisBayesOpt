@@ -1,20 +1,20 @@
 # General helpers (used in various functions)
 
-# extractFromDf = function(df, extr, keepColumNo = c(1)) {
-#   df = as.data.frame(df)
-#   extr = assert_class(extr, "list")
-#   check_fun = lapply(extr, check_function)
-#   if (!all(unlist(check_fun))) stop("Make sure that provided extractions are all functions")
-#   if (length(extr) > 1) stop("Only 1 function can be evaluated, you provided multiple ones")
-#
-#   df_select = df %>%
-#     select_if(extr)
-#   if (keepColumNo > 0) {
-#     df_select = cbind.data.frame(df[keepColumNo], cbind(df_select))
-#   }
-#
-#   return(df_select)
-# }
+extractFromDf = function(df, extr, keepColumNo = c(1)) {
+  df = as.data.frame(df)
+  extr = assert_class(extr, "list")
+  check_fun = lapply(extr, check_function)
+  if (!all(unlist(check_fun))) stop("Make sure that provided extractions are all functions")
+  if (length(extr) > 1) stop("Only 1 function can be evaluated, you provided multiple ones")
+
+  df_select = df %>%
+    select_if(extr)
+  if (keepColumNo > 0) {
+    df_select = cbind.data.frame(df[keepColumNo], cbind(df_select))
+  }
+
+  return(df_select)
+}
 
 wideToLong = function(df_wide, keyColumn = 1) {
 

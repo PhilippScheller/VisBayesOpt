@@ -75,7 +75,6 @@ MboPlotDistToNeighbor = R6Class(
         df_dist_disc_measure = as.data.frame(mat_dist_disc_measure)
         names(df_dist_disc_measure) = "Value"
       }
-# TODO: combine gower and euclidean distances.
 
       gg_dist = ggplot(df_dist_num_measure, aes(x = seq(1:nrow(df_dist_num_measure)), y = Value))
       gg_dist = gg_dist + geom_point(shape = 4)

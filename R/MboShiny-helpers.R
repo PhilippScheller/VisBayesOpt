@@ -2,10 +2,9 @@
 
 generateParamUi = function(param_set, param_vals) {
   param_types = getParamTypes(param_set)
-  param_names = getParam(param_set)
+  param_names = getParamIds(param_set)
 
-
-  params_uis = Map(function(param, param_val, param_type, param_name){
+  params_uis = mapply(function(param, param_val, param_type, param_name){
     param_choice = get(param_name, param)$values
     input_label = paste("Select value for", param_name)
 
@@ -47,8 +46,27 @@ paramBox = function(title, input, fill = TRUE) {#, desc
   return(content)
 }
 
+getParamTableFromMboSummary = function(mboSummary, names = c("Characteristic", "Value")) {
+  names = assert_class(names, "character")
+  if (length(names) != 2L) stop("Names vector has to much/less elements")
 
+  text_values = lapply(mboSummary, function(x) {
+    values = get("value", x)
+    values_combined = paste(values, collapse = ", ")
+    return(values_combined)
+  })
+  text_names = lapply(mboSummary, function(x) {
+    names = get("name", x)
+    names_combined = paste(names,  ":")
+    return(names_combined)
+  })
 
+  text_mat = matrix(c(unlist(text_names), unlist(text_values)), nrow = length(text_names))
+  text_df = data.frame(text_mat, stringsAsFactors = FALSE)
+  names(text_df) = names
+
+  return(text_df)
+}
 
 
 
@@ -138,31 +156,6 @@ makeParamUi = function(lower, upper, value, par_type, par_id, par_name) {
   return(ui)
 }
 
-
-
-getParamTableFromMboSummary = function(mboSummary, names = c("Characteristic", "Value")) {
-  names = assert_class(names, "character")
-  if (length(names) != 2L) stop("Names vector has to much/less elements")
-
-  text_values = lapply(mboSummary, function(x) {
-    values = get("value", x)
-    values_combined = paste(values, collapse = ", ")
-    return(values_combined)
-  })
-  text_names = lapply(mboSummary, function(x) {
-    names = get("name", x)
-    names_combined = paste(names,  ":")
-    return(names_combined)
-  })
-
-  text_mat = matrix(c(unlist(text_names), unlist(text_values)), nrow = length(text_names))
-  text_df = data.frame(text_mat, stringsAsFactors = FALSE)
-  names(text_df) = names
-
-  return(text_df)
-}
-
-# Helpers for generating conditional headings for sections (i.e. heading only appears when upload sucessfull)
 
 
 

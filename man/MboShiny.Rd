@@ -18,7 +18,7 @@ Object of class \code{MboPlot}.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{MboShiny$new()}}
-\item \href{#method-generateParamUiShiny}{\code{MboShiny$generateParamUiShiny()}}
+\item \href{#method-generatePlotParamUi}{\code{MboShiny$generatePlotParamUi()}}
 \item \href{#method-generateSummaryTable}{\code{MboShiny$generateSummaryTable()}}
 \item \href{#method-clone}{\code{MboShiny$clone()}}
 }
@@ -40,12 +40,12 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-generateParamUiShiny"></a>}}
-\subsection{Method \code{generateParamUiShiny()}}{
+\if{html}{\out{<a id="method-generatePlotParamUi"></a>}}
+\subsection{Method \code{generatePlotParamUi()}}{
 Generates ui elements of all parameters in the parameter set. The html elements are attached
 to the object which calls the function.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generateParamUiShiny()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboShiny$generatePlotParamUi()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

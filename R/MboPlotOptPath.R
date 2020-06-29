@@ -1,8 +1,8 @@
 #' @title MboPlotOptPath
 #'
 #' @include MboPlot-helpers-general.R
-#' @include MboPlot-helpers-RenderVisualizeOptPath1d.R
-#' @include MboPlot-helpers-RenderVisualizeOptPathNd.R
+#' @include MboPlot-helpers-renderVisualizeOptPath1d.R
+#' @include MboPlot-helpers-renderVisualizeOptPathNd.R
 #'
 #' @import checkmate
 #' @import mlrMBO
@@ -28,7 +28,7 @@ MboPlotOptPath = R6Class(
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
       param_set = makeParamSet(makeIntegerParam("highlight_iter"),
-                               makeDiscreteParam("feature", values = getParam(opt_state$opt.path$par.set)))
+                               makeDiscreteParam("feature", values = getParamIds(opt_state$opt.path$par.set)))
       param_vals = list(highlight_iter = 1L, feature = NULL) # default value, else set with function `set_param_vals()`
       super$initialize(opt_state, param_set, param_vals)
     },
@@ -50,8 +50,10 @@ MboPlotOptPath = R6Class(
     #' @param se_factor (\code{numeric(1) | 1})\cr
     #' Specifies the scaling factor for the uncertainty (standard error) estimate for the 1 dimensional case.
     #' The default value is that no up/or downscaling is applied.
-    #' @param trafo ([trafos]| NULL})\cr
+    #' @param trafo ([trafos]| NULL)\cr
     #' To be specified.
+    #' @param densregion (\code{boolean(1) | TRUE})\cr
+    #' Specifies if densregion should be plotted.
     #'
     #' @return ([ggplot]).
     plot = function(highlight_iter = self$param_vals$highlight_iter, feature = self$param_vals$feature,

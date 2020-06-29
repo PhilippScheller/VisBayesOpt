@@ -19,13 +19,22 @@ MboPlotFit = R6Class(
   inherit = MboPlot,
   public = list(
     #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param opt_state ([OptState]).
+    initialize = function(opt_state) {
+      param_set = makeParamSet(makeIntegerParam("highlight_iter"))
+      param_vals = list(highlight_iter = 1L) # default value, else set with function `set_param_vals()`
+      super$initialize(opt_state, param_set, param_vals)
+    },
+    #' @description
     #' Plots the fit of the model using R-squared for each iteration of the mbo run.
     #'
     #' @param highlight_iter (\code{integer(1) | NULL})\cr
     #' Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.
     #'
     #' @return ([ggplot]).
-    plot = function(highlight_iter = NULL) {
+    plot = function(highlight_iter = self$param_vals$highlight_iter) {
       opt_path = self$opt_state$opt.path
       control = self$opt_state$opt.problem$control
       models = self$opt_state$opt.result$stored.models

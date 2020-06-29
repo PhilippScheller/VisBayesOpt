@@ -21,6 +21,7 @@ it was already done.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-new}{\code{MboPlotOptPath$new()}}
 \item \href{#method-plot}{\code{MboPlotOptPath$plot()}}
 \item \href{#method-clone}{\code{MboPlotOptPath$clone()}}
 }
@@ -28,10 +29,25 @@ it was already done.}
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="VisBayesOpt" data-topic="MboPlot" data-id="initialize">}\href{../../VisBayesOpt/html/MboPlot.html#method-initialize}{\code{VisBayesOpt::MboPlot$initialize()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="VisBayesOpt" data-topic="MboPlot" data-id="set_param_vals">}\href{../../VisBayesOpt/html/MboPlot.html#method-set_param_vals}{\code{VisBayesOpt::MboPlot$set_param_vals()}}\out{</span>}
 }
 \out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+Creates a new instance of this \link[R6:R6Class]{R6} class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotOptPath$new(opt_state)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{opt_state}}{(\link{OptState}).}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-plot"></a>}}
@@ -39,11 +55,12 @@ it was already done.}
 Plots the opt state for a specified iteration of the mbo run.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MboPlotOptPath$plot(
-  highlight_iter = 1L,
-  feature = NULL,
+  highlight_iter = self$param_vals$highlight_iter,
+  feature = self$param_vals$feature,
   parallel = TRUE,
   se_factor = 1L,
-  trafo = NULL
+  trafo = NULL,
+  densregion = TRUE
 )}\if{html}{\out{</div>}}
 }
 
@@ -64,6 +81,12 @@ cores are used.}
 \item{\code{se_factor}}{(\code{numeric(1) | 1})\cr
 Specifies the scaling factor for the uncertainty (standard error) estimate for the 1 dimensional case.
 The default value is that no up/or downscaling is applied.}
+
+\item{\code{trafo}}{(\link{trafos}| NULL)\cr
+To be specified.}
+
+\item{\code{densregion}}{(\code{boolean(1) | TRUE})\cr
+Specifies if densregion should be plotted.}
 }
 \if{html}{\out{</div>}}
 }

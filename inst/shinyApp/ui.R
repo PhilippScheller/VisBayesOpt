@@ -75,6 +75,10 @@ ui <- navbarPage(
              tabPanel(
                "Run Time",
                fluidRow(plotOutput("RuntimePlot"))
+             ),
+             tabPanel(
+               "Fit",
+               fluidRow(plotOutput("FitPlot"))
              )
 
              ))),

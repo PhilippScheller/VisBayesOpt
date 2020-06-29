@@ -6,17 +6,6 @@
 \description{
 This is the base class for plotting in this package.
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{opt_state}}{(\link{OptState})\cr
-Environment containing necessary information needed during optimization in MBO.}
-
-\item{\code{param_vals}}{(\link{Param})\cr
-Object containing the parameter values.}
-}
-\if{html}{\out{</div>}}
-}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -30,13 +19,20 @@ Object containing the parameter values.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlot$new(opt_state)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlot$new(opt_state, param_set, param_vals)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{opt_state}}{(\link{OptState}).}
+\item{\code{opt_state}}{(\link{OptState})\cr
+Environment containing necessary information needed during optimization in MBO.}
+
+\item{\code{param_set}}{(\link{ParamSet})\cr
+Environment containing necessary parameters for the plot. NOT to be confused with the mbo parameter set.}
+
+\item{\code{param_vals}}{(\link{Param})\cr
+Named list containing the parameter values.}
 }
 \if{html}{\out{</div>}}
 }
