@@ -4,6 +4,8 @@
 library(shiny)
 library(shinythemes)
 
+source("ui-helpers.R", local = TRUE)
+
 # modify upload-size of files to 200MB
 options(shiny.maxRequestSize = 200 * 1024 ^ 2)
 

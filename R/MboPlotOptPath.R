@@ -13,6 +13,7 @@
 #'
 #' @importFrom R6 R6Class
 #' @importFrom parallelMap parallelMap
+#' @importFrom tidyr drop_na
 #'
 #' @description
 #' This class plots the opt state for a specified iteration of the mbo run.

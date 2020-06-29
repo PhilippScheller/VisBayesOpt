@@ -1,17 +1,5 @@
-renderVisualizeOptPathNd = function(opt_state,
-                            # which model/predictor do you want to analyse? If "surrogate" the training instances used,
-                            # if "acquisition" the seen.points are used
-                            interest = "surrogate",
-                            # argument of the FeatureEffect object
-                            feature,
-                            method = "pdp",
-                            grid.size = 20,
-                            center.at = NULL,
-                            # additional arguments to create a Predictor obejct
-                            batch.size = 1000,
-                            parallel = FALSE) {
-
-
+renderVisualizeOptPathNd = function(opt_state, interest = "surrogate", feature, method = "pdp", grid.size = 20,
+                                    center.at = NULL, batch.size = 1000, parallel = TRUE) {
 
   # data frames
   opt_path_df =  as.data.frame(opt_state$opt.path)

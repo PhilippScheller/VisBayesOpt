@@ -4,7 +4,7 @@
 library(shiny)
 library(checkmate)
 library(BBmisc)
-# source("ui-helpers.R", local = TRUE)
+source("server-helpers.R", local = TRUE)
 
 # Define server logic
 server <- function(input, output, session) {
