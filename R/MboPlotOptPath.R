@@ -101,26 +101,18 @@ MboPlotOptPath = R6Class(
                                         densregion = densregion, trafo = NULL))
       } else {
         if (!is.null(self$stored_pdp[[feature]])) {
-          p_feat = plot(self$stored_pdp[[feature]][[highlight_iter]])
-
+          plot(self$stored_pdp[[feature]][[highlight_iter]])
         } else {
           # if not yet calculated (i.e. attached to object) we need re-calculate feature effects for PDP
-          pdp_surrogate = renderVisualizeOptPathNd(opt_state = self$opt_state, interest = "surrogate", feature = feature,
-                                                      method = "pdp", grid.size = 50, center.at = NULL, batch.size = 1000,
-                                                      parallel = parallel)
-          # pdp_acq = renderVisualizeOptPathNd(opt_state = self$opt_state, interest = "acquisition", feature = feature,
-          #                                          method = "pdp", grid.size = 50, center.at = NULL, batch.size = 1000,
-          #                                          parallel = parallel)
-          # Bind pdp to R6 class object (therefore we do not need to recalculate once the same feature
+          pdp_interest = renderVisualizeOptPathNd(opt_state = self$opt_state, interest = "surrogate", feature = feature,
+                                                  method = "pdp", grid.size = 50, center.at = NULL, batch.size = 1000,
+                                                  parallel = parallel)
+          # Bind pdp_interest to R6 class object (therefore we do not need to recalculate once the same feature
           # is chosen with just another iteration)
-          self$stored_pdp$surrogate[[feature]] = pdp_surrogate
-          # self$stored_pdp$acq[[feature]] = pdp_acq
+          self$stored_pdp[[feature]] = pdp_interest
           # generate and return plot
-          p = plot(pdp_surrogate[[highlight_iter]])
-          # p_acq = plot(pdp_acq[[highlight_iter]])
-          #p = ggarrange(p_feat, p_acq, nrow = 2)
-
-          return(p)
+          p_feat = plot(pdp_interest[[highlight_iter]])
+          return(p_feat)
         }
       }
     }
