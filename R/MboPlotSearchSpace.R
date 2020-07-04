@@ -58,13 +58,12 @@ MboPlotSearchSpace = R6Class(
         key_disc = ncol(df_wide_disc)
       }
       ncols_df = c(ncol(df_wide_num), ncol(df_wide_disc))
-
       df_long_num = wideToLong(df_wide_num, key_num)
       df_long_disc = wideToLong(df_wide_disc, key_disc)
 
       gg_num = NULL
       gg_disc = NULL
-      if (ncols_df[1] > 0) {
+      if (ncols_df[1] > 1) {
         gg_num = ggplot(df_long_num, aes(x = rep(seq(1:n), times = nrow(df_long_num)/n), y = Value))
         if (include_y) {
           gg_num = ggplot(df_long_num, aes(x = rep(seq(1:n), times = nrow(df_long_num)/n), y = Value, col = y))
@@ -76,8 +75,9 @@ MboPlotSearchSpace = R6Class(
         gg_num = gg_num + ggtitle("Mbo search space: evaluated numeric parameters")
         gg_num = gg_num + xlab("Iteration")
         gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
+        print(gg_num)
       }
-      if (ncols_df[2] > 0) {
+      if (ncols_df[2] > 1) {
         gg_disc = ggplot(df_long_disc, aes(x = rep(seq(1:n), times = nrow(df_long_disc)/n), y = Value))
         if (include_y) {
           gg_disc = ggplot(df_long_disc, aes(x = rep(seq(1:n), times = nrow(df_long_disc)/n), y = Value, col = y))
