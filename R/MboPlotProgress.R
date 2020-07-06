@@ -39,6 +39,7 @@ MboPlotProgress = R6Class(
         pt_path_df$cumy = cummax(opt_path_df$y)
       }
       opt_path_df = opt_path_df[opt_path_df$dob <= self$opt_state$loop,]
+      opt_path_df = opt_path_df[, !duplicated(colnames(opt_path_df))] # remove duplicate columns (think this is an error in specifying the search space but leads to error in ggplot)
 
       gg = ggplot(opt_path_df, aes(x = dob, y = cumy))
       gg = gg + geom_line()
