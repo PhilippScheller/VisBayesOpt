@@ -4,12 +4,21 @@
 library(shiny)
 library(shinythemes)
 library(markdown)
+library(knitr)
 
 source("ui-helpers.R", local = TRUE)
 #source("Docs.Rmd", local = TRUE)
 
 # modify upload-size of files to 200MB
 options(shiny.maxRequestSize = 200 * 1024 ^ 2)
+
+# knit markdown files
+path_app = getwd()
+path_rmd = "./Rmd-docs"
+setwd(path_rmd)
+rmdfiles = list.files(pattern = paste("*.Rmd",sep = ""), full.names = TRUE)
+sapply(rmdfiles, knit, quiet = T)
+setwd(path_app)
 
 # Define UI for application
 ui <- navbarPage(
@@ -36,28 +45,31 @@ ui <- navbarPage(
       fluidRow(
         uiOutput("headerPerformance"),
         plotOutput("PerformancePlot"),
-        includeMarkdown("Docs.Rmd")
+        withMathJax(includeMarkdown("Rmd-docs/MboPlotProgress.md"))
       )
     ),
     tabPanel(
       "Input Space",
       fluidRow(
         uiOutput("headerInputSpace"),
-        plotOutput("InputSpacePlot")
+        plotOutput("InputSpacePlot"),
+        withMathJax(includeMarkdown("Rmd-docs/MboPlotInputSpace.md"))
       )
     ),
     tabPanel(
       "Search Space Optimizer",
       fluidRow(
         uiOutput("headerSearchSpace"),
-        plotOutput("SearchSpacePlot")
+        plotOutput("SearchSpacePlot"),
+        withMathJax(includeMarkdown("Rmd-docs/MboPlotSearchSpace.md"))
       )
     ),
     tabPanel(
       "Exploration vs. Exploitation",
       fluidRow(
         uiOutput("headerDist2Neighbor"),
-        plotOutput("Dist2NeighborPlot")
+        plotOutput("Dist2NeighborPlot"),
+        withMathJax(includeMarkdown("Rmd-docs/MboPlotDistToNeighbor.md"))
       )
     )
     )
@@ -79,7 +91,8 @@ ui <- navbarPage(
              ),
              tabPanel(
                "Run Time",
-               fluidRow(plotOutput("RuntimePlot"))
+               fluidRow(plotOutput("RuntimePlot")),
+               withMathJax(includeMarkdown("Rmd-docs/MboPlotRuntime.md"))
              ),
              tabPanel(
                "Fit",
@@ -87,7 +100,8 @@ ui <- navbarPage(
              ),
              tabPanel(
                "Uncertainty",
-               fluidRow(plotOutput("UncertaintyPlot"))
+               fluidRow(plotOutput("UncertaintyPlot")),
+               withMathJax(includeMarkdown("Rmd-docs/MboPlotEstimationUncertainty.md"))
              )
 
              ))),

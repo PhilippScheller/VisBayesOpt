@@ -7,6 +7,7 @@
 #' @import ParamHelpers
 #'
 #' @importFrom R6 R6Class
+#' @importFrom grDevices atop
 #'
 #' @description
 #' This class plots the minimum value (y) over the iterations of a mlrMbo run.
@@ -41,6 +42,9 @@ MboPlotProgress = R6Class(
 
       gg = ggplot(opt_path_df, aes(x = dob, y = cumy))
       gg = gg + geom_line()
+      gg = gg + xlab(expression("Iteration " *italic(n)))
+      gg = gg + ylab(expression("Min " *italic(f(x)) *" after " *italic(n) *" iterations"))
+      gg = gg + ggtitle(expression("Progress of optimization"))
       return(gg)
     }
   )

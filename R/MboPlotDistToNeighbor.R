@@ -79,9 +79,9 @@ MboPlotDistToNeighbor = R6Class(
       gg_dist = ggplot(df_dist_num_measure, aes(x = seq(1:nrow(df_dist_num_measure)), y = Value))
       gg_dist = gg_dist + geom_point(shape = 4)
       gg_dist = gg_dist + geom_line()
-      gg_dist = gg_dist + ggtitle(paste0(dist_measure, " distance"))
+      gg_dist = gg_dist + ggtitle(paste0(dist_measure, " distance of search space"))
       gg_dist = gg_dist + xlab("Iteration")
-      gg_dist = gg_dist + ylab("Euclidean distance")
+      gg_dist = gg_dist + ylab("Gower distance")
 
       return(gg_dist)
     }

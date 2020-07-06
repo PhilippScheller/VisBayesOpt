@@ -173,6 +173,10 @@ server <- function(input, output, session) {
     unique_uis = removeDuplicateUi(uis) # removes uis which are present in several plots (e.g. 'hihlight_iter')
     return(unique_uis)
   })
+
+
+  # Markdown descriptions for plots
+
 }
 
 
