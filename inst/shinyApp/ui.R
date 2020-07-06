@@ -85,10 +85,6 @@ ui <- navbarPage(
                #             choices = "", selected = "min")),
                width = 3),
              mainPanel(tabsetPanel(
-               tabPanel(
-               "Optimization Path",
-               fluidRow(plotOutput("OptPathPlot"))
-             ),
              tabPanel(
                "Run Time",
                fluidRow(plotOutput("RuntimePlot")),
@@ -96,14 +92,18 @@ ui <- navbarPage(
              ),
              tabPanel(
                "Fit",
-               fluidRow(plotOutput("FitPlot"))
+               fluidRow(plotOutput("FitPlot")),
+               withMathJax(includeMarkdown("Rmd-docs/MboPlotFit.md"))
              ),
              tabPanel(
                "Uncertainty",
                fluidRow(plotOutput("UncertaintyPlot")),
                withMathJax(includeMarkdown("Rmd-docs/MboPlotEstimationUncertainty.md"))
+             ),
+             tabPanel(
+               "Optimization Path",
+               fluidRow(plotOutput("OptPathPlot"))
              )
-
              ))),
     tabPanel("About")
   )
