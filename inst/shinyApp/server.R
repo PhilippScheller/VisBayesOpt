@@ -149,9 +149,10 @@ server <- function(input, output, session) {
 
   # Plot uncertainty
   output$UncertaintyPlot = renderPlot({
-    req(input$highlight_iter)
+    req(input$highlight_iter, input$predict_y_iter_surrogate)
     validate(need(storage$check == "ok", ""))
-    mbo_models$mbo_uncertainty$set_param_vals(list(highlight_iter = input$highlight_iter)) #adjust for selection from input
+    mbo_models$mbo_uncertainty$set_param_vals(list(highlight_iter = input$highlight_iter,
+                                                   predict_y_iter_surrogate = as.logical(input$predict_y_iter_surrogate))) #adjust for selection from input
     mbo_plots$plot_uncertainty = mbo_models$mbo_uncertainty$plot()
     return(mbo_plots$plot_uncertainty)
   })
@@ -173,7 +174,8 @@ server <- function(input, output, session) {
   output$ui_diagnost = renderUI({
     validate(need(storage$check == "ok", ""))
 
-    models = list(mbo_opt_path = mbo_models$mbo_opt_path, mbo_runtime = mbo_models$mbo_runtime)
+    models = list(mbo_opt_path = mbo_models$mbo_opt_path, mbo_runtime = mbo_models$mbo_runtime,
+                  mbo_uncertainty = mbo_models$mbo_uncertainty)
     names = names(models)
     uis = generateUi(models, names) # calls 'MboShiny()' for various 'models'
     unique_uis = removeDuplicateUi(uis) # removes uis which are present in several plots (e.g. 'hihlight_iter')
