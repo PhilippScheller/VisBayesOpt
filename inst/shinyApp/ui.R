@@ -2,7 +2,9 @@
 # You can run the application by calling the function 'runAppLocal()'.
 #
 library(shiny)
+library(shinyFiles)
 library(shinythemes)
+library(shinydashboard)
 library(markdown)
 library(knitr)
 
@@ -25,21 +27,28 @@ ui <- navbarPage(
   "Visual Diagnostics for Bayesian Optimization",
   theme = shinytheme("yeti"),
   tabPanel(
+    "Setup",
+    sidebarPanel(
+      fileInput("mbo1", h4("Select mlr run from local directory")),
+      uiOutput("mbo1Check"),
+      wellPanel(p("Export Plots"),
+              shinyDirButton("inputDir", "Chose directory", "Upload"),
+              uiOutput("directorySuccess"),
+              actionButton("exportPlot", "Export Plot as png", icon("paper-plane")),
+              uiOutput("saveSuccess"))
+    )
+  ),
+  tabPanel(
     "Visualize mlrMBO Run",
     sidebarPanel(
-        fileInput("mbo1", h4("Select mlr run from local directory")),
-        uiOutput("mbo1Check"),
-        wellPanel(p("Input for 'Exploration vs. Exploitation'"),
+        wellPanel(p("General input for run summary"),
         uiOutput("ui_run")),
-        # wellPanel(p("Input for 'Search Space'"),
-        #           uiOutput("ui"))
-        # uiOutput("mbo1Ui"),
         width = 3
         ),
     mainPanel(
       uiOutput("headerSummary"),
       uiOutput("mbo1Summary"),
-    tabsetPanel(
+    tabsetPanel(id = "runTab",
     tabPanel(
       "Performance",
       fluidRow(
@@ -80,11 +89,8 @@ ui <- navbarPage(
                #uiOutput("mbo1Check"),
                wellPanel(p("General input for diagnostic tool"),
                          uiOutput("ui_diagnost")),
-               # wellPanel(p("PDP input"),
-               #          selectInput("pdp_feature", h5("Select variable for PDP"),
-               #             choices = "", selected = "min")),
                width = 3),
-             mainPanel(tabsetPanel(
+             mainPanel(tabsetPanel(id = "diagTab",
              tabPanel(
                "Run Time",
                fluidRow(plotOutput("RuntimePlot")),

@@ -2,6 +2,8 @@
 # You can run the application by calling the function 'runAppLocal()'.
 #
 library(shiny)
+library(shinyFiles)
+library(shinydashboard)
 library(checkmate)
 library(BBmisc)
 source("server-helpers.R", local = TRUE)
@@ -14,7 +16,7 @@ server <- function(input, output, session) {
 
   output$mbo1Check = renderUI({
     # prevent error message when path is still empty
-    validate(need(input$mbo1$datapath != "", "Please select a data set"))
+    validate(need(input$mbo1$datapath != "", "Select a data set"))
     # check if provied file can be loaded
     if (is.error(try(readRDS(input$mbo1$datapath), silent = TRUE))) {
       storage$check = NULL
@@ -81,6 +83,7 @@ server <- function(input, output, session) {
   output$PerformancePlot = renderPlot({
     validate(need(storage$check == "ok", ""))
     mbo_plots$plot_performance = mbo_models$mbo_progress$plot()
+    storage$CurrPlot = mbo_plots$plot_performance
     return(mbo_plots$plot_performance)
   })
 
@@ -89,6 +92,7 @@ server <- function(input, output, session) {
     validate(need(storage$check == "ok", ""))
     mbo_models$mbo_input_space$set_param_vals(list(include_prior = as.logical(input$include_prior)))
     mbo_plots$plot_inputSpace = mbo_models$mbo_input_space$plot()
+    storage$CurrPlot =  mbo_plots$plot_inputSpace
     return(mbo_plots$plot_inputSpace)
   })
 
@@ -97,6 +101,7 @@ server <- function(input, output, session) {
     validate(need(storage$check == "ok", ""))
     mbo_models$mbo_search_space$set_param_vals(list(include_y = as.logical(input$include_y)))
     mbo_plots$plot_searchSpace = mbo_models$mbo_search_space$plot()
+    storage$CurrPlot =  mbo_plots$plot_searchSpace
     return(mbo_plots$plot_searchSpace)
   })
 
@@ -107,6 +112,7 @@ server <- function(input, output, session) {
     validate(need(storage$check == "ok", ""))
     mbo_models$mbo_dist_neighbor$set_param_vals(list(dist_measure = input$dist_measure)) #adjust for selection from input
     mbo_plots$plot_distToNeighbor = mbo_models$mbo_dist_neighbor$plot() # plot based on selected input
+    storage$CurrPlot =  mbo_plots$plot_distToNeighbor # needed for export plot if required by user
     return(mbo_plots$plot_distToNeighbor)
   })
 
@@ -175,41 +181,37 @@ server <- function(input, output, session) {
   })
 
 
-  # Markdown descriptions for plots
+  # Export plots png
 
+  #read directory from input
+  shinyDirChoose(input, 'inputDir', roots = c(home = '~'))
+
+  observeEvent(input$inputDir, {
+    req(input$inputDir)
+    output$directorySuccess = renderUI({
+      return(p("Valid path", style = "color:green"))
+    })
+  })
+  #create png export based on directory
+  observeEvent(input$exportPlot, {
+    req(input$inputDir)
+    errorPath = FALSE
+    tryCatch({
+      localDir = paste0("~", paste(unlist(input$inputDir$path), collapse = "/"))
+      ggsave(path = localDir, filename = "plot.png", plot = storage$CurrPlot, width = 30,
+        height = 12, units = "cm", dpi = 600)
+    },
+    error = function(contd) {
+      errorPath = TRUE
+    })
+    if (errorPath) {
+      output$saveSuccess = renderUI({
+        return(p("File path does not exist. Please make sure path is correctly specified.", style = "color:red"))
+      })
+    } else {
+      output$saveSuccess = renderUI({
+        return(p("File saved", style = "color:green"))
+      })
+    }
+  })
 }
-
-
-
-
-
-
-######## Backup
-
-# output$mbo1Ui = renderUI({
-#   validate(need(!is.null(storage$ui_mboObj1) , ""))
-#
-#   return(storage$ui_mboObj1)
-# })
-
-
-# observe({
-#   req(storage$mboObj1)
-#   storage$mbo_opt_path = MboPlotOptPath$new(storage$mboObj1)
-# })
-# # update selectInput based on features in 'mbo_opt_path'
-# observe({
-#   req(storage$mbo_opt_path)
-#   choices = names(storage$mbo_opt_path$opt_state$opt.path$par.set$pars)
-#   updateSelectInput(session, inputId =  "pdp_feature",
-#                     choices = choices)
-# })
-# # create plot
-# output$OptPathPlot = renderPlot({
-#   req(input$highlight_iteration, storage$mbo_opt_path)
-#   validate(need(storage$check == "ok", ""))
-#
-#   plot_optPath = storage$mbo_opt_path$plot(highlight_iter = input$highlight_iteration,
-#                                            feature = input$pdp_feature)
-#   return(plot_optPath)
-# })

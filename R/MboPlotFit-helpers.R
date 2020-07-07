@@ -16,7 +16,7 @@ RSQOverIterations = function(model, opt_path, control, names_x) {
   if (tss == 0) {
     R2 = NA_real_
   } else {
-    R2 = ifelse((1-rss/tss) < 0, NA_real_, 1-rss/tss)
+    R2 = ifelse((tss/(rss+tss)) < 0, 0, tss/(rss+tss)) # r2 numerical stable in accordante to r2 from summary.lm (in stats package)
   }
   return(R2)
 }
