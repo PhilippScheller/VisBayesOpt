@@ -5,9 +5,9 @@
 #' @import checkmate
 #' @import mlrMBO
 #' @import ParamHelpers
+#' @import grDevices
 #'
 #' @importFrom R6 R6Class
-#' @importFrom grDevices plotmath
 #'
 #' @description
 #' This class plots the minimum value (y) over the iterations of a mlrMbo run.

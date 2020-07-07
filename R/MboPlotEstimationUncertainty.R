@@ -5,9 +5,9 @@
 #' @import ParamHelpers
 #' @import BBmisc
 #' @import ggplot2
+#' @import grDevices
 #'
 #' @importFrom R6 R6Class
-#' @importFrom grDevices plotmath
 #'
 #' @description
 #' This class plots the uncertainty for one model in the mbo run.
