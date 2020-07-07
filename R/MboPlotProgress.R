@@ -7,7 +7,7 @@
 #' @import ParamHelpers
 #'
 #' @importFrom R6 R6Class
-#' @importFrom grDevices atop
+#' @importFrom grDevices plotmath
 #'
 #' @description
 #' This class plots the minimum value (y) over the iterations of a mlrMbo run.
