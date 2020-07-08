@@ -5,7 +5,7 @@
 #' @import checkmate
 #' @import mlrMBO
 #' @import ParamHelpers
-#' @import ggplot
+#' @import ggplot2
 #' @import BBmisc
 #'
 #' @importFrom R6 R6Class
