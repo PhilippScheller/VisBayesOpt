@@ -29,54 +29,51 @@ MboPlotDistToNeighbor = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
-      param_set = makeParamSet(makeDiscreteParam("dist_measure", c("min", "max", "mean")))
-      param_vals = list(dist_measure = "min") # default value, else set with function `set_param_vals()`
+      param_set = makeParamSet(makeDiscreteParam("dist_measure", c("min", "max", "mean")),
+                               makeLogicalParam("include_init_design"))
+      param_vals = list(dist_measure = "min", include_init_design = TRUE) # default value, else set with function `set_param_vals()`
       super$initialize(opt_state, param_set, param_vals)
     },
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
-    #' @param dist_measure (`character(1)`)
-    #'   Defines the distance measure which is considered for the determination of the distance between the
-    #'   difference between the values of `f(x)`. `min` takes the minimum of the `k` calculated distances to
-    #'   the neighbors while `max` uses maximum distance and `mean` calculates arithmetic mean distance.
+    #' @param dist_measure (\code{character(1) | "min"})\cr
+    #'   Defines the distance measure which is considered for the determination of the distance between
+    #'   the search space componentens. `min` takes the minimum of the `p` componentents, while `max` uses
+    #'   maximum distance and `mean` calculates arithmetic mean distance. The default is `min`.
+    #'   @param include_init_design (\code{logical(1) | TRUE})\cr
+    #'   Decide whether to include to points from the initial design. If `TRUE` the initial design points
+    #'   are separated by a vertical line. If `FALSE` they are not plotted. Default is `TRUE`.
     #'
     #' @return ([ggplot]).
-    plot = function(dist_measure = self$param_vals$dist_measure) {
+    plot = function(dist_measure = self$param_vals$dist_measure, include_init_design = self$param_vals$include_init_design) {
       if (length(dist_measure) != 1L) stop("Only 1 distance measure can be calculated.")
       dist_measure = assert_class(dist_measure, "character")
       if (!check_function(get(dist_measure))) stop("Chosen `dist_measure` cannot be evaluated as a function")
 
-      df = as.data.frame(getOptPathX(self$opt_state$opt.path))
-      df_colnames = colnames(df)
-      df_num = as.matrix(extractFromDf(df, extr = c(is.numeric), keepColumNo = 0))
-      df_disc = extractFromDf(df, extr = c(is.factor), keepColumNo = 0)
+      df = data.frame(self$opt_state$opt.path)
+      n_init = nrow(df) - df[nrow(df), "dob"]
+      df_x = as.data.frame(getOptPathX(self$opt_state$opt.path))
+      df_colnames = colnames(df_x)
 
-      num_present = ifelse(ncol(df_num) > 0, TRUE, FALSE)
-      disc_present = ifelse(ncol(df_disc) > 0, TRUE, FALSE)
-
-      # create matrix with euclidean/gower distances, extract lower triangular matrix
+      # create matrix with gower distances, extract lower triangular matrix
       # and calculate the distance over each row (iteration)
-      if (num_present) {
-        mat_dist_num = as.matrix(dist(df_num))
-        mat_dist_num_lower = mat_dist_num * lower.tri(mat_dist_num)
-        mat_dist_num_measure = apply(mat_dist_num_lower[2:nrow(mat_dist_num_lower), ], 1, function(x) {
+        mat_dist = as.matrix(daisy(df_x, metric = "gower"))
+        mat_dist_lower = mat_dist * lower.tri(mat_dist)
+        mat_dist_measure = apply(mat_dist_lower[2:nrow(mat_dist_lower), ], 1, function(x) {
           suppressWarnings(get(dist_measure)(x[x > 0]))
         })
-        df_dist_num_measure = as.data.frame(mat_dist_num_measure)
-          names(df_dist_num_measure) = "Value"
-      }
-      if (disc_present) {
-        mat_dist_disc = as.matrix(daisy(df_disc, metric = "gower"))
-        mat_dist_disc_lower = mat_dist_disc * lower.tri(mat_dist_disc)
-        mat_dist_disc_measure = apply(mat_dist_disc_lower[2:nrow(mat_dist_disc_lower), ], 1, function(x) {
-          suppressWarnings(get(dist_measure)(x[x > 0]))
-        })
-        df_dist_disc_measure = as.data.frame(mat_dist_disc_measure)
-        names(df_dist_disc_measure) = "Value"
+        df_dist_measure = as.data.frame(mat_dist_measure)
+        names(df_dist_measure) = "Value"
+
+      if (!include_init_design) {
+        df_dist_measure = df_dist_measure[(n_init+1):nrow(df_dist_measure),, drop = FALSE]
       }
 
-      gg_dist = ggplot(df_dist_num_measure, aes(x = seq(1:nrow(df_dist_num_measure)), y = Value))
+      gg_dist = ggplot(df_dist_measure, aes(x = seq(1:nrow(df_dist_measure)), y = Value))
+      if (include_init_design) {
+        gg_dist = gg_dist + geom_vline(xintercept = n_init, col = "black", lty = "dashed")
+      }
       gg_dist = gg_dist + geom_point(shape = 4)
       gg_dist = gg_dist + geom_line()
       gg_dist = gg_dist + ggtitle(paste0(dist_measure, " distance of search space"))

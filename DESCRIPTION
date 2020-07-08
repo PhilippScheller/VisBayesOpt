@@ -19,7 +19,9 @@ Imports:
     checkmate,
     ggplot2,
     mlrMBO,
-    shiny
+    shiny,
+    shinyFiles,
+    shinydashboard
 Suggests:
     iml,
     testthat
@@ -32,6 +34,7 @@ Collate:
     'MboPlot-helpers-renderVisualizeOptPath1d.R'
     'MboPlot-helpers-renderVisualizeOptPathNd.R'
     'MboPlot.R'
+    'MboPlotDependencies.R'
     'MboPlotDistToNeighbor.R'
     'MboPlotEstimationUncertainty.R'
     'MboPlotFit-helpers.R'

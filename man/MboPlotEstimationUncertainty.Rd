@@ -46,8 +46,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 Plots the estimation uncertainty (y_evaluated vs y_estimated) for all previous outcome values at an iteration.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MboPlotEstimationUncertainty$plot(
-  highlight_iter = self$param_vals$highlight_iter,
-  predict_y_iter_surrogate = self$param_vals$predict_y_iter_surrogate
+  highlight_iter = self$param_vals$highlight_iter
 )}\if{html}{\out{</div>}}
 }
 
@@ -55,11 +54,7 @@ Plots the estimation uncertainty (y_evaluated vs y_estimated) for all previous o
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{highlight_iter}}{(\code{integer(1) | 1})\cr
-Specifies the iteration at which the uncertainty estimation is calculated.
-#' @param predict_y_iter_surrogate (\code{boolean(1) | FALSE})\cr
-Specifies if y_hat is predicted with the surrogate from the chosen iteration. If FALSE y_hat is taken from the optimization
-path, i.e. predicted based on surrogate of the respective iteration. If TRUE we use the surrogate of 'highlight_iter' iteration
-to predict all points based on the search space x again.}
+Specifies the iteration at which the uncertainty estimation is calculated.}
 }
 \if{html}{\out{</div>}}
 }

@@ -76,7 +76,7 @@ MboPlotInputSpace = R6Class(
                                     alpha = .4)
        }
         gg_num = gg_num + facet_wrap(Param ~ ., scales = "free")
-        gg_num = gg_num + ggtitle("Mbo search space: evaluated numeric parameters")
+        gg_num = gg_num + ggtitle("MBO search space: evaluated numeric parameters")
         gg_num = gg_num + xlab("Param value")
         gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
       }
@@ -89,7 +89,7 @@ MboPlotInputSpace = R6Class(
                                      alpha = .4)
         }
         gg_disc = gg_disc + facet_wrap(Param ~ ., scales = "free")
-        gg_disc = gg_disc + ggtitle("Mbo search space: evaluated discrete parameters")
+        gg_disc = gg_disc + ggtitle("MBO search space: evaluated discrete parameters")
         gg_disc = gg_disc + xlab("Param value")
         gg_disc = gg_disc + theme(plot.title = element_text(face = "bold"))
       }

@@ -22,8 +22,8 @@ MboPlotEstimationUncertainty = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
-      param_set = makeParamSet(makeIntegerParam("highlight_iter"), makeLogicalParam("predict_y_iter_surrogate"))
-      param_vals = list(highlight_iter = 1L, predict_y_iter_surrogate = FALSE) # default value, else set with function `set_param_vals()`
+      param_set = makeParamSet(makeIntegerParam("highlight_iter"))
+      param_vals = list(highlight_iter = 1L) # default value, else set with function `set_param_vals()`
       super$initialize(opt_state, param_set, param_vals)
     },
     #' @description
@@ -31,13 +31,9 @@ MboPlotEstimationUncertainty = R6Class(
     #'
     #' @param highlight_iter (\code{integer(1) | 1})\cr
     #' Specifies the iteration at which the uncertainty estimation is calculated.
-    #'  #' @param predict_y_iter_surrogate (\code{boolean(1) | FALSE})\cr
-    #' Specifies if y_hat is predicted with the surrogate from the chosen iteration. If FALSE y_hat is taken from the optimization
-    #' path, i.e. predicted based on surrogate of the respective iteration. If TRUE we use the surrogate of 'highlight_iter' iteration
-    #' to predict all points based on the search space x again.
     #'
     #' @return ([ggplot]).
-    plot = function(highlight_iter = self$param_vals$highlight_iter, predict_y_iter_surrogate = self$param_vals$predict_y_iter_surrogate) {
+    plot = function(highlight_iter = self$param_vals$highlight_iter) {
       opt_path = self$opt_state$opt.path
       control = self$opt_state$opt.problem$control
       models = self$opt_state$opt.result$stored.models
@@ -56,27 +52,10 @@ MboPlotEstimationUncertainty = R6Class(
       }
       # generate opt_path for the iteration "highlight_iter" with the seen points until "highlight_iter".
       opt_path_iter = opt_path_df[opt_path_df$dob != 0, ][1:highlight_iter,]
-      model_iter = models[highlight_iter]
-      opt_path_x_iter = getOptPathX(opt_path, 1:highlight_iter)
-      infill.mean = makeMBOInfillCritMeanResponse()$fun
-      infill.std = makeMBOInfillCritStandardError()$fun
-
-      # calculate estimation of target
-      if (predict_y_iter_surrogate) {
-        y_hat = ifelse(control$minimize, 1, -1) * infill.mean(opt_path_x_iter, model_iter, control)
-        y_hat_se = abs(infill.std(opt_path_x_iter, model_iter, control))
-      } else {
-        y_hat = opt_path_df[opt_path_df$dob != 0, "mean"] [1:highlight_iter]
-        y_hat_se = opt_path_df[opt_path_df$dob != 0, "se"] [1:highlight_iter]
-      }
-      y_min = y_hat - y_hat_se
-      y_max = y_hat + y_hat_se
+      y_hat = opt_path_df[opt_path_df$dob != 0, "mean"] [1:highlight_iter]
       y_eval = opt_path_iter$y
 
-
-      y_df = data.frame(y.hat = y_hat, y.eval = y_eval, y.absdiff = abs(y_hat - y_eval), iters = seq(1:highlight_iter),
-                        y.min = y_min, y.max = y_max)
-
+      y_df = data.frame(y.absdiff = abs(y_hat - y_eval), iters = seq(1:highlight_iter))
 
       if (highlight_iter > 1) {
       gg_iter = ggplot(y_df, aes(x = iters, y = y.absdiff))
@@ -92,17 +71,7 @@ MboPlotEstimationUncertainty = R6Class(
       gg_dens = gg_dens + xlab(expression("| " * hat(y)-y *" |"))
       gg_dens = gg_dens + ggtitle(paste("Frequency of Uncertainty-estimation in Iteration", highlight_iter))
 
-      gg_cross = ggplot(y_df, aes(x = y.eval, y = y.hat, col = iters))
-      gg_cross = gg_cross + geom_pointrange(aes(ymin = y.min, ymax = y.max), data = y_df)
-      gg_cross = gg_cross + geom_abline(slope = 1)
-      gg_cross = gg_cross + ylab(expression(hat(y)))
-      gg_cross = gg_cross + xlab(expression(y))
-      gg_cross = gg_cross + labs(color = "Iteration")
-      gg_cross = gg_cross + ggtitle(paste("Predicted vs. True Target in Iteration", highlight_iter))
-
-
-
-      gg = ggarrange(gg_iter, gg_dens, gg_cross,  ncol = 3)
+      gg = ggarrange(gg_iter, gg_dens, ncol = 2)
 
       } else {
         gg = paste("Plot only available for highlight_iter > 1")

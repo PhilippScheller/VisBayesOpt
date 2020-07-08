@@ -70,13 +70,21 @@ server <- function(input, output, session) {
   output$mbo1Summary = renderTable({
     validate(need(storage$check == "ok", ""))
     mbo_shiny = MboShiny$new(mbo_models$mbo_summary)
-    table_mbo_summary = mbo_shiny$generateSummaryTable()
-    return(table_mbo_summary)
+    storage$table_mbo_summary = mbo_shiny$generateSummaryTable()
+    return(storage$table_mbo_summary)
+  })
+  output$mbo1Summary1 = renderTable({
+    req(storage$table_mbo_summary)
+    return(storage$table_mbo_summary)
+  })
+  output$headerSummary1 = renderText({
+    validate(need(storage$check == "ok", ""))
+    return(paste(h4("Characteristics of MBO Run")))
   })
 
   output$headerSummary = renderText({
     validate(need(storage$check == "ok", ""))
-    return(paste(h4("Characteristics of Mbo Run")))
+    return(paste(h4("Characteristics of MBO Run")))
   })
 
   #Plot performance over iterations
@@ -110,7 +118,8 @@ server <- function(input, output, session) {
     # The R6 class 'MboShiny' names the generated uis based on their names in the function, e.g.in
     # 'MboPlotDistToNeighbor' the plot function is 'plot(dist_measure)' thus the ui is names 'dist_measure'.
     validate(need(storage$check == "ok", ""))
-    mbo_models$mbo_dist_neighbor$set_param_vals(list(dist_measure = input$dist_measure)) #adjust for selection from input
+    mbo_models$mbo_dist_neighbor$set_param_vals(list(dist_measure = input$dist_measure,
+                                                     include_init_design = as.logical(input$include_init_design))) #adjust for selection from input
     mbo_plots$plot_distToNeighbor = mbo_models$mbo_dist_neighbor$plot() # plot based on selected input
     storage$CurrPlot =  mbo_plots$plot_distToNeighbor # needed for export plot if required by user
     return(mbo_plots$plot_distToNeighbor)
@@ -140,19 +149,19 @@ server <- function(input, output, session) {
 
   # Plot fit
   output$FitPlot = renderPlot({
-    req(input$highlight_iter)
+    req(input$highlight_iter, input$predict_y_iter_surrogate)
     validate(need(storage$check == "ok", ""))
-    mbo_models$mbo_fit$set_param_vals(list(highlight_iter = input$highlight_iter)) #adjust for selection from input
+    mbo_models$mbo_fit$set_param_vals(list(highlight_iter = input$highlight_iter,
+                                           predict_y_iter_surrogate = as.logical(input$predict_y_iter_surrogate))) #adjust for selection from input
     mbo_plots$plot_fit = mbo_models$mbo_fit$plot()
     return(mbo_plots$plot_fit)
   })
 
   # Plot uncertainty
   output$UncertaintyPlot = renderPlot({
-    req(input$highlight_iter, input$predict_y_iter_surrogate)
+    req(input$highlight_iter)
     validate(need(storage$check == "ok", ""))
-    mbo_models$mbo_uncertainty$set_param_vals(list(highlight_iter = input$highlight_iter,
-                                                   predict_y_iter_surrogate = as.logical(input$predict_y_iter_surrogate))) #adjust for selection from input
+    mbo_models$mbo_uncertainty$set_param_vals(list(highlight_iter = input$highlight_iter)) #adjust for selection from input
     mbo_plots$plot_uncertainty = mbo_models$mbo_uncertainty$plot()
     return(mbo_plots$plot_uncertainty)
   })
@@ -161,8 +170,8 @@ server <- function(input, output, session) {
   output$ui_run = renderUI({
 
     validate(need(storage$check == "ok", ""))
-    models = list(mbo_dist_neighbor = mbo_models$mbo_dist_neighbor, mbo_input_space = mbo_models$mbo_input_space,
-                  mbo_search_space = mbo_models$mbo_search_space)
+    models = list(mbo_input_space = mbo_models$mbo_input_space, mbo_search_space = mbo_models$mbo_search_space,
+                  mbo_dist_neighbor = mbo_models$mbo_dist_neighbor)
     names = names(models)
     uis = generateUi(models, names)
     unique_uis = removeDuplicateUi(uis)
@@ -174,8 +183,8 @@ server <- function(input, output, session) {
   output$ui_diagnost = renderUI({
     validate(need(storage$check == "ok", ""))
 
-    models = list(mbo_opt_path = mbo_models$mbo_opt_path, mbo_runtime = mbo_models$mbo_runtime,
-                  mbo_uncertainty = mbo_models$mbo_uncertainty)
+    models = list(mbo_runtime = mbo_models$mbo_runtime, mbo_fit = mbo_models$mbo_fit, mbo_uncertainty = mbo_models$mbo_uncertainty,
+                  mbo_opt_path = mbo_models$mbo_opt_path)
     names = names(models)
     uis = generateUi(models, names) # calls 'MboShiny()' for various 'models'
     unique_uis = removeDuplicateUi(uis) # removes uis which are present in several plots (e.g. 'hihlight_iter')

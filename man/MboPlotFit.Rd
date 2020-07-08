@@ -45,7 +45,10 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Method \code{plot()}}{
 Plots the fit of the model using R-squared for each iteration of the mbo run.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotFit$plot(highlight_iter = self$param_vals$highlight_iter)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotFit$plot(
+  highlight_iter = self$param_vals$highlight_iter,
+  predict_y_iter_surrogate = self$param_vals$predict_y_iter_surrogate
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -53,6 +56,11 @@ Plots the fit of the model using R-squared for each iteration of the mbo run.
 \describe{
 \item{\code{highlight_iter}}{(\code{integer(1) | NULL})\cr
 Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.}
+
+\item{\code{predict_y_iter_surrogate}}{(\code{logical(1) | FALSE})\cr
+Specifies if y_hat is predicted with the surrogate from the chosen iteration. If FALSE y_hat is taken from the optimization
+path, i.e. predicted based on surrogate of the respective iteration. If TRUE we use the surrogate of 'highlight_iter' iteration
+to predict all points based on the search space x again.}
 }
 \if{html}{\out{</div>}}
 }

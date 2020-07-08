@@ -74,8 +74,9 @@ MboPlotSearchSpace = R6Class(
         gg_num = gg_num + geom_smooth(aes(x = rep(seq(1:n), times = nrow(df_long_num)/n), y = Value),
                               method = "lm", formula = y~x, size=0.5)
         gg_num = gg_num + facet_wrap(Param ~ ., scales = "free")
-        gg_num = gg_num + ggtitle("Mbo search space: evaluated numeric parameters")
+        gg_num = gg_num + ggtitle("MBO search space: evaluated numeric parameters")
         gg_num = gg_num + xlab(expression("Iteration " *italic(n)))
+        gg_num = gg_num + ylab(expression(atop("Value of search", paste("space component")))) # note: just \n does not work since label is then outside of plot area -> use atop()
         gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
         print(gg_num)
       }
@@ -86,8 +87,9 @@ MboPlotSearchSpace = R6Class(
         }
         gg_disc = gg_disc + geom_point()
         gg_disc = gg_disc + facet_wrap(Param ~ ., scales = "free")
-        gg_disc = gg_disc + ggtitle("Mbo search space: evaluated discrete parameters")
+        gg_disc = gg_disc + ggtitle("MBO search space: evaluated discrete parameters")
         gg_disc = gg_disc + xlab(expression("Iteration " *italic(n)))
+        gg_disc = gg_disc + ylab(expression(atop("Value of search", paste("space component")))) # note: just \n does not work since label is then outside of plot area -> use atop()
         gg_disc = gg_disc + theme(plot.title = element_text(face = "bold"))
       }
       gg = ggarrange(gg_num, gg_disc, nrow = 2, heights = c(2,1))

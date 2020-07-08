@@ -46,16 +46,22 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Method \code{plot()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$plot(dist_measure = self$param_vals$dist_measure)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotDistToNeighbor$plot(
+  dist_measure = self$param_vals$dist_measure,
+  include_init_design = self$param_vals$include_init_design
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dist_measure}}{(\code{character(1)})
-Defines the distance measure which is considered for the determination of the distance between the
-difference between the values of \code{f(x)}. \code{min} takes the minimum of the \code{k} calculated distances to
-the neighbors while \code{max} uses maximum distance and \code{mean} calculates arithmetic mean distance.}
+\item{\code{dist_measure}}{(\code{character(1) | "min"})\cr
+Defines the distance measure which is considered for the determination of the distance between
+the search space componentens. \code{min} takes the minimum of the \code{p} componentents, while \code{max} uses
+maximum distance and \code{mean} calculates arithmetic mean distance. The default is \code{min}.
+@param include_init_design (\code{logical(1) | TRUE})\cr
+Decide whether to include to points from the initial design. If \code{TRUE} the initial design points
+are separated by a vertical line. If \code{FALSE} they are not plotted. Default is \code{TRUE}.}
 }
 \if{html}{\out{</div>}}
 }

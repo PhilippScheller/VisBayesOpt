@@ -29,14 +29,19 @@ ui <- navbarPage(
   tabPanel(
     "Setup",
     sidebarPanel(
-      fileInput("mbo1", h4("Select mlr run from local directory")),
+      fileInput("mbo1",
+                helpText(h4("Select a 'final.opt.state' from a",
+                         a(href="https://mlrmbo.mlr-org.com", "mlrMBO"), " run from a local directory"))),
       uiOutput("mbo1Check"),
       wellPanel(p("Export Plots"),
               shinyDirButton("inputDir", "Chose directory", "Upload"),
               uiOutput("directorySuccess"),
               actionButton("exportPlot", "Export Plot as png", icon("paper-plane")),
               uiOutput("saveSuccess"))
-    )
+    ),
+    mainPanel(
+      uiOutput("headerSummary"),
+      uiOutput("mbo1Summary"))
   ),
   tabPanel(
     "Visualize mlrMBO Run",
@@ -46,8 +51,8 @@ ui <- navbarPage(
         width = 3
         ),
     mainPanel(
-      uiOutput("headerSummary"),
-      uiOutput("mbo1Summary"),
+      uiOutput("headerSummary1"),
+      uiOutput("mbo1Summary1"),
     tabsetPanel(id = "runTab",
     tabPanel(
       "Performance",
