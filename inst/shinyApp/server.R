@@ -5,6 +5,7 @@ library(shiny)
 library(shinyFiles)
 library(shinydashboard)
 library(checkmate)
+library(ParamHelpers)
 library(BBmisc)
 source("server-helpers.R", local = TRUE)
 
