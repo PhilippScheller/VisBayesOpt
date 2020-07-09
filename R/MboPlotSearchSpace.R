@@ -100,7 +100,6 @@ MboPlotSearchSpace = R6Class(
         gg_disc = gg_disc + ylab(expression(atop("Value of search", paste("space component")))) # note: just \n does not work since label is then outside of plot area -> use atop()
         gg_disc = gg_disc + theme(plot.title = element_text(hjust = 0.5))
       }
-      print(gg_disc)
       if (length_disc < 1) {
         gg = gg_num
       } else {
