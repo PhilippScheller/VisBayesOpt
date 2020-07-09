@@ -12,6 +12,7 @@
 #' @importFrom GGally ggpairs
 #' @importFrom ggpubr ggarrange
 #' @importFrom ggpubr annotate_figure
+#' @importFrom ggpubr text_grob
 #'
 #' @description
 #' This class generates plots for the pairwise dependencies of the features in the mbo run.

@@ -85,7 +85,7 @@ MboPlotInputSpace = R6Class(
         gg_num = gg_num + facet_wrap(Param ~ ., scales = "free")
         gg_num = gg_num + ggtitle("MBO search space: evaluated numeric parameters")
         gg_num = gg_num + xlab("Param value")
-        gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
+        gg_num = gg_num + theme(plot.title = element_text(hjust = 0.5))
       }
       if (ncols_df[2] > 1) {
         gg_disc = ggplot(filter(df_long_disc, type == "posterior"), aes(x = Value))
