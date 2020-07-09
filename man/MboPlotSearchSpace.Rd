@@ -46,7 +46,11 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Method \code{plot()}}{
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboPlotSearchSpace$plot(include_y = self$param_vals$include_y)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboPlotSearchSpace$plot(
+  include_y = self$param_vals$include_y,
+  include_init_design = self$param_vals$include_init_design,
+  search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

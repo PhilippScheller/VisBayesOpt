@@ -53,10 +53,6 @@ MboPlotDependencies = R6Class(
       n = nrow(df_x_comp)
       is_num = sum(sapply(df_x_comp, is.numeric))
 
-      #df_wide_num = df_x %>%
-       # select_if(is.numeric)
-
-      #print(color_y)
       if (color_y) {
         df_3d = data.frame(fill_col = y) # do not change 'fill_col' as name or also change in helpers file
         legend_title = "y"
@@ -69,13 +65,6 @@ MboPlotDependencies = R6Class(
       gg_list = create_gg_combinations_scatter(df, legend_title, y_best_index)
       gg = ggarrange(plotlist = gg_list, common.legend = TRUE, legend = "right")
 
-      #df_long = wideToLong(df, 1)
-
-
-     # print(df_long)
-
-
-      #gg = ggpairs(df, ggplot2::aes(colour = cut(fill_col, breaks = nrow(df))))
       return(gg)
     }
   )
