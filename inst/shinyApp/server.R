@@ -59,6 +59,7 @@ server <- function(input, output, session) {
     mbo_models$mbo_progress = MboPlotProgress$new(storage$mboObj1)
     mbo_models$mbo_input_space = MboPlotInputSpace$new(storage$mboObj1)
     mbo_models$mbo_search_space = MboPlotSearchSpace$new(storage$mboObj1)
+    mbo_models$mbo_dependencies = MboPlotDependencies$new(storage$mboObj1)
 
     mbo_models$mbo_runtime = MboPlotRuntime$new(storage$mboObj1)
     mbo_models$mbo_opt_path = MboPlotOptPath$new(storage$mboObj1)
@@ -125,6 +126,25 @@ server <- function(input, output, session) {
     return(mbo_plots$plot_distToNeighbor)
   })
 
+  # Plot dependencies
+  # FIXME: this plot is manually included since it would need an option to make a character parameter set without a defined length to choose search space components
+  output$DependenciesPlot = renderPlot({
+    validate(need(storage$check == "ok", ""))
+
+    mbo_models$mbo_dependencies$set_param_vals(list(color_y = as.logical(input$color_y)))
+
+    mbo_plots$plot_dependencies = mbo_models$mbo_dependencies$plot(search_space_components = input$dep_choice)
+    storage$CurrPlot =  mbo_plots$plot_dependencies
+    return(mbo_plots$plot_dependencies)
+  })
+  output$dep_choice = renderUI({
+    validate(need(storage$check == "ok", ""))
+    req(storage$mboObj1)
+    checkboxGroupInput("dep_choice", "Choose search_space_components",
+                                               choices = getParamIds(storage$mboObj1$opt.path$par.set),
+                                               selected = getParamIds(storage$mboObj1$opt.path$par.set)[1:2]
+  )})
+
 
   # ######## Diagnostic section
 
@@ -171,7 +191,7 @@ server <- function(input, output, session) {
 
     validate(need(storage$check == "ok", ""))
     models = list(mbo_input_space = mbo_models$mbo_input_space, mbo_search_space = mbo_models$mbo_search_space,
-                  mbo_dist_neighbor = mbo_models$mbo_dist_neighbor)
+                  mbo_dist_neighbor = mbo_models$mbo_dist_neighbor, mbo_dependencies = mbo_models$mbo_dependencies)
     names = names(models)
     uis = generateUi(models, names)
     unique_uis = removeDuplicateUi(uis)

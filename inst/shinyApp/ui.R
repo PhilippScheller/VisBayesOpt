@@ -47,7 +47,8 @@ ui <- navbarPage(
     "Visualize mlrMBO Run",
     sidebarPanel(
         wellPanel(p("General input for run summary"),
-        uiOutput("ui_run")),
+        uiOutput("ui_run")), # all automatically generated UIs
+        uiOutput("dep_choice"), # manual for dependencies plot
         width = 3
         ),
     mainPanel(
@@ -83,6 +84,14 @@ ui <- navbarPage(
       fluidRow(
         uiOutput("headerDist2Neighbor"),
         plotOutput("Dist2NeighborPlot"),
+        withMathJax(includeMarkdown("Rmd-docs/MboPlotDistToNeighbor.md"))
+      )
+    ),
+    tabPanel(
+      "Dependencies Search Space",
+      fluidRow(
+        #uiOutput("headerDist2Neighbor"),
+        plotOutput("DependenciesPlot"),
         withMathJax(includeMarkdown("Rmd-docs/MboPlotDistToNeighbor.md"))
       )
     )

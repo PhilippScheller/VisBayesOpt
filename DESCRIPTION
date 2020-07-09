@@ -34,6 +34,7 @@ Collate:
     'MboPlot-helpers-renderVisualizeOptPath1d.R'
     'MboPlot-helpers-renderVisualizeOptPathNd.R'
     'MboPlot.R'
+    'MboPlotDependencies-helpers.R'
     'MboPlotDependencies.R'
     'MboPlotDistToNeighbor.R'
     'MboPlotEstimationUncertainty.R'

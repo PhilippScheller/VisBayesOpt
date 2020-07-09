@@ -26,8 +26,9 @@ MboPlotDependencies = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
-      param_set = makeParamSet(makeLogicalParam("color_y"))
-      param_vals = list(color_y = TRUE)
+      param_set = makeParamSet(makeLogicalParam("color_y"))#,
+                               #makeCharacterVectorParam("search_space_components", values = getParamIds(opt_state$opt.path$par.set)))
+      param_vals = list(color_y = TRUE)#, search_space_components = getParamIds(opt_state$opt.path$par.set)[1:2]) # we choose only the first 2 params by default to save time when plot is called first
       super$initialize(opt_state, param_set, param_vals)
     },
     #' @description
@@ -38,30 +39,45 @@ MboPlotDependencies = R6Class(
     #' If FALSE color corresponds to 'iteration'. Default is TRUE.
     #'
     #' @return ([ggplot]).
-    plot = function(color_y = self$param_vals$color_y) {
+    plot = function(color_y = self$param_vals$color_y, search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]) { #, search_space_components = self$search_space_components)
       df_x = getOptPathX(self$opt_state$opt.path)
-      y = data.frame(y = getOptPathY(self$opt_state$opt.path))
-      iter = data.frame(self$opt_state$opt.path)$dob
-      n = nrow(df_x)
-      is_num = sum(sapply(df_x, is.numeric))
-
-      df_wide_num = df_x %>%
-        select_if(is.numeric)
-
-      if (color_y) {
-        df_3d = data.frame(fill_col = y)
+      df_x_comp = df_x
+      df_x_comp =  df_x[, which(colnames(df_x) %in% search_space_components), drop = FALSE]
+      y = getOptPathY(self$opt_state$opt.path)
+      if (self$opt_state$opt.problem$control$minimize) {
+        y_best_index = which.min(y)
       } else {
-        df_3d = data.frame(fill_col = iter)
+        y_best_index = which.max(y)
       }
-      df = cbind.data.frame(df_3d, df_wide_num)
-      df_long = wideToLong(df, 1)
+
+      iter = data.frame(self$opt_state$opt.path)$dob
+      n = nrow(df_x_comp)
+      is_num = sum(sapply(df_x_comp, is.numeric))
+
+      #df_wide_num = df_x %>%
+       # select_if(is.numeric)
+
+      #print(color_y)
+      if (color_y) {
+        df_3d = data.frame(fill_col = y) # do not change 'fill_col' as name or also change in helpers file
+        legend_title = "y"
+      } else {
+        df_3d = data.frame(fill_col = iter) # do not change 'fill_col' as name or also change in helpers file
+        legend_title = "Iteration"
+      }
+      df = cbind.data.frame(df_3d, df_x_comp)
+
+      gg_list = create_gg_combinations_scatter(df, legend_title, y_best_index)
+      gg = ggarrange(plotlist = gg_list, common.legend = TRUE, legend = "right")
+
+      #df_long = wideToLong(df, 1)
 
 
-      print(df_long)
+     # print(df_long)
 
 
-      gg = ggplot2  (df_gg, aes())
-      #return(gg)
+      #gg = ggpairs(df, ggplot2::aes(colour = cut(fill_col, breaks = nrow(df))))
+      return(gg)
     }
   )
 )

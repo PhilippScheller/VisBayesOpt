@@ -1,7 +1,7 @@
 **MboPlotEstimationUncertainty**
 
 **Description**    
- The plots show how the degree of uncertainty in the estimation of new points. 
+ The plot visualizes the degree of uncertainty in the estimation of new points. 
 
 
 **Interpretation**   
