@@ -41,7 +41,6 @@ MboPlotDependencies = R6Class(
     #' @return ([ggplot]).
     plot = function(color_y = self$param_vals$color_y, search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]) { #, search_space_components = self$search_space_components)
       df_x = getOptPathX(self$opt_state$opt.path)
-      df_x_comp = df_x
       df_x_comp =  df_x[, which(colnames(df_x) %in% search_space_components), drop = FALSE]
       y = getOptPathY(self$opt_state$opt.path)
       if (self$opt_state$opt.problem$control$minimize) {

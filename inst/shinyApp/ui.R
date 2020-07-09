@@ -128,10 +128,3 @@ ui <- navbarPage(
     tabPanel("About")
   )
 
-
-# tags = tagList(
-#
-# )
-#
-# shinyUI(tags)
-

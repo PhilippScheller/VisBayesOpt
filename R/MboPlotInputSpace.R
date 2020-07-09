@@ -12,7 +12,6 @@
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %T>%
 #' @importFrom tidyr gather
-#' @importFrom dplyr select_if
 #' @importFrom scales number_format
 #' @importFrom ggpubr ggarrange
 #'
@@ -41,22 +40,30 @@ MboPlotInputSpace = R6Class(
     #'   Specifies if bar chart over sampled prior should also be included in plot.
     #'
     #' @return ([ggplot]).
-    plot = function(include_prior = self$param_vals$include_prior) {
-      df = getOptPathX(self$opt_state$opt.path)
+    plot = function(include_prior = self$param_vals$include_prior, search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]) {
+      df_x = getOptPathX(self$opt_state$opt.path)
+      df_x_comp =  df_x[, which(colnames(df_x) %in% search_space_components), drop = FALSE]
+      length_num = sum(sapply(df_x_comp, is.numeric))
+      length_disc = sum(sapply(df_x_comp, is.factor))
+
       n = 1000L
-      df_wide_post_num = df %>%
+      df_wide_post_num = df_x_comp %>%
         select_if(is.numeric)
       df_wide_post_num = cbind(type = "posterior", df_wide_post_num)
 
-      df_wide_post_disc = df %>%
+      df_wide_post_disc = df_x_comp %>%
         select_if(is.factor)
       df_wide_post_disc = cbind(type = "posterior", df_wide_post_disc)
 
       df_wide_prior_num = generateRandomDesign(n, self$opt_state$opt.path$par.set) %>%
-        select_if(is.numeric)
+        select_if(is.numeric) %>%
+        select(matches(search_space_components))
+
       df_wide_prior_num = cbind(type = "prior", df_wide_prior_num)
       df_wide_prior_disc = generateRandomDesign(n, self$opt_state$opt.path$par.set) %>%
-        select_if(is.factor)
+        select_if(is.factor) %>%
+        select(matches(search_space_components))
+
       df_wide_prior_disc = cbind(type = "prior", df_wide_prior_disc)
 
       df_long_num = rbind(wideToLong(df_wide_post_num), wideToLong(df_wide_prior_num))
@@ -93,8 +100,16 @@ MboPlotInputSpace = R6Class(
         gg_disc = gg_disc + xlab("Param value")
         gg_disc = gg_disc + theme(plot.title = element_text(face = "bold"))
       }
-      gg = ggarrange(gg_num, gg_disc, nrow = 2, heights = c(2,1))
 
+      if (ncols_df[2] <= 1) {
+        gg = gg_num
+      } else {
+        if (ncols_df[1] <= 1) {
+          gg = gg_disc
+        } else {
+      gg = ggarrange(gg_num, gg_disc, nrow = ifelse(length_disc >0, 2, 1),
+                    heights = ifelse(c(length_disc >0,length_disc >0) , c(round(log(length_num/length_disc)+0.51), 1)))
+      }}
       return(gg)
     }
   )

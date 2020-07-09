@@ -100,7 +100,7 @@ server <- function(input, output, session) {
   output$InputSpacePlot = renderPlot({
     validate(need(storage$check == "ok", ""))
     mbo_models$mbo_input_space$set_param_vals(list(include_prior = as.logical(input$include_prior)))
-    mbo_plots$plot_inputSpace = mbo_models$mbo_input_space$plot()
+    mbo_plots$plot_inputSpace = mbo_models$mbo_input_space$plot(search_space_components = input$dep_choice)
     storage$CurrPlot =  mbo_plots$plot_inputSpace
     return(mbo_plots$plot_inputSpace)
   })
@@ -108,8 +108,9 @@ server <- function(input, output, session) {
   # Plot search space
   output$SearchSpacePlot = renderPlot({
     validate(need(storage$check == "ok", ""))
-    mbo_models$mbo_search_space$set_param_vals(list(include_y = as.logical(input$include_y)))
-    mbo_plots$plot_searchSpace = mbo_models$mbo_search_space$plot()
+    mbo_models$mbo_search_space$set_param_vals(list(include_y = as.logical(input$include_y),
+                                                    include_init_design = as.logical(input$include_init_design)))
+    mbo_plots$plot_searchSpace = mbo_models$mbo_search_space$plot(search_space_components = input$dep_choice)
     storage$CurrPlot =  mbo_plots$plot_searchSpace
     return(mbo_plots$plot_searchSpace)
   })
@@ -196,7 +197,7 @@ server <- function(input, output, session) {
     uis = generateUi(models, names)
     unique_uis = removeDuplicateUi(uis)
 
-    return(uis)
+    return(unique_uis)
   })
 
   # create uis for plot param_set for tab 'Diagnostic Tool for Single Iteration'
