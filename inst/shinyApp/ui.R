@@ -80,18 +80,18 @@ ui <- navbarPage(
       )
     ),
     tabPanel(
-      "Exploration vs. Exploitation",
+      "Search Space Dependencies",
       fluidRow(
-        uiOutput("headerDist2Neighbor"),
-        plotOutput("Dist2NeighborPlot"),
+        #uiOutput("headerDist2Neighbor"),
+        plotOutput("DependenciesPlot"),
         withMathJax(includeMarkdown("Rmd-docs/MboPlotDistToNeighbor.md"))
       )
     ),
     tabPanel(
-      "Dependencies Search Space",
+      "Exploration vs. Exploitation",
       fluidRow(
-        #uiOutput("headerDist2Neighbor"),
-        plotOutput("DependenciesPlot"),
+        uiOutput("headerDist2Neighbor"),
+        plotOutput("Dist2NeighborPlot"),
         withMathJax(includeMarkdown("Rmd-docs/MboPlotDistToNeighbor.md"))
       )
     )
