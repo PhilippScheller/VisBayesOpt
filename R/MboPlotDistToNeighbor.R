@@ -79,6 +79,7 @@ MboPlotDistToNeighbor = R6Class(
       gg_dist = gg_dist + ggtitle(paste0(dist_measure, " distance of search space"))
       gg_dist = gg_dist + xlab("Iteration")
       gg_dist = gg_dist + ylab("Gower distance")
+      gg_dist = gg_dist + theme(plot.title = element_text(face = "bold"))
 
       return(gg_dist)
     }

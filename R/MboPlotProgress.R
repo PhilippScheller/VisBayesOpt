@@ -45,6 +45,7 @@ MboPlotProgress = R6Class(
       gg = gg + xlab(expression("Iteration " *italic(n)))
       gg = gg + ylab(expression("Min " *italic(f(x)) *" after " *italic(n) *" iterations"))
       gg = gg + ggtitle(expression("Progress of optimization"))
+      gg = gg + theme(plot.title = element_text(face = "bold"))
       return(gg)
     }
   )

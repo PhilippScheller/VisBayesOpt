@@ -72,7 +72,6 @@ MboPlotSearchSpace = R6Class(
       df_long_num = wideToLong(df_wide_num, key_num)
       df_long_disc = wideToLong(df_wide_disc, key_disc)
 
-      #print(df_wide_disc)
       gg_num = NULL
       gg_disc = NULL
       if (length_num > 0) {
@@ -88,7 +87,6 @@ MboPlotSearchSpace = R6Class(
         gg_num = gg_num + xlab(expression("Iteration " *italic(n)))
         gg_num = gg_num + ylab(expression(atop("Value of search", paste("space component")))) # note: just \n does not work since label is then outside of plot area -> use atop()
         gg_num = gg_num + theme(plot.title = element_text(face = "bold"))
-        print(gg_num)
       }
       if (length_disc > 0) {
         gg_disc = ggplot(df_long_disc, aes(x = rep(seq(1:n), times = nrow(df_long_disc)/n), y = Value))

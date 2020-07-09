@@ -11,7 +11,7 @@
 #' @importFrom R6 R6Class
 #' @importFrom GGally ggpairs
 #' @importFrom ggpubr ggarrange
-#' @importFrom ggpubs annotate_figure
+#' @importFrom ggpubr annotate_figure
 #'
 #' @description
 #' This class generates plots for the pairwise dependencies of the features in the mbo run.
@@ -65,7 +65,8 @@ MboPlotDependencies = R6Class(
 
       gg_list = create_gg_combinations_scatter(df, legend_title, y_best_index)
       gg = ggarrange(plotlist = gg_list, common.legend = TRUE, legend = "right")
-      annotate_figure(gg, fig.lab = "Pairwise Dependencies of Search Space Components")
+      gg = annotate_figure(gg, top = text_grob("Pairwise Dependencies of Search Space Components",
+                                               face = "bold", hjust = 1))
 
       return(gg)
     }
