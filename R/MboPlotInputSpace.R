@@ -98,7 +98,7 @@ MboPlotInputSpace = R6Class(
         gg_disc = gg_disc + facet_wrap(Param ~ ., scales = "free")
         gg_disc = gg_disc + ggtitle("MBO search space: evaluated discrete parameters")
         gg_disc = gg_disc + xlab("Param value")
-        gg_disc = gg_disc + theme(plot.title = element_text(face = "bold"))
+        gg_disc = gg_disc + theme(plot.title = element_text(hjust = 0.5))
       }
 
       if (ncols_df[2] <= 1) {

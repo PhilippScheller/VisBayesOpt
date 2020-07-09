@@ -42,10 +42,11 @@ MboPlotProgress = R6Class(
 
       gg = ggplot(opt_path_df, aes(x = dob, y = cumy))
       gg = gg + geom_line()
+      gg = gg + ggtitle(expression("Progress of optimization"))
       gg = gg + xlab(expression("Iteration " *italic(n)))
       gg = gg + ylab(expression("Min " *italic(f(x)) *" after " *italic(n) *" iterations"))
-      gg = gg + ggtitle(expression("Progress of optimization"))
-      gg = gg + theme(plot.title = element_text(face = "bold"))
+      gg = gg + theme(plot.title = element_text(hjust = 0.5))
+
       return(gg)
     }
   )

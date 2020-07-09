@@ -66,7 +66,7 @@ MboPlotDependencies = R6Class(
       gg_list = create_gg_combinations_scatter(df, legend_title, y_best_index)
       gg = ggarrange(plotlist = gg_list, common.legend = TRUE, legend = "right")
       gg = annotate_figure(gg, top = text_grob("Pairwise Dependencies of Search Space Components",
-                                               face = "bold", hjust = 1))
+                                               face = "bold"))
 
       return(gg)
     }
