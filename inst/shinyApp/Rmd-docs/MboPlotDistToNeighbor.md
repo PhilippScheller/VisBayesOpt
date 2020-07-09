@@ -29,7 +29,8 @@ row of $M$, i.e. giving the $min,max, mean$ of each row which is then plotted.
   * Adjustment of infill criterion (if infill criterion bears parameter measuring the degree of exploration): If heavy peaks also at later iterations one may consider to adjust the infill criterion towards a lower degree of exploration to yield better results (as the optimizer then exploits more often).  
   
 **Modifications**
-  * We can use different $dist\_measure$s from the dropdown in the sidebar panel.
+  * $dist\_measure$: We can use different $dist\_measure$s from the dropdown in the sidebar panel.  
+  * $include\_init\_desgin$: We can exclude the points of the initial design by setting $include\_init\_desgin=FALSE$.  
 
 
   

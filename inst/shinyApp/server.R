@@ -142,7 +142,7 @@ server <- function(input, output, session) {
   output$dep_choice = renderUI({
     validate(need(storage$check == "ok", ""))
     req(storage$mboObj1)
-    checkboxGroupInput("dep_choice", "Choose search_space_components",
+    checkboxGroupInput("dep_choice", "Select value for search_space_components",
                                                choices = getParamIds(storage$mboObj1$opt.path$par.set),
                                                selected = getParamIds(storage$mboObj1$opt.path$par.set)[1:2]
   )})

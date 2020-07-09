@@ -84,7 +84,7 @@ ui <- navbarPage(
       fluidRow(
         #uiOutput("headerDist2Neighbor"),
         plotOutput("DependenciesPlot"),
-        withMathJax(includeMarkdown("Rmd-docs/MboPlotDistToNeighbor.md"))
+        withMathJax(includeMarkdown("Rmd-docs/MboPlotDependencies.md"))
       )
     ),
     tabPanel(
@@ -122,7 +122,8 @@ ui <- navbarPage(
              ),
              tabPanel(
                "Optimization Path",
-               fluidRow(plotOutput("OptPathPlot"))
+               fluidRow(plotOutput("OptPathPlot")),
+               withMathJax(includeMarkdown("Rmd-docs/MboPlotOptPath.md"))
              )
              ))),
     tabPanel("About")

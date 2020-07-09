@@ -13,7 +13,7 @@
   * Analyzing posterior: If the optimizer searches heavily on an upper/lower boundary of a specified range one may adjust the range of the search space components as it seems the optimizer finds the minimum $f(x)$ at a different range of $x$.
   
 **Modifications**
-  * We can exclude the sampled observations from the specified prior of the search space components by setting $include\_prior$ to $FALSE$ at the sidebar panel
+  * $include\_prior$: We can exclude the sampled observations from the specified prior of the search space components by setting $include\_prior$ to $FALSE$ at the sidebar panel.
 
 
   

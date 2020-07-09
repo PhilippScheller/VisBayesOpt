@@ -11,10 +11,11 @@
 
 **How to use**  
   * linear trend : If optimizer shows a positive (negative) linear trend, i.e. no constant, then it may be sufficient to limit the search space to larger (smaller) values in future runs.  
-  * discrete params: If optimizer does rarely search for certain level of a search space component (e.g. search space component 'temperature' has 3 levels [(i) 'low', (ii) 'medium', (iii) 'high'] but for large $n$ the optimizer never evaluates e.g. 'low' then it might be a benefit to limit the component 'temperature' to only 2 levels)
+  * discrete params: If optimizer does rarely search for certain level of a search space component (e.g. search space component 'temperature' has 3 levels [(i) 'low', (ii) 'medium', (iii) 'high'] but for large $n$ the optimizer never evaluates e.g. 'low' then it might be a benefit to limit the component 'temperature' to only 2 levels).
   
 **Modifications**
-  * We can exclude the $y=f(x)$ value from the plot by setting $include\_y$ to $FALSE$ at the sidebar panel
+  * $include\_y$: We can exclude the $y=f(x)$ value from the plot by setting $include\_y$ to $FALSE$ at the sidebar panel.  
+  * $include\_init\_desgin$: We can exclude the points of the initial design by setting $include\_init\_desgin=FALSE$.
 
 
   
