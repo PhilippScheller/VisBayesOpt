@@ -15,7 +15,7 @@
   * Train and propose time as portion: Sometimes the surrogate model fitting gets very expensive if the surrogate model does not scale well with the number of data points used for fitting. Combining this information with the ones from other analyses one may cut the number of iterations to save cost or use a different surrogate.
   
 **Modifications**
-  * We can set $highlight\_iter$ in the sidebar panel if we are interested in a specific iteration to be highlighted.
+  * $highlight\_iter$: We can set $highlight\_iter$ in the sidebar panel if we are interested in a specific iteration to be highlighted.
 
 
   

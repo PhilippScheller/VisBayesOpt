@@ -26,8 +26,8 @@ The right plot shows the predicted target $\hat y$ against the true target $y$. 
   * Actions if bad fit identified: choose another surrogate model class to improve the quality of the surrogate fit and thus the overall optimization result.  
   
 **Modifications**
-  * We can set $highlight\_iter$ in the sidebar panel if we are interested in a specific iteration to be highlighted. The right plot only shows the target ($(y, \hat y)$) up to the $highlight\_iter$.  
-  * We can set $predict\_y\_iter\_surrogate = TRUE$ to predict all estimated target values $\hat y$ by using the surrogate model of the iteration $highlight\_iter$. If $predict\_y\_iter\_surrogate = FALSE$ the predicted target values $\hat y$ are taken from the design matrix, i.e. $\hat y^{(i)}$ is predicted by the surrogate model of iteration $i$ $\forall i=1,\ldots,highlight\_iter$.  
+  * $highlight\_iter$: We can set $highlight\_iter$ in the sidebar panel if we are interested in a specific iteration to be highlighted. The right plot only shows the target ($(y, \hat y)$) up to the $highlight\_iter$.  
+  * $predict\_y\_iter\_surrogate$: We can set $predict\_y\_iter\_surrogate = TRUE$ to predict all estimated target values $\hat y$ by using the surrogate model of the iteration $highlight\_iter$. If $predict\_y\_iter\_surrogate = FALSE$ the predicted target values $\hat y$ are taken from the design matrix, i.e. $\hat y^{(i)}$ is predicted by the surrogate model of iteration $i$ $\forall i=1,\ldots,highlight\_iter$.  
   * Choosing $predict\_y\_iter\_surrogate = TRUE$ may result in a bad prediction of $\hat y$ if the surrogate of $highlight\_iter$ is bad (e.g. constant).
 
 

@@ -13,7 +13,8 @@
   * Identify quality of surrogate at single iteration: If the PDP shows a constant at iteration $i$ the search space component under review does not influence $\hat y^{(i)}$ thus the surrogate might not be suited for this problem.  
   
 **Modifications**
-  * We can set $highlight\_iter$ in the sidebar panel if we are interested in a specific iteration to be highlighted.
+  * $highlight\_iter$: We can set $highlight\_iter$ in the sidebar panel if we are interested in a specific iteration to be highlighted.  
+  * $feature$: We can select a search space component ($feature$) to inspect the surrogate (or PDP for higher dimensions) for that component.
 
 
   
