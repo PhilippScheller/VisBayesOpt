@@ -12,6 +12,7 @@
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %T>%
 #' @importFrom tidyr gather
+#' @importFrom dplyr select_if
 #' @importFrom scales number_format
 #' @importFrom ggpubr ggarrange
 #'
@@ -76,12 +77,12 @@ MboPlotInputSpace = R6Class(
       if (ncols_df[1] > 1) {
         gg_num = ggplot(filter(df_long_num, type == "posterior"), aes(x = Value, fill = type))
         gg_num = gg_num + geom_bar(aes(y = ..prop.., group = 1), alpha = .4)
+        if (include_prior) {
+          gg_num = gg_num + geom_bar(data = filter(df_long_num, type == "prior"),
+                                     mapping = aes(x = Value, y = ..prop.., group = 1, fill = type),
+                                     alpha = .4)
+        }
         gg_num = gg_num + scale_x_binned(n.breaks = 20, labels = scales::number_format(accuracy = .1))
-       if (include_prior) {
-         gg_num = gg_num + geom_bar(data = filter(df_long_num, type == "prior"),
-                                        mapping = aes(y = ..prop.., group = 1, fill = type),
-                                    alpha = .4)
-       }
         gg_num = gg_num + facet_wrap(Param ~ ., scales = "free")
         gg_num = gg_num + ggtitle("MBO search space: evaluated numeric parameters")
         gg_num = gg_num + xlab("Param value")

@@ -64,10 +64,10 @@ MboSummary = R6Class(
       infillCrit_param_val = list(name = "Infill Criterion Parameter Value",
                        value = infill_crit_param_val,
                        group = 2)
-      max_iter = list(name = "Maximum Number of Iterations",
+      max_iter = list(name = "Maximum Number of Evaluations",
                       value = n_iter,
                       group = 2)
-      runtime = list(name = "Runtime [minutes]",
+      runtime = list(name = "Runtime [Minutes]",
                       value = time,
                       group = 2)
       multi_prop = list(name = "Multi-Point Proposal",
