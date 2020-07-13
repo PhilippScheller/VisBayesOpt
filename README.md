@@ -30,12 +30,12 @@ Due to the object oriented style of R6, the user can easily apply the workflow t
 ```r{}
 library(VisBayesOpt)
 mboObj2 = readRDS("inst/test-data/mboObj2.rds") #adjust to local file
-  mbo_plot_class = MboPlotSearchSpace$new(mboObj2)
+mbo_plot_class = MboPlotSearchSpace$new(mboObj2)
   ```
 ## Step 2 - Plot search space by calling the $plot() function on the R6 object
 At this step we can already create our first plot with the default `param_vals`. Every R6 class (`MboPlotProgress`, `MboPlotInputSpace`,...) comes with the unified $plot() function, i.e. we can call $plot() on every R6 object from `VisBayesOpt`.
 ```r
-  mbo_plot_class$plot()
+mbo_plot_class$plot()
 ```
 ## Step 3 - Modify `param_vals`
 All plot classes are inherits from the overall class `MboPlot` which contains a setting method we can use in all classes. Once the constructor is called (in Step 1) the `param_vals`of the plot are initialized with default values. We can change these values by using the $set_param_vals() function.   
@@ -44,14 +44,14 @@ All plot classes are inherits from the overall class `MboPlot` which contains a 
 Now we do not want to include the points from the initial design so we set `include_init_design = FALSE` (to see the default values for all params of a class see the help page of the class), so we specify it by the function `$set_param_vals()` on the createt `mbo_plot_class` object:
 
 ```r
-  mbo_plot_class$set_param_vals(list(include_y = TRUE, include_init_design = FALSE))
+mbo_plot_class$set_param_vals(list(include_y = TRUE, include_init_design = FALSE))
 ```
 
 By doing so we tell the object `mbo_plot_class` to change the parameters of the function `$plot()`. 
 
 Afterwards we can simply create the new plot by calling the `$plot()` function again and see that the changes are applied.
 ```r
- mbo_plot_class$plot()
+mbo_plot_class$plot()
 ```
 
 
