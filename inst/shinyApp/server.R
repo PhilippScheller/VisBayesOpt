@@ -100,7 +100,7 @@ server <- function(input, output, session) {
   # Plot input space
   output$InputSpacePlot = renderPlot({
     validate(need(storage$check == "ok", ""))
-    mbo_models$mbo_input_space$set_param_vals(list(include_prior = as.logical(input$include_prior)))
+    mbo_models$mbo_input_space$set_param_vals(list(include_init_design_sampling_distribution = as.logical(input$include_init_design_sampling_distribution)))
     mbo_plots$plot_inputSpace = mbo_models$mbo_input_space$plot(search_space_components = input$dep_choice)
     storage$CurrPlot =  mbo_plots$plot_inputSpace
     return(mbo_plots$plot_inputSpace)

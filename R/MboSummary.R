@@ -41,6 +41,7 @@ MboSummary = R6Class(
       n_iter = assert_multi_class(self$opt_state$opt.problem$control$max.evals, c("numeric", "integer"))
       time = assert_multi_class(round(as.numeric(self$opt_state$time.used)/60, digits = 2), c("numeric", "integer"))
       p_proposed = assert_multi_class(self$opt_state$opt.problem$control$propose.points, c("numeric", "integer"))
+      y_minimum = round(min(data.frame(self$opt_state$opt.path)$y), digits = 3)
 
 
       infillCritOpt = list(name = "Optimization Direction",
@@ -73,6 +74,9 @@ MboSummary = R6Class(
       multi_prop = list(name = "Multi-Point Proposal",
                      value = p_proposed,
                      group = 2)
+      min_y = list(name = "Minimum y",
+                   value = y_minimum,
+                   gorup = 2)
 
       mboSummary = list(
         infillCrit = infillCrit,
@@ -84,7 +88,8 @@ MboSummary = R6Class(
         noObjectives = noObjectives,
         multi_prop = multi_prop,
         max_iter = max_iter,
-        runtime = runtime
+        runtime = runtime,
+        min_y = min_y
       )
         return(mboSummary)
     }

@@ -30,18 +30,18 @@ MboPlotInputSpace = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
-      param_set = makeParamSet(makeLogicalParam("include_prior"))
-      param_vals = list(include_prior = TRUE) # default value, else set with function `set_param_vals()`
+      param_set = makeParamSet(makeLogicalParam("include_init_design_sampling_distribution"))
+      param_vals = list(include_init_design_sampling_distribution = TRUE) # default value, else set with function `set_param_vals()`
       super$initialize(opt_state, param_set, param_vals)
     },
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
-    #' @param include_prior (`boolean(1)`)
+    #' @param include_init_design_sampling_distribution (`boolean(1)`)
     #'   Specifies if bar chart over sampled prior should also be included in plot.
     #'
     #' @return ([ggplot]).
-    plot = function(include_prior = self$param_vals$include_prior, search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]) {
+    plot = function(include_init_design_sampling_distribution = self$param_vals$include_init_design_sampling_distribution, search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]) {
       df_x = getOptPathX(self$opt_state$opt.path)
       df_x_comp =  df_x[, which(colnames(df_x) %in% search_space_components), drop = FALSE]
       length_num = sum(sapply(df_x_comp, is.numeric))
@@ -51,22 +51,22 @@ MboPlotInputSpace = R6Class(
       df_wide_post_num = df_x_comp %>%
         select_if(is.numeric)
 
-      df_wide_post_num = cbind(type = "posterior", df_wide_post_num)
+      df_wide_post_num = cbind(type = "entire optimization run", df_wide_post_num)
 
       df_wide_post_disc = df_x_comp %>%
         select_if(is.factor)
-      df_wide_post_disc = cbind(type = "posterior", df_wide_post_disc)
+      df_wide_post_disc = cbind(type = "entire optimization run", df_wide_post_disc)
 
       df_wide_prior_num = generateRandomDesign(n, self$opt_state$opt.path$par.set, trafo = TRUE) %>%
         select_if(is.numeric) %>%
         select(matches(search_space_components))
 
-      df_wide_prior_num = cbind(type = "prior", df_wide_prior_num)
+      df_wide_prior_num = cbind(type = "init design sampling distribution", df_wide_prior_num)
       df_wide_prior_disc = generateRandomDesign(n, self$opt_state$opt.path$par.set,  trafo = TRUE) %>%
         select_if(is.factor) %>%
         select(matches(search_space_components))
 
-      df_wide_prior_disc = cbind(type = "prior", df_wide_prior_disc)
+      df_wide_prior_disc = cbind(type = "init design sampling distribution", df_wide_prior_disc)
 
       df_long_num = rbind(wideToLong(df_wide_post_num), wideToLong(df_wide_prior_num))
       df_long_disc = rbind(wideToLong(df_wide_post_disc), wideToLong(df_wide_prior_disc))
@@ -76,10 +76,10 @@ MboPlotInputSpace = R6Class(
       gg_num = NULL
       gg_disc = NULL
       if (ncols_df[1] > 1) {
-        gg_num = ggplot(filter(df_long_num, type == "posterior"), aes(x = Value, fill = type))
+        gg_num = ggplot(filter(df_long_num, type == "entire optimization run"), aes(x = Value, fill = type))
         gg_num = gg_num + geom_bar(aes(y = ..prop.., group = 1), alpha = .4)
-        if (include_prior) {
-          gg_num = gg_num + geom_bar(data = filter(df_long_num, type == "prior"),
+        if (include_init_design_sampling_distribution) {
+          gg_num = gg_num + geom_bar(data = filter(df_long_num, type == "init design sampling distribution"),
                                      mapping = aes(x = Value, y = ..prop.., group = 1, fill = type),
                                      alpha = .4)
         }
@@ -91,10 +91,10 @@ MboPlotInputSpace = R6Class(
                                 axis.text.x = element_text(angle = 45, hjust = 1))
       }
       if (ncols_df[2] > 1) {
-        gg_disc = ggplot(filter(df_long_disc, type == "posterior"), aes(x = Value))
+        gg_disc = ggplot(filter(df_long_disc, type == "entire optimization run"), aes(x = Value))
         gg_disc = gg_disc + geom_bar(aes(y = ..prop.., group = 2, fill = type), alpha = .4)
-        if (include_prior) {
-        gg_disc = gg_disc + geom_bar(data = filter(df_long_disc, type == "prior"),
+        if (include_init_design_sampling_distribution) {
+        gg_disc = gg_disc + geom_bar(data = filter(df_long_disc, type == "init design sampling distribution"),
                                      mapping = aes(y = ..prop.., group = 1, fill = type),
                                      alpha = .4)
         }

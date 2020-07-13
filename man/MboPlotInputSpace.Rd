@@ -47,7 +47,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MboPlotInputSpace$plot(
-  include_prior = self$param_vals$include_prior,
+ 
+    include_init_design_sampling_distribution = self$param_vals$include_init_design_sampling_distribution,
   search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]
 )}\if{html}{\out{</div>}}
 }
@@ -55,7 +56,7 @@ Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{include_prior}}{(\code{boolean(1)})
+\item{\code{include_init_design_sampling_distribution}}{(\code{boolean(1)})
 Specifies if bar chart over sampled prior should also be included in plot.}
 }
 \if{html}{\out{</div>}}
