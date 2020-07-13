@@ -49,7 +49,7 @@ MboPlot = R6Class(
     #'
     #' @param x ([Param][ParamSet]).
     set_param_vals = function(x) {
-      assert_list(x, names = "named")
+      assertList(x, names = "named")
       is_feasible = isFeasible(par = self$param_set, x)
       if (!is_feasible) {
         stop(attr(is_feasible, "warning"))

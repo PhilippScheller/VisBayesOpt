@@ -1,6 +1,5 @@
-
 generateSummaryRowsUiShiny = function(mboSummary = NULL) {
-  mboSummary = assert_class(mboSummary, "mboSummary")
+  assertClass(mboSummary, "mboSummary")
 
   ifelse(is.null(mboSummary$mboSummary), stop("No summary provided, first run mboSummary() on the object"),
          summary = mboSummary$mboSummary)
@@ -10,6 +9,7 @@ generateSummaryRowsUiShiny = function(mboSummary = NULL) {
   generateColumnsUi(ncols = 3, nrows = maxRow, mboSummary)
 
 }
+
 generateColumnsUi = function(ncols = 1, nrows = 1, mboSummary) {
 
   # for (column in 1:n)
@@ -25,7 +25,3 @@ generateTextUi = function(text, par_name, par_id) {
   ui = textOutput(par_id, )
 
 }
-
-########################################################################################################
-
-

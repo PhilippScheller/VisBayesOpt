@@ -43,7 +43,7 @@ MboPlotEstimationUncertainty = R6Class(
       names_x = names(opt_path$par.set$pars)
 
       if (!is.null(highlight_iter)) {
-        highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
+        assertMultiClass(highlight_iter, c("integer", "numeric"))
         if (n_iters < highlight_iter) {
           messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
                  highlight_iter, n_iters)

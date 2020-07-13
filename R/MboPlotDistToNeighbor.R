@@ -48,7 +48,7 @@ MboPlotDistToNeighbor = R6Class(
     #' @return ([ggplot]).
     plot = function(dist_measure = self$param_vals$dist_measure, include_init_design = self$param_vals$include_init_design) {
       if (length(dist_measure) != 1L) stop("Only 1 distance measure can be calculated.")
-      dist_measure = assert_class(dist_measure, "character")
+      assertClass(dist_measure, "character")
       if (!check_function(get(dist_measure))) stop("Chosen `dist_measure` cannot be evaluated as a function")
 
       df = data.frame(self$opt_state$opt.path)

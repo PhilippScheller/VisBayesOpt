@@ -2,7 +2,7 @@
 
 extractFromDf = function(df, extr, keepColumNo = c(1)) {
   df = as.data.frame(df)
-  extr = assert_class(extr, "list")
+  assertClass(extr, "list")
   check_fun = lapply(extr, check_function)
   if (!all(unlist(check_fun))) stop("Make sure that provided extractions are all functions")
   if (length(extr) > 1) stop("Only 1 function can be evaluated, you provided multiple ones")
@@ -80,7 +80,7 @@ wrappedPlot = function(df_long, title, method = c("numeric", "discrete"), type =
 }
 
 generateFrequencyDf = function(df) {
-  df = assert_class(df, "data.frame")
+  assertClass(df, "data.frame")
 
   df_n = df %>%
     group_by(Value) %>%

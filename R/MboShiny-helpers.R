@@ -47,7 +47,7 @@ paramBox = function(title, input, fill = TRUE) {#, desc
 }
 
 getParamTableFromMboSummary = function(mboSummary, names = c("Characteristic", "Value")) {
-  names = assert_class(names, "character")
+  assertClass(names, "character")
   if (length(names) != 2L) stop("Names vector has to much/less elements")
 
   text_values = lapply(mboSummary, function(x) {

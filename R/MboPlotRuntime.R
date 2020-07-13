@@ -45,7 +45,7 @@ MboPlotRuntime = R6Class(
       df_time$total.time = df_time$train.time + df_time$propose.time
 
       if (!is.null(highlight_iter)) {
-        highlight_iter = assertMultiClass(highlight_iter, c("integer", "numeric"))
+        assertMultiClass(highlight_iter, c("integer", "numeric"))
         if (n_iters < highlight_iter) {
           messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
                  highlight_iter, n_iters)
