@@ -57,11 +57,10 @@ MboPlotFit = R6Class(
       }
       # generate opt_path for each iteration "i" with the seen points until "i", i.e. for plot R2
       opt_path_iters = lapply(as.list(seq(1:n_iters)), function(row) opt_path_df[opt_path_df$dob != 0, ][1:row,])
-      model_iters = models[1:n_iters]
       # calculate r squared
-      R2 = mapply(function(model, opt_path) {
-          RSQOverIterations(model, opt_path, control, names_x)
-        },opt_path = opt_path_iters, model = model_iters)
+      R2 = mapply(function(opt_path) {
+          RSQOverIterations(opt_path, names_x)
+        },opt_path = opt_path_iters)
 
       df_r2 = data.frame(R2 = R2, iter = seq(1:n_iters))
 
@@ -71,6 +70,7 @@ MboPlotFit = R6Class(
       opt_path_x_iter = getOptPathX(opt_path, 1:highlight_iter)
       infill.mean = makeMBOInfillCritMeanResponse()$fun
       infill.std = makeMBOInfillCritStandardError()$fun
+
 
       if (predict_y_iter_surrogate) {
         y_hat = ifelse(control$minimize, 1, -1) * infill.mean(opt_path_x_iter, model_iter, control)
@@ -84,6 +84,7 @@ MboPlotFit = R6Class(
       y_eval = opt_path_iter$y
       y_df = data.frame(y.hat = y_hat, y.eval = y_eval, y.absdiff = abs(y_hat - y_eval), iters = seq(1:highlight_iter),
                         y.min = y_min, y.max = y_max)
+      current_iter = y_df[nrow(y_df), ,drop = FALSE]
 
       # plot r2
       gg_r2 = ggplot(df_r2, aes(x = iter, y = R2))
@@ -99,15 +100,17 @@ MboPlotFit = R6Class(
       gg_r2 = gg_r2 + ggtitle(bquote("In-Sample"~R^2))
 
       # plot y vs. yhat
-      gg_cross = ggplot(y_df, aes(x = y.eval, y = y.hat, col = iters))
-      gg_cross = gg_cross + geom_pointrange(aes(ymin = y.min, ymax = y.max), data = y_df)
-      gg_cross = gg_cross + geom_abline(slope = 1)
-      gg_cross = gg_cross + ylab(expression(hat(y)))
-      gg_cross = gg_cross + xlab(expression(y))
-      gg_cross = gg_cross + labs(color = "Iteration")
-      gg_cross = gg_cross + ggtitle(paste("Predicted vs. True Target in Iteration", highlight_iter))
+      gg_y = ggplot(y_df, aes(x = y.eval, y = y.hat, col = iters))
+      gg_y = gg_y + geom_pointrange(aes(ymin = y.min, ymax = y.max), data = y_df)
+      gg_y = gg_y + geom_point(data = current_iter, aes(x = y.eval, y = y.hat), col = "red", size = 3)
+      gg_y = gg_y + geom_abline(slope = 1)
+      gg_y = gg_y + ylab(expression(hat(y)))
+      gg_y = gg_y + xlab(expression(y))
+      gg_y = gg_y + labs(color = "Iteration")
+      gg_y = gg_y + ggtitle(paste("Predicted vs. True Target in Iteration", highlight_iter))
 
-      gg = ggarrange(gg_r2, gg_cross, ncol = 2)
+
+      gg = ggarrange(gg_r2, gg_y, ncol = 2)
       return(gg)
     }
   )
