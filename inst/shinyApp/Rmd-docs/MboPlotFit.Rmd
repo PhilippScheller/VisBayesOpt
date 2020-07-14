@@ -3,9 +3,6 @@
 **Description**    
  The plots show the fit of the model.
 
-
-The right plot shows the predicted target $\hat y$ against the true target $y$. The angle bisector shows a 'perfect' 
-
 **Interpretation**   
   * Left plot: Shows the in-sample R-squared at a certain iteration
   $$
