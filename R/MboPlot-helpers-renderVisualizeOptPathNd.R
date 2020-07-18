@@ -105,7 +105,7 @@ renderVisualizeOptPathNd = function(opt_state, interest = "surrogate", feature, 
 
     # detect the number of cores & initiate cluster
     no.cores = parallel::detectCores() - 1
-    cl = parallel::makeCluster(no.cores, type = "FORK")
+    cl = parallel::makeCluster(no.cores) # use default type = "PSOCK" since fork does not work on windows which might limit some users, type = "FORK")
 
     if (interest == "surrogate") {
       result = parallel::parLapply(
