@@ -21,6 +21,7 @@ Imports:
     mlrMBO,
     shiny,
     shinyFiles,
+    shinythemes,
     shinydashboard
 Suggests:
     iml,
