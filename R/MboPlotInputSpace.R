@@ -30,7 +30,8 @@ MboPlotInputSpace = R6Class(
     #'
     #' @param opt_state ([OptState]).
     initialize = function(opt_state) {
-      param_set = makeParamSet(makeLogicalParam("include_init_design_sampling_distribution"))
+      param_set = makeParamSet(makeLogicalParam("include_init_design_sampling_distribution"),
+                               makeCharacterVectorParam("search_space_components"))
       param_vals = list(include_init_design_sampling_distribution = TRUE) # default value, else set with function `set_param_vals()`
       super$initialize(opt_state, param_set, param_vals)
     },
