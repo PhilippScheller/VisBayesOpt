@@ -26,7 +26,7 @@ runAppLocal()
 We use the exemplary `final.opt.state`object [mboObj2](inst/test-data/mboObj2.rds) which contains a mixed search space with numeric and discrete search space parameters. We show the worklfow for the R6 class `MboPlotSearchSpace()`.
 Due to the object oriented style of R6, the user can easily apply the workflow to any other class from `VisBayesOpt`.
 
-## Step 1 - Create a R6 object by calling the constructor with `$new()
+## Step 1 - Create a R6 object by calling the constructor with `$new()`
 ```r{}
 library(VisBayesOpt)
 mboObj2 = readRDS("inst/test-data/mboObj2.rds") #adjust to local file
