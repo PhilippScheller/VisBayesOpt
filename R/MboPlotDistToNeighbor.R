@@ -18,8 +18,6 @@
 #' Therefore the distance of `f(x)`
 #'
 #' @export
-
-
 MboPlotDistToNeighbor = R6Class(
   "MboPlotDistToNeighbor",
   inherit = MboPlot,

@@ -35,8 +35,12 @@ MboPlotSearchSpace = R6Class(
     #' @description
     #' Plots prior distributions of mbo run specified in the set of parameters.
     #'
-    #' @param include_y (`boolean(1)`)
+    #' @param include_init_design (\code{logical(1) | TRUE})\cr
     #' Specifies if points should be coloured with y values.
+    #' @param include_y (\code{logical(1) | TRUE})\cr
+    #' Specifies if points should be coloured with y values.
+    #' @param search_space_components (\code{list()})\cr
+    #' Specifies the search space components which should be plotted.
     #'
     #' @return ([ggplot]).
     plot = function(include_y = self$param_vals$include_y,  include_init_design = self$param_vals$include_init_design,
@@ -46,34 +50,37 @@ MboPlotSearchSpace = R6Class(
       df_x_comp =  df_x[, which(colnames(df_x) %in% search_space_components), drop = FALSE]
       y = data.frame(y = getOptPathY(self$opt_state$opt.path))
       n_init = nrow(df) - df[nrow(df), "dob"]
+      # if initial design should not be included drop first rows of opt.path
       if (!include_init_design) {
         df_x_comp = df_x_comp[(n_init+1):nrow(df_x_comp),, drop = FALSE]
         y = y[(n_init+1):nrow(y),, drop = FALSE]
       }
-
+      # check if numeric and discrete parameters are present (needed for creating plots)
       length_num = sum(sapply(df_x_comp, is.numeric))
       length_disc = sum(sapply(df_x_comp, is.factor))
-
       n = nrow(df_x_comp)
       key_num = 0
       key_disc = 0
-
+      # extract all numeric search space components
       df_wide_num = df_x_comp %>%
         select_if(is.numeric)
+      # extract all discrete search space components
       df_wide_disc = df_x_comp %>%
         select_if(is.factor)
-
+      # if color of scatters should be in accordance with 'y': cbind 'y' to the data.frame.
       if (include_y) {
         df_wide_num = cbind(df_wide_num, y)
         df_wide_disc = cbind(df_wide_disc, y)
         key_num = ncol(df_wide_num)
         key_disc = ncol(df_wide_disc)
       }
+      # create long format for plotting.
       df_long_num = wideToLong(df_wide_num, key_num)
       df_long_disc = wideToLong(df_wide_disc, key_disc)
-
+      # initialize both gg objects with NULL. Needed if one category is empty, e.g. no discrete search space components
       gg_num = NULL
       gg_disc = NULL
+      # only plot if numeric parameters present in the search space
       if (length_num > 0) {
         gg_num = ggplot(df_long_num, aes(x = rep(seq(1:n), times = nrow(df_long_num)/n), y = Value))
         if (include_y) {
@@ -88,6 +95,7 @@ MboPlotSearchSpace = R6Class(
         gg_num = gg_num + ylab(expression(atop("Value of search", paste("space component")))) # note: just \n does not work since label is then outside of plot area -> use atop()
         gg_num = gg_num + theme(plot.title = element_text(hjust = 0.5))
       }
+      # only plot if discrete parameters present in the search space
       if (length_disc > 0) {
         gg_disc = ggplot(df_long_disc, aes(x = rep(seq(1:n), times = nrow(df_long_disc)/n), y = Value))
         if (include_y) {
@@ -100,6 +108,8 @@ MboPlotSearchSpace = R6Class(
         gg_disc = gg_disc + ylab(expression(atop("Value of search", paste("space component")))) # note: just \n does not work since label is then outside of plot area -> use atop()
         gg_disc = gg_disc + theme(plot.title = element_text(hjust = 0.5))
       }
+      # some specifications for partitioning the plot area (split between space required for numeric search space components
+      # facet of plots and discret search space components facet of plots).
       if (length_disc < 1) {
         gg = gg_num
       } else {

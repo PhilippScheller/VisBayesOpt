@@ -32,12 +32,13 @@ MboPlotProgress = R6Class(
     #' @return ([ggplot]).
     plot = function() {
       opt_path_df = data.frame(self$opt_state$opt.path)
-
+      # distinguish between minimization problem and maximization problem.
       if (self$opt_state$opt.problem$control$minimize) {
         opt_path_df$cumy = cummin(opt_path_df$y)
       } else {
         pt_path_df$cumy = cummax(opt_path_df$y)
       }
+      # only consider iterations until termination, i.e. stop criterion met.
       opt_path_df = opt_path_df[opt_path_df$dob <= self$opt_state$loop,]
 
       gg = ggplot(opt_path_df, aes(x = dob, y = cumy))

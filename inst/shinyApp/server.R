@@ -34,12 +34,11 @@ server <- function(input, output, session) {
       }
     }
   })
-
   #FIXME: works but needs implementation for updating params via 'set_param_vals()' function
+  # fully automatic generation of Uis
   # model_names = list(MboPlotDistToNeighbor = "MboPlotDistToNeighbor", MboPlotProgress = "MboPlotProgress",
   #                    MboPlotInputSpace = "MboPlotInputSpace", MboPlotSearchSpace = "MboPlotSearchSpace",
   #                    MboPlotOptPath = "MboPlotOptPath")
-  #
   #
   # # generate plots for all present 'MboPlot...()' functions
   # mbo_plots = reactive({
@@ -146,8 +145,6 @@ server <- function(input, output, session) {
                                                choices = getParamIds(storage$mboObj1$opt.path$par.set),
                                                selected = getParamIds(storage$mboObj1$opt.path$par.set)[1:2]
   )})
-
-
   # ######## Diagnostic section
 
   # Plot opt path
@@ -213,9 +210,7 @@ server <- function(input, output, session) {
     return(unique_uis)
   })
 
-
-  # Export plots png
-
+# Export plots png
   #read directory from input
   shinyDirChoose(input, 'inputDir', roots = c(home = '~'))
 

@@ -1,4 +1,5 @@
-
+# Helper function for 'MboPlotDependencies'
+# Creates the scatter plot combinations on the lower triangular matrix
 create_gg_combinations_scatter = function(df, legend_title, y_best_index) {
   assertClass(df, "data.frame")
   assertClass(legend_title, "character")
@@ -11,6 +12,7 @@ create_gg_combinations_scatter = function(df, legend_title, y_best_index) {
   return(gg_list)
 }
 
+# create list object with all pairwise combinations of data and labels (x,y axis)
 create_df_combinations_list = function(df_x, df_col, y_best_index) {
   assertClass(df_x, "data.frame")
   n = ncol(df_x)
@@ -20,7 +22,6 @@ create_df_combinations_list = function(df_x, df_col, y_best_index) {
   for (i in 1:n) {
     for (j in 1:n) {
       if (i >= j) {
-
         if (i == j) {# for plotting histogram on diagonal
           hist = TRUE
           gg_df = df_x[, i, drop = FALSE]
@@ -49,6 +50,7 @@ create_df_combinations_list = function(df_x, df_col, y_best_index) {
   return(df_list)
 }
 
+# based on output of 'create_df_combinations_list' this function creates all pairwise ggplots and the respective axis labels (only on outer axes)
 create_gg_object = function(df, legend_title) {
   if (!is.null(df$gg_df)) {
     axis_x = df$x_axis[1] # if TRUE plot x axis, if FALSE do not
@@ -65,7 +67,6 @@ create_gg_object = function(df, legend_title) {
       name_x2 = colnames(df_sel[, 2, drop = FALSE])
       name_col = colnames(df_sel[, 3, drop = FALSE])
     }
-
     if (hist) {
       gg = ggplot(df_sel, aes(x = get(name_x2)))
       gg = gg + geom_bar(aes(y = ..prop.., group = 1))

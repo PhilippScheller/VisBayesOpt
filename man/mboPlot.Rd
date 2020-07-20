@@ -31,7 +31,7 @@ Environment containing necessary information needed during optimization in MBO.}
 \item{\code{param_set}}{(\link{ParamSet})\cr
 Environment containing necessary parameters for the plot. NOT to be confused with the mbo parameter set.}
 
-\item{\code{param_vals}}{(\link{Param})\cr
+\item{\code{param_vals}}{(\link{list})\cr
 Named list containing the parameter values.}
 }
 \if{html}{\out{</div>}}
@@ -48,7 +48,7 @@ Sets parameter values
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\link[=ParamSet]{Param}).}
+\item{\code{x}}{(\code{list()})\cr}
 }
 \if{html}{\out{</div>}}
 }

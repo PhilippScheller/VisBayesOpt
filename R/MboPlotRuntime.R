@@ -38,14 +38,15 @@ MboPlotRuntime = R6Class(
       opt_path_df = as.data.frame(self$opt_state$opt.path)
       n_iters = opt_path_df[nrow(opt_path_df), "dob"]
 
-      #df_extra = convertListOfRowsToDataFrame(self$opt_state$opt.path$env$extra)
+      # read different times from the opt.path of the mbo object.
       df_time = opt_path_df[colnames(opt_path_df) %in% c("train.time", "propose.time", "exec.time")] %>%
         drop_na()
-      #df_time$log.ecec.time = log(self$opt_state$opt.path$env$exec.time[(nrow(opt_path_df)-n_iters+1):nrow(opt_path_df)])
       df_time$total.time = df_time$train.time + df_time$propose.time
 
       if (!is.null(highlight_iter)) {
-        assertMultiClass(highlight_iter, c("integer", "numeric"))
+        assertMultiClass(highlight_iter, c("integer", "numeric")) #problem since iterations are sometimes of class 'numeric' even though they are (full) integers. Fix by assertMulticlass
+        # prevent crash of function if user specifies iteration which is beyond the number of iterations in the object of the mbo run.
+        # simply set it then to the highest iteration possible.
         if (n_iters < highlight_iter) {
           messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
                  highlight_iter, n_iters)

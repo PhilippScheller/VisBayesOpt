@@ -39,6 +39,8 @@ MboPlotDependencies = R6Class(
     #' @param color_y (\code{logical(1) | TRUE})\cr
     #' Specifies which dimension the color of the scatter represents. If TRUE then color corresponds to value of 'y'.
     #' If FALSE color corresponds to 'iteration'. Default is TRUE.
+    #' @param search_space_components (\code{list()})\cr
+    #' Specifies the search space components which should be plotted.
     #'
     #' @return ([ggplot]).
     plot = function(color_y = self$param_vals$color_y, search_space_components = getParamIds(self$opt_state$opt.path$par.set)[1:2]) { #, search_space_components = self$search_space_components)
@@ -51,9 +53,9 @@ MboPlotDependencies = R6Class(
         y_best_index = which.max(y)
       }
 
-      iter = data.frame(self$opt_state$opt.path)$dob
+      iter = data.frame(self$opt_state$opt.path)$dob #'iter' is number of columns- initial points.
       n = nrow(df_x_comp)
-      is_num = sum(sapply(df_x_comp, is.numeric))
+      is_num = sum(sapply(df_x_comp, is.numeric)) #if any numeric in x-space then 'is_num' != 0.
 
       if (color_y) {
         df_3d = data.frame(fill_col = y) # do not change 'fill_col' as name or also change in helpers file
@@ -63,8 +65,9 @@ MboPlotDependencies = R6Class(
         legend_title = "Iteration"
       }
       df = cbind.data.frame(df_3d, df_x_comp)
-
       gg_list = create_gg_combinations_scatter(df, legend_title, y_best_index)
+
+      # plot all objects and set some layout options
       gg = ggarrange(plotlist = gg_list, common.legend = TRUE, legend = "right")
       gg = annotate_figure(gg, top = text_grob("Pairwise Dependencies of Search Space Components"))
 

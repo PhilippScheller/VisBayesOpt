@@ -44,19 +44,21 @@ MboPlotEstimationUncertainty = R6Class(
 
       if (!is.null(highlight_iter)) {
         assertMultiClass(highlight_iter, c("integer", "numeric"))
+        # prevent crash of function if user specifies iteration which is beyond the number of iterations in the object of the mbo run.
+        # simply set it then to the highest iteration possible.
         if (n_iters < highlight_iter) {
           messagef("highlight_iter = %i > n_iters= %i: highlight_iter automatically set to n_iters",
                  highlight_iter, n_iters)
           highlight_iter = n_iters
         }
       }
-      # generate opt_path for the iteration "highlight_iter" with the seen points until "highlight_iter".
+      # generate opt_path for the iteration 'highlight_iter' with the seen points until 'highlight_iter'.
       opt_path_iter = opt_path_df[opt_path_df$dob != 0, ][1:highlight_iter,]
       y_hat = opt_path_df[opt_path_df$dob != 0, "mean"] [1:highlight_iter]
       y_eval = opt_path_iter$y
-
       y_df = data.frame(y.absdiff = abs(y_hat - y_eval), iters = seq(1:highlight_iter))
 
+      # we can only calculate plot for iteration > 1.
       if (highlight_iter > 1) {
       gg_iter = ggplot(y_df, aes(x = iters, y = y.absdiff))
       gg_iter = gg_iter + geom_line(na.rm = TRUE)

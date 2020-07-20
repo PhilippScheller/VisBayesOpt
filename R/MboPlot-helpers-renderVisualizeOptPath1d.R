@@ -1,3 +1,4 @@
+# Function for visualization of surrogate and infill criterion of 1d search space.
 renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE, se_factor = 1L,
                                     trafo = NULL) {
   par_set = opt_state$opt.path$par.set
@@ -34,12 +35,10 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
 
   # determine global optimum of objective function
   if (smoof::hasGlobalOptimum(opt_fun)) {
-    global_opt = smoof::getGlobalOptimum(opt_fun)$value # to be changed for noisy evals
+    global_opt = smoof::getGlobalOptimum(opt_fun)$value
   } else {
     global_opt = NA_real_
   }
-
-
 
   propose.points = control$propose.points
   infill.crit.id = getMBOInfillCritId(control$infill.crit)
@@ -58,8 +57,9 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
   # }
 
   #evals = design
+  # get data frame with evaluated values of search space components
   evals_x = evals[, getParamIds(par_set) , drop = FALSE]
-
+  # initialize list for plots
   plots = list()
 
   infill.mean = makeMBOInfillCritMeanResponse()$fun
@@ -79,6 +79,7 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
       evals[[infill.crit.id]] = opt.direction *
         critfun(evals_x, list(model), control, par_set, list(design[idx.past, , drop = FALSE]))
     }
+    #FIXME multi-point proposal not yet implemented.
     # else {
     #   objective = control$multipoint.moimbo.objective
     #   if (objective == "mean.dist") {
@@ -119,7 +120,6 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
 
 
     # data frame with points of different type (initial design points, infill points, proposed points)
-
     gg.points = buildPointsData(opt_state$opt.path, highlight_iter, design)
     gg.points$pane = factor(pane_names[1], levels = pane_names)
 
@@ -152,7 +152,7 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
     plotNumeric = plotNumeric + scale_linetype(name = "type")
     plotNumeric = plotNumeric + theme_bw()
 
-    # noisy should be plotted with bars (see fb post)
+    # Improvement: noisy should be plotted with bars (i.e. use se of prediction to mark range with vertical line and use mean prediction as point)
     if (noisy) {
       if (!anyMissing(y.true)) {
         source = data.frame(y.true)
@@ -166,21 +166,15 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
     }
     plotNumeric = plotNumeric + ggtitle(sprintf("Iter = %i, Gap = %.4e", highlight_iter, gap))
     plotNumeric = plotNumeric + ylab(NULL)
-    # plotNumeric = plotNumeric + theme(
-    #   plot.title = element_text(size = 11, face = "bold")
-    # )
 
     plots = list(pl.fun = plotNumeric)
-
   }
   if (isDiscrete(par_set)) {
-
-
+    #FIXME: Mixed spaces not yet implemented.
     # create plot for mixed space
     if (!noisy) {
       stopf("Deterministic 1d function with a single factor parameter are not supported.")
     }
-
     gg.points = buildPointsData(opt_path, highlight_iter)
 
     if (se && densregion) {
@@ -189,7 +183,6 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
       gg.points$se.min = gg.points[[name_y]] - se_factor * gg.points$se
       gg.points$se.max = gg.points[[name_y]] + se_factor * gg.points$se
     }
-
     plotMixed = ggplot(data = gg.points, aes_string(x = names_x, y = name_y,
                                                     colour = "type", shape = "type"))
     plotMixed = plotMixed + geom_point()
@@ -197,26 +190,16 @@ renderVisualizeOptPath1d = function(opt_state, highlight_iter, densregion = TRUE
       plotMixed = plotMixed + geom_errorbar(aes_string(ymin = "se.min", ymax = "se.max"),
                                             width = .1, alpha = .5)
     }
-
     plotMixed = plotMixed + xlab(names_x)
     plotMixed = plotMixed + scale_colour_discrete(name = "type")
     plotMixed = plotMixed + ggtitle(
       sprintf("Iter = %i, Gap = %.4e", highlight_iter,
               calculateGap(design[idx.pastpresent,, drop = FALSE], global_opt, control))
     )
-
     plotMixed = plotMixed + theme_bw()
-    #   theme(
-    #   legend.position = "top",
-    #   legend.box = "horizontal",
-    #   plot.title = element_text(size = 11, face = "bold")
-    # )
-
     plots = list(pl.fun = plotMixed)
   }
-
   return(plots)
-
 }
 
 

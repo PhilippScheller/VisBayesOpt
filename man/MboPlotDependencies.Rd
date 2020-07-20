@@ -58,6 +58,9 @@ Plots prior distributions of mbo run specified in the set of parameters.
 \item{\code{color_y}}{(\code{logical(1) | TRUE})\cr
 Specifies which dimension the color of the scatter represents. If TRUE then color corresponds to value of 'y'.
 If FALSE color corresponds to 'iteration'. Default is TRUE.}
+
+\item{\code{search_space_components}}{(\code{list()})\cr
+Specifies the search space components which should be plotted.}
 }
 \if{html}{\out{</div>}}
 }

@@ -56,8 +56,14 @@ Plots prior distributions of mbo run specified in the set of parameters.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{include_y}}{(\code{boolean(1)})
+\item{\code{include_y}}{(\code{logical(1) | TRUE})\cr
 Specifies if points should be coloured with y values.}
+
+\item{\code{include_init_design}}{(\code{logical(1) | TRUE})\cr
+Specifies if points should be coloured with y values.}
+
+\item{\code{search_space_components}}{(\code{list()})\cr
+Specifies the search space components which should be plotted.}
 }
 \if{html}{\out{</div>}}
 }

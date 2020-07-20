@@ -32,6 +32,7 @@ MboSummary = R6Class(
     getMboSummary = function() {
       infill_crit_name = assert_class(getMBOInfillCritName(self$opt_state$opt.problem$control$infill.crit),
                                  "character")
+      # assert all values we want to extract from the mbo run.
       infill_crit_dir = assert_class(self$opt_state$opt.problem$control$infill.crit$opt.direction, "character")
       param_names = assert_class(names(self$opt_state$opt.path$par.set$pars), "character")
       n_objectives = assert_multi_class(self$opt_state$opt.problem$control$n.objectives, c("numeric", "integer"))
@@ -43,7 +44,7 @@ MboSummary = R6Class(
       p_proposed = assert_multi_class(self$opt_state$opt.problem$control$propose.points, c("numeric", "integer"))
       y_minimum = round(min(data.frame(self$opt_state$opt.path)$y), digits = 3)
 
-
+      # save all values with a 'name' (which is equal to the displayed name in the app summary table), the 'value' and the 'group' (for arranging table)
       infillCritOpt = list(name = "Optimization Direction",
                            value = infill_crit_dir,
                            group = 1)
@@ -77,7 +78,7 @@ MboSummary = R6Class(
       min_y = list(name = "Minimum y",
                    value = y_minimum,
                    gorup = 2)
-
+      # create list with the entire information
       mboSummary = list(
         infillCrit = infillCrit,
         infillCrit_param_name = infillCrit_param_name,

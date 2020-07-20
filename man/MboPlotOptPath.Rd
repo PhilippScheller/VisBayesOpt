@@ -13,7 +13,7 @@ This class plots the opt state for a specified iteration of the mbo run.
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{stored_pdp}}{(\code{list()})\cr
-List for storing already calculated feature effect object for PDPs. Helps to avoid re-calculation in case
+List for storing already calculated search_space_component effect object for PDPs. Helps to avoid re-calculation in case
 it was already done.}
 }
 \if{html}{\out{</div>}}
@@ -56,11 +56,9 @@ Plots the opt state for a specified iteration of the mbo run.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MboPlotOptPath$plot(
   highlight_iter = self$param_vals$highlight_iter,
-  feature = self$param_vals$feature,
+  search_space_component = self$param_vals$search_space_component,
   parallel = TRUE,
-  se_factor = 1L,
-  trafo = NULL,
-  densregion = TRUE
+  se_factor = 1L
 )}\if{html}{\out{</div>}}
 }
 
@@ -70,8 +68,8 @@ Plots the opt state for a specified iteration of the mbo run.
 \item{\code{highlight_iter}}{(\code{integer(1) | NULL})\cr
 Specifies the iteration to be highlighted. The default \code{NULL} does not highlight any iteration.}
 
-\item{\code{feature}}{(\code{character(1) | NULL})\cr
-Specifies the feature to be calculated in PDP for higher dimensions, i.e. number of features > 2.
+\item{\code{search_space_component}}{(\code{character(1) | NULL})\cr
+Specifies the search_space_component to be calculated in PDP for higher dimensions, i.e. number of features > 2.
 The default \code{NULL} is only a valid input for the 1 dimensional case.}
 
 \item{\code{parallel}}{(\code{boolean(1) | TRUE})\cr
@@ -81,12 +79,6 @@ cores are used.}
 \item{\code{se_factor}}{(\code{numeric(1) | 1})\cr
 Specifies the scaling factor for the uncertainty (standard error) estimate for the 1 dimensional case.
 The default value is that no up/or downscaling is applied.}
-
-\item{\code{trafo}}{(\link{trafos}| NULL)\cr
-To be specified.}
-
-\item{\code{densregion}}{(\code{boolean(1) | TRUE})\cr
-Specifies if densregion should be plotted.}
 }
 \if{html}{\out{</div>}}
 }
