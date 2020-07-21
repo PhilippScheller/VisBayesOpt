@@ -125,7 +125,6 @@ ui <- navbarPage(
                fluidRow(plotOutput("OptPathPlot")),
                withMathJax(includeMarkdown("Rmd-docs/MboPlotOptPath.md"))
              )
-             ))),
-    tabPanel("About")
+             )))
   )
 
