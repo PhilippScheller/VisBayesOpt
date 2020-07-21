@@ -2,6 +2,7 @@
 # You can run the application by calling the function 'runAppLocal()'.
 #
 library(shiny)
+library(ggplot2)
 library(shinyFiles)
 library(shinydashboard)
 library(checkmate)
@@ -149,11 +150,12 @@ server <- function(input, output, session) {
 
   # Plot opt path
   output$OptPathPlot = renderPlot({
-    req(input$highlight_iter, input$feature)
+    req(input$highlight_iter, input$search_space_component)
     validate(need(storage$check == "ok", ""))
 
-    mbo_models$mbo_opt_path$set_param_vals(list(highlight_iter = input$highlight_iter, feature = input$feature))
+    mbo_models$mbo_opt_path$set_param_vals(list(highlight_iter = input$highlight_iter, search_space_component = input$search_space_component))
     mbo_plots$plot_optPath = mbo_models$mbo_opt_path$plot()
+    storage$CurrPlot = mbo_plots$plot_optPath
     return(mbo_plots$plot_optPath)
   })
 
@@ -163,6 +165,7 @@ server <- function(input, output, session) {
     validate(need(storage$check == "ok", ""))
     mbo_models$mbo_runtime$set_param_vals(list(highlight_iter = input$highlight_iter)) #adjust for selection from input
     mbo_plots$plot_runtime = mbo_models$mbo_runtime$plot()
+    storage$CurrPlot = mbo_plots$plot_runtime
     return(mbo_plots$plot_runtime)
   })
 
@@ -173,6 +176,7 @@ server <- function(input, output, session) {
     mbo_models$mbo_fit$set_param_vals(list(highlight_iter = input$highlight_iter,
                                            predict_y_iter_surrogate = as.logical(input$predict_y_iter_surrogate))) #adjust for selection from input
     mbo_plots$plot_fit = mbo_models$mbo_fit$plot()
+    storage$CurrPlot = mbo_plots$plot_fit
     return(mbo_plots$plot_fit)
   })
 
@@ -182,6 +186,7 @@ server <- function(input, output, session) {
     validate(need(storage$check == "ok", ""))
     mbo_models$mbo_uncertainty$set_param_vals(list(highlight_iter = input$highlight_iter)) #adjust for selection from input
     mbo_plots$plot_uncertainty = mbo_models$mbo_uncertainty$plot()
+    storage$CurrPlot = mbo_plots$plot_uncertainty
     return(mbo_plots$plot_uncertainty)
   })
 
@@ -223,6 +228,7 @@ server <- function(input, output, session) {
   #create png export based on directory
   observeEvent(input$exportPlot, {
     req(input$inputDir)
+    req(storage$CurrPlot)
     errorPath = FALSE
     tryCatch({
       localDir = paste0("~", paste(unlist(input$inputDir$path), collapse = "/"))
