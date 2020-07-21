@@ -147,7 +147,6 @@ server <- function(input, output, session) {
                                                selected = getParamIds(storage$mboObj1$opt.path$par.set)[1:2]
   )})
   # ######## Diagnostic section
-
   # Plot opt path
   output$OptPathPlot = renderPlot({
     req(input$highlight_iter, input$search_space_component)
