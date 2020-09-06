@@ -36,7 +36,7 @@ MboPlotProgress = R6Class(
       if (self$opt_state$opt.problem$control$minimize) {
         opt_path_df$cumy = cummin(opt_path_df$y)
       } else {
-        pt_path_df$cumy = cummax(opt_path_df$y)
+        opt_path_df$cumy = cummax(opt_path_df$y)
       }
       # only consider iterations until termination, i.e. stop criterion met.
       opt_path_df = opt_path_df[opt_path_df$dob <= self$opt_state$loop,]
