@@ -35,7 +35,6 @@ MboPlotProgress = R6Class(
       # distinguish between minimization problem and maximization problem.
       if (self$opt_state$opt.problem$control$minimize) {
         opt_path_df$cumy = cummin(opt_path_df$y)
-        label_minmax = "Min "
       } else {
         opt_path_df$cumy = cummax(opt_path_df$y)
         label_minmax = "Max "
@@ -47,9 +46,13 @@ MboPlotProgress = R6Class(
       gg = gg + geom_line()
       gg = gg + ggtitle(expression("Progress of optimization"))
       gg = gg + xlab(expression("Iteration " *italic(n)))
-      gg = gg + ylab(expression(label_minmax *italic(f(x)) *" after " *italic(n) *" iterations"))
       gg = gg + theme(plot.title = element_text(hjust = 0.5))
 
+      if (self$opt_state$opt.problem$control$minimize) {
+      gg = gg + ylab(expression("Min " *italic(f(x)) *" after " *italic(n) *" iterations"))
+      } else {
+      gg = gg + ylab(expression("Max " *italic(f(x)) *" after " *italic(n) *" iterations"))
+      }
       return(gg)
     }
   )
